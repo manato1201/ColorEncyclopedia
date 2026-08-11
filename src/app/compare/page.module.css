@@ -1,0 +1,22 @@
+.switchBar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-6) var(--space-6) 0;
+  max-width: 72rem;
+  margin: 0 auto;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+}
+
+.switchActive {
+  color: var(--accent-current);
+}
+
+.switchLink {
+  color: var(--color-text-muted);
+}
+
+.switchLink:hover {
+  color: var(--accent-current);
+}

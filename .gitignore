@@ -1,0 +1,36 @@
+### Node
+node_modules/
+*.log
+*.pid
+*.pid.lock
+coverage/
+*.lcov
+.nyc_output
+dist/
+build/Release
+*.tsbuildinfo
+.cache
+.parcel-cache
+.next
+out/
+.nuxt
+.env
+.env.local
+.env.*.local
+.npm
+*.tgz
+.yarn/cache
+.yarn/unplugged
+.yarn/install-state.gz
+.pnp.*
+
+### Next.js
+next-env.d.ts
+.vercel
+*.pem
+
+### Windows
+Thumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.lnk
