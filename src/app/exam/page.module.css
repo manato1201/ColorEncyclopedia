@@ -1,0 +1,68 @@
+.page {
+  padding: var(--space-6);
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: var(--space-8);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--accent-current);
+  margin-bottom: var(--space-4);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  margin-bottom: var(--space-3);
+}
+
+.lead {
+  font-family: var(--font-body);
+  color: var(--color-text-muted);
+  line-height: 1.8;
+  max-width: 42rem;
+}
+
+.levelGrid {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: var(--space-4);
+}
+
+.levelCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  padding: var(--space-6);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.levelCard:hover,
+.levelCard:focus-visible {
+  border-color: var(--accent-current);
+  box-shadow: var(--glow-accent);
+}
+
+.levelName {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.levelCount {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+}

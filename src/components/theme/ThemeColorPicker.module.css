@@ -1,0 +1,40 @@
+.picker {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.swatchInput {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--color-line);
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.swatchInput::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border-radius: 50%;
+}
+
+.swatchInput::-webkit-color-swatch {
+  border: none;
+  border-radius: 50%;
+}
+
+.hexValue {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent-current);
+  min-width: 4.5rem;
+}
