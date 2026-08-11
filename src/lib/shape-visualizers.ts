@@ -12,6 +12,7 @@ export type ShapeElement =
   | { kind: "line"; x1: number; y1: number; x2: number; y2: number; state: ShapeElementState; dashed?: boolean }
   | { kind: "circle"; cx: number; cy: number; r: number; state: ShapeElementState }
   | { kind: "polygon"; points: [number, number][]; state: ShapeElementState }
+  | { kind: "polyline"; points: [number, number][]; state: ShapeElementState }
   | { kind: "label"; x: number; y: number; text: string };
 
 export type ShapeFrame = {
@@ -299,10 +300,226 @@ export function rotationalSymmetrySteps(): ShapeFrame[] {
   ];
 }
 
+function pentagonVertices(cx: number, cy: number, r: number): [number, number][] {
+  const pts: [number, number][] = [];
+  for (let i = 0; i < 5; i++) {
+    const angle = (Math.PI / 180) * (-90 + 72 * i);
+    pts.push([cx + r * Math.cos(angle), cy + r * Math.sin(angle)]);
+  }
+  return pts;
+}
+
+/** 星型正多角形(五芒星、{5/2})。正五角形の頂点を1つ飛ばしに結んで星形を作る。 */
+export function starPolygonSteps(): ShapeFrame[] {
+  const center: [number, number] = [50, 52];
+  const pts = pentagonVertices(center[0], center[1], 40);
+  // {5/2}: 0→2→4→1→3→0 の順に結ぶ
+  const order = [0, 2, 4, 1, 3, 0];
+  const frames: ShapeFrame[] = [];
+  const dots: ShapeElement[] = pts.map((p) => ({ kind: "circle", cx: p[0], cy: p[1], r: 2, state: "guide" }));
+
+  frames.push({ elements: [...dots], description: "正五角形の頂点を5つ配置する" });
+
+  const lines: ShapeElement[] = [];
+  for (let i = 0; i < order.length - 1; i++) {
+    const from = pts[order[i]];
+    const to = pts[order[i + 1]];
+    lines.push({ kind: "line", x1: from[0], y1: from[1], x2: to[0], y2: to[1], state: "final" });
+    frames.push({
+      elements: [...dots, ...lines],
+      description: `頂点P${order[i]}から1つ飛ばしにP${order[i + 1]}へ結ぶ(五芒星 {5/2})`,
+    });
+  }
+
+  frames.push({
+    elements: [...dots, ...lines],
+    description: "完成。対角線同士が交わる比率には黄金比が随所に現れる",
+  });
+
+  return frames;
+}
+
+/** 黄金螺旋(対数螺旋)。角度が90°増えるごとに半径がφ倍になる曲線を段階的に描く。 */
+export function goldenSpiralSteps(): ShapeFrame[] {
+  const center: [number, number] = [58, 56];
+  const a = 0.9;
+  const b = Math.log(PHI) / (Math.PI / 2);
+  const totalTheta = 4 * Math.PI; // 2周
+  const totalSamples = 72;
+  const allPoints: [number, number][] = [];
+  for (let i = 0; i <= totalSamples; i++) {
+    const theta = (totalTheta * i) / totalSamples;
+    const r = a * Math.exp(b * theta);
+    allPoints.push([center[0] + r * Math.cos(theta), center[1] + r * Math.sin(theta)]);
+  }
+
+  const stepCount = 6;
+  const frames: ShapeFrame[] = [];
+  const centerDot: ShapeElement = { kind: "circle", cx: center[0], cy: center[1], r: 1.5, state: "guide" };
+
+  frames.push({ elements: [centerDot], description: "螺旋の起点を定める" });
+
+  for (let s = 1; s <= stepCount; s++) {
+    const upto = Math.round((totalSamples * s) / stepCount);
+    const turns = ((totalTheta * upto) / totalSamples / (2 * Math.PI)).toFixed(2);
+    frames.push({
+      elements: [centerDot, { kind: "polyline", points: allPoints.slice(0, upto + 1), state: "final" }],
+      description: `角度が90°増えるごとに半径がφ(約1.618)倍になるよう伸ばしていく(現在${turns}周)`,
+    });
+  }
+
+  return frames;
+}
+
+function midpoint(p1: [number, number], p2: [number, number]): [number, number] {
+  return [(p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2];
+}
+
+function sierpinskiTriangles(
+  p1: [number, number],
+  p2: [number, number],
+  p3: [number, number],
+  depth: number,
+): [number, number][][] {
+  if (depth === 0) return [[p1, p2, p3]];
+  const m12 = midpoint(p1, p2);
+  const m23 = midpoint(p2, p3);
+  const m31 = midpoint(p3, p1);
+  return [
+    ...sierpinskiTriangles(p1, m12, m31, depth - 1),
+    ...sierpinskiTriangles(m12, p2, m23, depth - 1),
+    ...sierpinskiTriangles(m31, m23, p3, depth - 1),
+  ];
+}
+
+/** シェルピンスキーの三角形。中央の三角形を取り除く操作を繰り返し、自己相似なフラクタルを構築する。 */
+export function fractalSelfSimilaritySteps(): ShapeFrame[] {
+  const p1: [number, number] = [50, 6];
+  const p2: [number, number] = [6, 90];
+  const p3: [number, number] = [94, 90];
+  const maxDepth = 4;
+  const frames: ShapeFrame[] = [];
+
+  for (let depth = 0; depth <= maxDepth; depth++) {
+    const triangles = sierpinskiTriangles(p1, p2, p3, depth);
+    const elements: ShapeElement[] = triangles.map((points) => ({ kind: "polygon", points, state: "final" }));
+    const count = triangles.length;
+    const description =
+      depth === 0
+        ? "元になる正三角形(0回操作)"
+        : `${depth}回操作: 各三角形の中央を取り除く操作を繰り返す(残り${count}個 = 3^${depth})`;
+    frames.push({ elements, description });
+  }
+
+  frames.push({
+    elements: sierpinskiTriangles(p1, p2, p3, maxDepth).map((points) => ({
+      kind: "polygon",
+      points,
+      state: "final",
+    })),
+    description: `完成。フラクタル次元は log(3)/log(2) ≈ ${(Math.log(3) / Math.log(2)).toFixed(3)}(1次元と2次元の間の非整数次元)`,
+  });
+
+  return frames;
+}
+
+function reflectAboutLineThroughPoint(
+  points: [number, number][],
+  cx: number,
+  cy: number,
+  angleDeg: number,
+): [number, number][] {
+  const theta = (angleDeg * Math.PI) / 180;
+  const cos2 = Math.cos(2 * theta);
+  const sin2 = Math.sin(2 * theta);
+  return points.map(([x, y]) => {
+    const dx = x - cx;
+    const dy = y - cy;
+    return [cx + dx * cos2 + dy * sin2, cy + dx * sin2 - dy * cos2];
+  });
+}
+
+/** 万華鏡対称(二面体群D4、位数8)。回転対称(C4)に鏡映を組み合わせた対称性。 */
+export function kaleidoscopeSymmetrySteps(): ShapeFrame[] {
+  const center: [number, number] = [50, 50];
+  const base = translatePts(MOTIF, 60, 20);
+  const copy90 = rotateAboutPoint(base, center[0], center[1], 90);
+  const copy180 = rotateAboutPoint(base, center[0], center[1], 180);
+  const copy270 = rotateAboutPoint(base, center[0], center[1], 270);
+
+  const axisGuides: ShapeElement[] = [0, 45, 90, 135].map((angleDeg) => {
+    const rad = (angleDeg * Math.PI) / 180;
+    const len = 48;
+    return {
+      kind: "line",
+      x1: center[0] - len * Math.cos(rad),
+      y1: center[1] - len * Math.sin(rad),
+      x2: center[0] + len * Math.cos(rad),
+      y2: center[1] + len * Math.sin(rad),
+      state: "guide",
+    };
+  });
+  const centerDot: ShapeElement = { kind: "circle", cx: center[0], cy: center[1], r: 1.5, state: "guide" };
+
+  const rotational = [base, copy90, copy180, copy270];
+
+  return [
+    {
+      elements: [...axisGuides, centerDot, { kind: "polygon", points: base, state: "active" }],
+      description: "中心点Oと4本の鏡映軸(万華鏡の鏡)を配置する",
+    },
+    {
+      elements: [
+        ...axisGuides,
+        centerDot,
+        { kind: "polygon", points: base, state: "active" },
+        { kind: "polygon", points: copy90, state: "final" },
+      ],
+      description: "中心のまわりに90°回転させたコピーを追加する",
+    },
+    {
+      elements: [
+        ...axisGuides,
+        centerDot,
+        ...rotational.slice(0, 3).map((points): ShapeElement => ({ kind: "polygon", points, state: "final" })),
+      ],
+      description: "さらに90°回転させたコピーを追加する",
+    },
+    {
+      elements: [
+        ...axisGuides,
+        centerDot,
+        ...rotational.map((points): ShapeElement => ({ kind: "polygon", points, state: "final" })),
+      ],
+      description: "90°刻みで4枚並べる(回転対称C4が完成)",
+    },
+    {
+      elements: [
+        ...axisGuides,
+        centerDot,
+        ...rotational.map((points): ShapeElement => ({ kind: "polygon", points, state: "final" })),
+        ...rotational.map(
+          (points): ShapeElement => ({
+            kind: "polygon",
+            points: reflectAboutLineThroughPoint(points, center[0], center[1], 0),
+            state: "final",
+          }),
+        ),
+      ],
+      description:
+        "この4枚を1本の鏡(軸)に対して反転させると、万華鏡のように8枚の像が現れる(二面体群D4、位数8=2×4)",
+    },
+  ];
+}
+
 export const SHAPE_VISUALIZERS: Record<string, () => ShapeFrame[]> = {
   "golden-ratio": goldenRatioSteps,
   "regular-tessellation": regularTessellationSteps,
   "point-symmetry": pointSymmetrySteps,
   "line-symmetry": lineSymmetrySteps,
   "rotational-symmetry": rotationalSymmetrySteps,
+  "star-polygon": starPolygonSteps,
+  "golden-spiral": goldenSpiralSteps,
+  "fractal-self-similarity": fractalSelfSimilaritySteps,
+  "kaleidoscope-symmetry": kaleidoscopeSymmetrySteps,
 };
