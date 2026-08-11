@@ -63,6 +63,16 @@ function renderElement(el: ShapeElement, index: number) {
       />
     );
   }
+  if (el.kind === "polyline") {
+    // 開いた曲線(螺旋など)。polygon用のstateクラスはfillを持つため、開いた線には適用せず常にfill:noneにする。
+    return (
+      <polyline
+        key={index}
+        points={polygonPoints(el.points)}
+        className={`${styles.shape} ${styles[STATE_CLASS[el.state]]} ${styles.openLine}`}
+      />
+    );
+  }
   return (
     <text key={index} x={el.x} y={el.y} className={styles.label}>
       {el.text}

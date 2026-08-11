@@ -1,23 +1,26 @@
-/* デザイントークン。src/lib/design-tokens.ts の coreColors と同期させる */
+/* デザイントークン。
+   The-Algorithm-Illustrated(アンバー×グリーンのターミナルHUD)との差別化として、
+   ブランドアクセントをバイオレット系に変更している。#5B21B6は淡い背景(bgTint, s<=18%/v=96%)に対して
+   WCAG AA(4.5:1)以上のコントラストを確保できる濃さとして選定した(検証: contrast(#5B21B6, bgTint)=5.84)。 */
 :root {
-  /* コアカラー(固定) */
-  --color-bg-void: #06070a;
-  --color-bg-surface: #12141b;
-  --color-bg-surface-2: #191c26;
-  --color-text: #edf0f5;
-  --color-text-muted: #8b93a7;
+  /* コアカラー(固定)。バイオレットに寄せたわずかに青紫みのあるダーク基調 */
+  --color-bg-void: #0a0812;
+  --color-bg-surface: #14101d;
+  --color-bg-surface-2: #1c1729;
+  --color-text: #f1eef5;
+  --color-text-muted: #9891ac;
   --color-accent-green: #4dffb0;
-  --color-accent-amber: #ffa733;
+  --color-accent-primary: #5b21b6;
 
   /* 選択色に応じたサイトテーマ(Phase 4: deriveThemeFromColor / ThemeFromColorProvider)。
-     未設定(初回ロード時)はJS注入前でもamberのデフォルトにフォールバックする。 */
-  --theme-primary: var(--color-accent-amber);
+     未設定(初回ロード時)はJS注入前でもブランドバイオレットのデフォルトにフォールバックする。 */
+  --theme-primary: var(--color-accent-primary);
   --theme-accent: var(--color-accent-green);
   --theme-bg-tint: var(--color-bg-surface);
   --theme-text-on: light;
 
   /* サイト全体の「今のアクセント色」。ここを介すことでUI各所が選択色に連動する */
-  --accent-current: var(--theme-primary, var(--color-accent-amber));
+  --accent-current: var(--theme-primary, var(--color-accent-primary));
   --accent-current-glow: color-mix(
     in srgb,
     var(--accent-current) 35%,
@@ -30,7 +33,7 @@
   /* 色彩図鑑の状態パレット(可視化専用) */
   --shape-idle: #3a3f4d;
   --shape-guide: #5b6478;
-  --shape-active: var(--color-accent-amber);
+  --shape-active: var(--color-accent-primary);
   --shape-final: var(--color-accent-green);
 
   /* タイポグラフィ */

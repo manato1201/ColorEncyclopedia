@@ -21,6 +21,16 @@ export const HUE_WHEEL_VISUALIZERS: Record<string, true> = {
   rikyunezumi: true,
   gofunniro: true,
   sumiiro: true,
+  sakurairo: true,
+  suou: true,
+  konjiro: true,
+  sorairo: true,
+  wakatakeiro: true,
+  murasaki: true,
+  hiiro: true,
+  nibiiro: true,
+  kinariiro: true,
+  nurigarasu: true,
 };
 
 /** 配色理論可視化(補色・類似色・トライアド・スプリットコンプリメンタリ)は色相環と同じ対象集合を使う。 */
