@@ -1,0 +1,97 @@
+.visualizer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.chip {
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  padding: var(--space-1) var(--space-3);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.chip:hover {
+  color: var(--color-text);
+}
+
+.chipActive {
+  border-color: var(--accent-current);
+  color: var(--accent-current);
+}
+
+.stageWrap {
+  position: relative;
+  width: 260px;
+  height: 260px;
+}
+
+.canvas {
+  display: block;
+  border-radius: 50%;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.harmonyLine {
+  stroke: rgba(255, 255, 255, 0.65);
+  stroke-width: 1.5;
+}
+
+.baseMarker {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+.harmonyMarker {
+  fill: none;
+  stroke: var(--color-bg-void);
+  stroke-width: 2.5;
+}
+
+.harmonyList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+  max-width: 22rem;
+}
+
+.harmonyItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--color-line);
+  flex-shrink: 0;
+}

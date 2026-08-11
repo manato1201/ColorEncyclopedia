@@ -1,0 +1,44 @@
+.page {
+  padding: var(--space-6);
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+.backLink {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-6);
+}
+
+.backLink:hover {
+  color: var(--accent-current);
+}
+
+.header {
+  margin-bottom: var(--space-8);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  color: var(--accent-current);
+  margin-bottom: var(--space-4);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.emptyState {
+  border: 1px dashed var(--color-line);
+  border-radius: 8px;
+  padding: var(--space-8);
+  text-align: center;
+  font-family: var(--font-body);
+  color: var(--color-text-muted);
+}

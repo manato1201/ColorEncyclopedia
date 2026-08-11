@@ -1,0 +1,127 @@
+.page {
+  padding: var(--space-6);
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.backLink {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-6);
+}
+
+.backLink:hover {
+  color: var(--accent-current);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-8);
+}
+
+.category {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  letter-spacing: 0.06em;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 700;
+  flex-basis: 100%;
+}
+
+.sectionLabel {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: var(--space-8);
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.visualPane {
+  position: sticky;
+  top: var(--space-6);
+}
+
+@media (max-width: 768px) {
+  .visualPane {
+    position: static;
+  }
+}
+
+.placeholder {
+  border: 1px dashed var(--color-line);
+  border-radius: 8px;
+  padding: var(--space-8);
+  font-family: var(--font-body);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.explainPane {
+  padding-top: var(--space-1);
+}
+
+.markdownBody {
+  font-family: var(--font-body);
+  line-height: 1.8;
+  color: var(--color-text-muted);
+}
+
+.markdownBody h2 {
+  font-family: var(--font-display-en);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--accent-current);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-3);
+}
+
+.markdownBody h2:first-child {
+  margin-top: 0;
+}
+
+.markdownBody p {
+  margin-bottom: var(--space-3);
+}
+
+.markdownBody ul,
+.markdownBody ol {
+  margin: 0 0 var(--space-3) var(--space-6);
+}
+
+.markdownBody li {
+  margin-bottom: var(--space-1);
+}
+
+.markdownBody strong {
+  color: var(--color-text);
+}
+
+.markdownBody a {
+  color: var(--accent-current);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}

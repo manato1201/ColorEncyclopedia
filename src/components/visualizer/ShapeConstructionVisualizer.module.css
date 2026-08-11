@@ -1,0 +1,57 @@
+.visualizer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.canvas {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: block;
+  background: var(--color-bg-void);
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+}
+
+.shape {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  transition:
+    stroke 0.2s ease,
+    fill 0.2s ease;
+}
+
+.stateIdle {
+  stroke: var(--shape-idle);
+  stroke-width: 0.6;
+}
+
+.stateGuide {
+  stroke: var(--shape-guide);
+  stroke-width: 0.5;
+}
+
+.stateActive {
+  stroke: var(--shape-active);
+  stroke-width: 0.8;
+  fill: color-mix(in srgb, var(--shape-active) 12%, transparent);
+}
+
+.stateFinal {
+  stroke: var(--shape-final);
+  stroke-width: 0.8;
+  fill: color-mix(in srgb, var(--shape-final) 14%, transparent);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 4px;
+  fill: var(--accent-current);
+}
+
+.description {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--accent-current);
+  min-height: 2.5em;
+}

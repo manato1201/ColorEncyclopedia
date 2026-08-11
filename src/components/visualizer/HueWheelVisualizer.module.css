@@ -1,0 +1,48 @@
+.visualizer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.stageWrap {
+  position: relative;
+  width: 260px;
+  height: 260px;
+}
+
+.canvas {
+  display: block;
+  border-radius: 50%;
+  cursor: crosshair;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.marker {
+  fill: none;
+  stroke: var(--color-bg-void);
+  stroke-width: 2.5;
+}
+
+.markerCore {
+  fill: #fff;
+}
+
+.probeMarker {
+  fill: none;
+  stroke: var(--accent-current);
+  stroke-width: 2;
+}
+
+.description {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--accent-current);
+  text-align: center;
+  min-height: 2.5em;
+}
