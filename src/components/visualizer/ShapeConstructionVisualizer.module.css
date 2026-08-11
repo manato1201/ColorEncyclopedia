@@ -43,6 +43,11 @@
   fill: color-mix(in srgb, var(--shape-final) 14%, transparent);
 }
 
+/* 開いた曲線(螺旋など)。polygon用のstateクラスが持つfillを打ち消し、線だけを表示する */
+.openLine {
+  fill: none;
+}
+
 .label {
   font-family: var(--font-mono);
   font-size: 4px;

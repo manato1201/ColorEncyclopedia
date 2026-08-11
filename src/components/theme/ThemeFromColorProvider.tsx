@@ -13,7 +13,7 @@ import {
   type DerivedTheme,
 } from "@/lib/theme/deriveThemeFromColor";
 
-const DEFAULT_HEX = "#EB6238"; // 朱色。初回ロード時の既定テーマ色。
+const DEFAULT_HEX = "#5B21B6"; // ブランドのバイオレット。初回ロード時の既定テーマ色(globals.cssの--color-accent-primaryと同値)。
 
 type ThemeContextValue = {
   selectedHex: string;
