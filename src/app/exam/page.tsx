@@ -8,7 +8,7 @@ export default function ExamIndexPage() {
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <p className={styles.eyebrow}>■ EXAM 検定対策</p>
+        <p className={styles.eyebrow}>EXAM 検定対策</p>
         <h1 className={styles.title}>色彩検定 級別問題演習</h1>
         <p className={styles.lead}>
           級ごとに自作問題を出題する。解答すると、対応する色エントリの詳細ページへのリンクが表示され、根拠となる数値データ・配色理論を確認できる。

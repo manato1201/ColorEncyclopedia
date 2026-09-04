@@ -7,22 +7,21 @@
 
 .button,
 .buttonPrimary {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
   padding: var(--space-2) var(--space-4);
-  border-radius: 4px;
+  border-radius: var(--radius-interactive);
   border: 1px solid var(--color-line);
   background: transparent;
-  color: var(--color-text);
+  color: var(--color-ink);
   cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: border-color 0.15s ease;
 }
 
 .button:hover:not(:disabled),
 .buttonPrimary:hover {
-  border-color: var(--accent-current);
+  border-color: var(--color-ink);
 }
 
 .button:disabled {
@@ -33,12 +32,11 @@
 .buttonPrimary {
   border-color: var(--accent-current);
   color: var(--accent-current);
-  box-shadow: var(--glow-accent);
 }
 
 .stepCount {
   margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
 }

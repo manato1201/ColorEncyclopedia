@@ -1,236 +1,215 @@
 .page {
   display: flex;
   flex-direction: column;
+  max-width: var(--page-max-width);
+  margin: 0 auto;
 }
 
+/* ヒーロー: 大見出し(左)+ 選択色から導出したテーマ球(右)。OFF+BRANDの唯一の有彩色イベント */
 .hero {
-  padding: var(--space-16) var(--space-6) var(--space-12);
-  max-width: 56rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  padding: var(--space-20) var(--space-8) var(--space-16);
+  overflow: hidden;
+}
+
+.heroRings {
+  position: absolute;
+  top: 50%;
+  right: -80px;
+  width: 620px;
+  height: 620px;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.heroText {
+  position: relative;
+  z-index: 1;
+  max-width: 44rem;
 }
 
 .eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  color: var(--accent-current);
-  margin-bottom: var(--space-4);
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+  margin-bottom: var(--space-6);
 }
 
 .heroTitle {
   font-family: var(--font-display);
-  font-weight: 900;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  line-height: 1.25;
-  margin-bottom: var(--space-6);
-  animation: flicker-in 0.6s ease-out both;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .heroTitle {
-    animation: none;
-  }
-}
-
-@keyframes flicker-in {
-  from {
-    opacity: 0;
-    filter: drop-shadow(0 0 0 transparent);
-  }
-  60% {
-    opacity: 1;
-    filter: drop-shadow(0 0 18px var(--accent-current-glow));
-  }
-  to {
-    opacity: 1;
-    filter: drop-shadow(0 0 0 transparent);
-  }
+  font-weight: var(--weight-regular);
+  font-size: clamp(2.25rem, 6vw, var(--text-display));
+  line-height: var(--leading-display);
+  letter-spacing: var(--tracking-display);
+  margin-bottom: var(--space-8);
 }
 
 .heroLead {
   font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.8;
-  color: var(--color-text-muted);
-  max-width: 38rem;
-  margin-bottom: var(--space-6);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  color: var(--color-ink-muted);
+  max-width: 34rem;
+  margin-bottom: var(--space-8);
 }
 
 .countLine {
   display: flex;
   align-items: baseline;
   gap: var(--space-2);
-  font-family: var(--font-mono);
-  margin-bottom: var(--space-6);
 }
 
 .countNumber {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--accent-current);
+  font-family: var(--font-display);
+  font-size: var(--text-subheading);
+  font-weight: var(--weight-regular);
+  color: var(--color-ink);
 }
 
 .countLabel {
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-12);
+  }
+
+  .heroRings {
+    display: none;
+  }
+}
+
+/* 検索・絞り込み */
+.filterBar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-8) var(--space-8) 0;
+  border-top: 1px solid var(--color-line);
 }
 
 .searchBar {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  border: 1px solid var(--color-line);
-  border-radius: 4px;
-  padding: var(--space-3) var(--space-4);
-  max-width: 32rem;
-  transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
-}
-
-.searchBar:focus-within {
-  border-color: var(--accent-current);
-  box-shadow: var(--glow-accent);
-}
-
-.searchLabel {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.1em;
-  color: var(--color-text-muted);
-  flex-shrink: 0;
+  max-width: 28rem;
 }
 
 .searchInput {
-  flex: 1;
+  width: 100%;
   background: transparent;
-  border: none;
-  color: var(--color-text);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-interactive);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-ink);
   font-family: var(--font-body);
-  font-size: 0.9375rem;
+  font-size: var(--text-body-sm);
+  transition: border-color 0.15s ease;
 }
 
 .searchInput::placeholder {
-  color: var(--color-text-muted);
+  color: var(--color-ink-muted);
 }
 
 .searchInput:focus {
   outline: none;
+  border-color: var(--color-ink);
 }
 
 .chipRow {
   display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
+  flex-wrap: wrap;
   gap: var(--space-2);
-  margin-top: var(--space-4);
-  padding-bottom: var(--space-1);
-}
-
-.chipRow:first-of-type {
-  margin-top: var(--space-6);
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  flex-shrink: 0;
   border: 1px solid var(--color-line);
-  border-radius: 999px;
+  border-radius: var(--radius-interactive);
   padding: var(--space-2) var(--space-4);
   background: transparent;
-  color: var(--color-text-muted);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.03em;
+  color: var(--color-ink-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
   cursor: pointer;
   transition:
-    border-color 0.15s ease,
-    color 0.15s ease;
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .chip:hover {
-  border-color: var(--color-text-muted);
-  color: var(--color-text);
+  border-color: var(--color-ink);
+  color: var(--color-ink);
 }
 
 .chipSub {
-  font-size: 0.6875rem;
   padding: var(--space-1) var(--space-3);
 }
 
 .chipActive {
-  border-color: var(--accent-current);
-  color: var(--accent-current);
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-parchment);
 }
 
 .chipCount {
   font-size: 0.6875rem;
-  color: inherit;
   opacity: 0.7;
 }
 
-.chipVisualized {
-  border-style: dashed;
-}
-
-.chipVisualizedDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  flex-shrink: 0;
-  background: var(--color-accent-green);
-}
-
 .visualizedBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  color: var(--color-accent-green);
-  border: 1px solid var(--color-accent-green);
-  border-radius: 999px;
-  padding: 0.0625rem var(--space-2);
-  letter-spacing: 0.02em;
-}
-
-.visualizedDot {
-  width: 5px;
-  height: 5px;
-  border-radius: 999px;
-  flex-shrink: 0;
-  background: var(--color-accent-green);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
 }
 
 .sectionLabel {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-4);
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+  margin-bottom: var(--space-6);
 }
 
+/* 代表エントリ: グリッド罫線背景を持つ紙面(Featured Work Card) */
 .showcase {
-  padding: var(--space-8) var(--space-6);
-  border-top: 1px solid var(--color-line);
+  padding: var(--space-16) var(--space-8);
 }
 
 .featuredCard {
   display: block;
-  border: 1px solid var(--color-line);
-  border-radius: 8px;
+  background: var(--color-paper);
+  border-radius: var(--radius-card);
   padding: var(--space-8);
-  background: var(--color-bg-surface);
-  transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
-}
-
-.featuredCard:hover,
-.featuredCard:focus-visible {
-  border-color: var(--accent-current);
-  box-shadow: var(--glow-accent);
+  background-image:
+    linear-gradient(
+      to right,
+      color-mix(in srgb, var(--color-ash) 45%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-ash) 45%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 28px 28px;
 }
 
 .featuredMeta {
@@ -242,34 +221,36 @@
 }
 
 .category {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  letter-spacing: 0.06em;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+  letter-spacing: var(--tracking-caption);
 }
 
 .featuredName {
   font-family: var(--font-display);
-  font-size: 1.75rem;
-  font-weight: 700;
-  margin-bottom: var(--space-3);
+  font-size: var(--text-heading-sm);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-heading-sm);
+  margin-bottom: var(--space-4);
 }
 
 .featuredDesc {
   font-family: var(--font-body);
-  color: var(--color-text-muted);
-  line-height: 1.7;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-ink-muted);
   max-width: 42rem;
 }
 
+/* 一覧・検索結果 */
 .list,
 .results {
-  padding: var(--space-8) var(--space-6) var(--space-16);
-  border-top: 1px solid var(--color-line);
+  padding: var(--space-16) var(--space-8) var(--space-20);
 }
 
 .categoryGroup {
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-12);
 }
 
 .categoryGroup:last-child {
@@ -280,28 +261,26 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  font-family: var(--font-display-en);
-  font-size: 0.9375rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--accent-current);
-  margin-bottom: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink);
+  margin-bottom: var(--space-3);
 }
 
 .categoryCount {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  font-weight: 400;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+  font-weight: var(--weight-regular);
 }
 
 .listItems {
   list-style: none;
-  border-top: 1px solid var(--color-line);
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-4);
-  padding-top: var(--space-4);
 }
 
 @media (min-width: 640px) {
@@ -317,24 +296,9 @@
 }
 
 .listRow {
-  border: 1px solid var(--color-line);
-  border-radius: 8px;
-  padding: var(--space-4);
-  transition:
-    border-color 0.15s ease,
-    box-shadow 0.15s ease;
-}
-
-.listRow:hover,
-.listRow:focus-within {
-  border-color: var(--accent-current);
-  box-shadow: var(--glow-accent);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .listRow {
-    transition: none;
-  }
+  background: var(--color-paper);
+  border-radius: var(--radius-card);
+  padding: var(--space-6);
 }
 
 .listRowHead {
@@ -342,43 +306,43 @@
   align-items: center;
   flex-wrap: wrap;
   gap: var(--space-3);
-  margin-bottom: var(--space-1);
+  margin-bottom: var(--space-2);
   width: fit-content;
   max-width: 100%;
 }
 
 .listRowHead:hover .listName,
 .listRowHead:focus-visible .listName {
-  color: var(--accent-current);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 .listName {
   font-family: var(--font-body);
-  font-size: 0.9375rem;
-  transition: color 0.15s ease;
-  font-weight: 500;
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-regular);
+  color: var(--color-ink);
 }
 
 .listCategory {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  letter-spacing: 0.04em;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+  letter-spacing: var(--tracking-caption);
 }
 
 .listSummary {
   font-family: var(--font-body);
-  font-size: 0.8125rem;
-  line-height: 1.6;
-  color: var(--color-text-muted);
-  max-width: 48rem;
+  font-size: var(--text-body-sm);
+  line-height: var(--leading-body-sm);
+  color: var(--color-ink-muted);
 }
 
 .emptyState {
-  border: 1px dashed var(--color-line);
-  border-radius: 8px;
-  padding: var(--space-8);
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  padding: var(--space-8) 0;
   text-align: center;
   font-family: var(--font-body);
-  color: var(--color-text-muted);
+  color: var(--color-ink-muted);
 }
