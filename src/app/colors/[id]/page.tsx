@@ -51,7 +51,7 @@ export default async function ColorDetailPage({
       {colorValue ? (
         <section className={styles.dataPanel} aria-labelledby="data-heading">
           <h2 id="data-heading" className={styles.sectionLabel}>
-            ■ DATA 数値データ
+            DATA 数値データ
           </h2>
           <dl className={styles.dataGrid}>
             <div className={styles.dataItem}>
@@ -80,7 +80,7 @@ export default async function ColorDetailPage({
       <div className={styles.layout}>
         <section className={styles.visualPane} aria-labelledby="visual-heading">
           <h2 id="visual-heading" className={styles.sectionLabel}>
-            ■ VISUALIZE 色相環・配色理論の可視化
+            VISUALIZE 色相環・配色理論の可視化
           </h2>
           {colorValue && hasColorVisualizer(id) ? (
             <ColorVisualizer colorId={id} hex={colorValue.hex} />
@@ -92,7 +92,7 @@ export default async function ColorDetailPage({
 
           {colorValue ? (
             <div className={styles.contrastBlock}>
-              <h2 className={styles.sectionLabel}>■ CONTRAST WCAGコントラスト比を確認する</h2>
+              <h2 className={styles.sectionLabel}>CONTRAST WCAGコントラスト比を確認する</h2>
               <ContrastVisualizer initialForeground={colorValue.hex} initialBackground="#FFFFFF" />
             </div>
           ) : null}
@@ -103,7 +103,7 @@ export default async function ColorDetailPage({
           aria-labelledby="explain-heading"
         >
           <h2 id="explain-heading" className={styles.sectionLabel}>
-            ■ ABOUT 概要
+            ABOUT 概要
           </h2>
           <div
             className={styles.markdownBody}

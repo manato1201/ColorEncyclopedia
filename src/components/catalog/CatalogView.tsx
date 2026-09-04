@@ -3,6 +3,8 @@
 import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import styles from "./CatalogView.module.css";
+import { ThemeSphere } from "@/components/theme/ThemeSphere";
+import { ConcentricCircles } from "@/components/hud/ConcentricCircles";
 
 export type CatalogItem = {
   id: string;
@@ -33,6 +35,7 @@ type CatalogViewProps<T extends CatalogItem> = {
  * The-Algorithm-IllustratedのAlgorithmCatalog.tsxを汎化した共通カタログ実装。
  * ColorCatalog/ShapeCatalogの両方がこの内部実装をpropsだけ変えて利用する
  * (createContentLoader<T>の汎化と同じ発想を、UIコンポーネント側にも一箇所だけ適用したもの)。
+ * 見た目はOFF+BRANDスタイルリファレンス(暖色パーチメント紙 × 単一幾何学サンセリフ)に準拠する。
  */
 export function CatalogView<T extends CatalogItem>({
   items,
@@ -152,23 +155,29 @@ export function CatalogView<T extends CatalogItem>({
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
-        <p className={styles.eyebrow}>{eyebrow}</p>
-        <h1 className={styles.heroTitle}>
-          {titleLines[0]}
-          <br />
-          {titleLines[1]}
-        </h1>
-        <p className={styles.heroLead}>{lead}</p>
-        <p className={styles.countLine}>
-          <span className={styles.countNumber}>{items.length}</span>
-          <span className={styles.countLabel}>{countLabel}</span>
-        </p>
+        <ConcentricCircles className={styles.heroRings} />
+        <div className={styles.heroText}>
+          <p className={styles.eyebrow}>{eyebrow}</p>
+          <h1 className={styles.heroTitle}>
+            {titleLines[0]}
+            <br />
+            {titleLines[1]}
+          </h1>
+          <p className={styles.heroLead}>{lead}</p>
+          <p className={styles.countLine}>
+            <span className={styles.countNumber}>{items.length}</span>
+            <span className={styles.countLabel}>{countLabel}</span>
+          </p>
+        </div>
+        <ThemeSphere size={480} />
+      </section>
+
+      <section className={styles.filterBar}>
         <form
           className={styles.searchBar}
           role="search"
           onSubmit={(event) => event.preventDefault()}
         >
-          <span className={styles.searchLabel}>SEARCH</span>
           <input
             className={styles.searchInput}
             type="search"
@@ -246,11 +255,10 @@ export function CatalogView<T extends CatalogItem>({
         >
           <button
             type="button"
-            className={`${styles.chip} ${styles.chipVisualized} ${visualizedOnly ? styles.chipActive : ""}`}
+            className={`${styles.chip} ${visualizedOnly ? styles.chipActive : ""}`}
             aria-pressed={visualizedOnly}
             onClick={() => setVisualizedOnly((current) => !current)}
           >
-            <span className={styles.chipVisualizedDot} aria-hidden="true" />
             {visualizedLabel}のみ
             <span className={styles.chipCount}>{visualizedCount}</span>
           </button>
@@ -260,7 +268,7 @@ export function CatalogView<T extends CatalogItem>({
       {isFiltering ? (
         <section className={styles.results} aria-labelledby="results-heading">
           <h2 id="results-heading" className={styles.sectionLabel}>
-            ■ RESULTS {filterLabel}の絞り込み結果 — {filteredResults.length}件
+            {filterLabel}の絞り込み結果 — {filteredResults.length}件
           </h2>
           {filteredResults.length === 0 ? (
             <div className={styles.emptyState}>
@@ -289,7 +297,7 @@ export function CatalogView<T extends CatalogItem>({
             aria-labelledby="featured-heading"
           >
             <h2 id="featured-heading" className={styles.sectionLabel}>
-              ■ FEATURED 代表エントリ
+              FEATURED — 代表エントリ
             </h2>
             <Link
               href={`${basePath}/${featured.id}`}
@@ -311,7 +319,7 @@ export function CatalogView<T extends CatalogItem>({
 
           <section className={styles.list} aria-labelledby="list-heading">
             <h2 id="list-heading" className={styles.sectionLabel}>
-              ■ INDEX 一覧
+              INDEX — 一覧
             </h2>
             {groupedByCategory.map(({ category, items: groupItems }) => (
               <div key={category} className={styles.categoryGroup}>
@@ -383,7 +391,6 @@ function VisualizedBadge({ label }: { label: string }) {
       className={styles.visualizedBadge}
       title={`この項目は${label}に対応済みです`}
     >
-      <span className={styles.visualizedDot} aria-hidden="true" />
       {label}
     </span>
   );

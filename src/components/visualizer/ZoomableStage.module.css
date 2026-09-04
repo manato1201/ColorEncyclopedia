@@ -18,18 +18,17 @@
   align-items: center;
   justify-content: center;
   border: 1px solid var(--color-line);
-  border-radius: 4px;
-  background: var(--color-bg-surface);
-  color: var(--color-text);
-  font-family: var(--font-mono);
+  border-radius: var(--radius-interactive);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
   font-size: 1rem;
   line-height: 1;
   cursor: pointer;
 }
 
 .zoomButton:hover:not(:disabled) {
-  border-color: var(--accent-current);
-  color: var(--accent-current);
+  border-color: var(--color-ink);
 }
 
 .zoomButton:disabled {
@@ -40,25 +39,25 @@
 .zoomValue {
   min-width: 3rem;
   text-align: center;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
 }
 
 .resetButton {
   border: 1px solid var(--color-line);
-  border-radius: 4px;
+  border-radius: var(--radius-interactive);
   background: none;
-  color: var(--color-text-muted);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  color: var(--color-ink-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
   padding: 0.25rem 0.5rem;
   cursor: pointer;
 }
 
 .resetButton:hover {
-  color: var(--accent-current);
-  border-color: var(--accent-current);
+  color: var(--color-ink);
+  border-color: var(--color-ink);
 }
 
 .viewport {

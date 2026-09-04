@@ -1,63 +1,111 @@
-/* デザイントークン。
-   The-Algorithm-Illustrated(アンバー×グリーンのターミナルHUD)との差別化として、
-   ブランドアクセントをバイオレット系に変更している。#5B21B6は淡い背景(bgTint, s<=18%/v=96%)に対して
-   WCAG AA(4.5:1)以上のコントラストを確保できる濃さとして選定した(検証: contrast(#5B21B6, bgTint)=5.84)。 */
+/*
+ * デザイントークン ― OFF+BRAND. スタイルリファレンス(暖色パーチメント紙 × 単一幾何学サンセリフ × ゴーストUI)を
+ * ColorEncyclopediaに適用したもの。旧トークン名(--color-bg-void等)は新パレットへのエイリアスとして残し、
+ * 個々のコンポーネントCSSを書き換えなくても全体が新デザインへ移行するようにしている。
+ *
+ * 唯一の例外は --accent-current(選択色から導出されるサイトテーマ)で、これはOFF+BRANDの
+ * 「虹色球体 = ページ上でただ一つの有彩色イベント」という思想を、本サイトの核となる機能
+ * (選んだ色でサイト全体のテーマが変わる)に重ね合わせたもの。ゴーストリンクのアクセント・
+ * 選択中チップ・ヒーローの色球(ThemeSphere)にのみ使い、構造的な罫線や背景には使わない。
+ */
 :root {
-  /* コアカラー(固定)。バイオレットに寄せたわずかに青紫みのあるダーク基調 */
-  --color-bg-void: #0a0812;
-  --color-bg-surface: #14101d;
-  --color-bg-surface-2: #1c1729;
-  --color-text: #f1eef5;
-  --color-text-muted: #9891ac;
-  --color-accent-green: #4dffb0;
+  /* コアカラー(固定) */
+  --color-parchment: #e5e4e0;
+  --color-ink: #1d1d1d;
+  --color-paper: #ffffff;
+  --color-ash: #bfbebe;
+  --color-stone: #cdcdc9;
+  --color-ink-muted: #706f6b;
+
+  /* 旧トークン名 → 新パレットのエイリアス */
+  --color-bg-void: var(--color-parchment);
+  --color-bg-surface: var(--color-paper);
+  --color-bg-surface-2: var(--color-stone);
+  --color-text: var(--color-ink);
+  --color-text-muted: var(--color-ink-muted);
+  --color-accent-green: #2f6844;
   --color-accent-primary: #5b21b6;
 
-  /* 選択色に応じたサイトテーマ(Phase 4: deriveThemeFromColor / ThemeFromColorProvider)。
-     未設定(初回ロード時)はJS注入前でもブランドバイオレットのデフォルトにフォールバックする。 */
+  /* 選択色に応じたサイトテーマ(Phase 4: deriveThemeFromColor / ThemeFromColorProvider) */
   --theme-primary: var(--color-accent-primary);
   --theme-accent: var(--color-accent-green);
-  --theme-bg-tint: var(--color-bg-surface);
-  --theme-text-on: light;
+  --theme-bg-tint: var(--color-paper);
+  --theme-text-on: dark;
 
-  /* サイト全体の「今のアクセント色」。ここを介すことでUI各所が選択色に連動する */
+  /* サイト全体の「今のアクセント色」。ゴーストリンク・選択中チップ・ヒーロー球にのみ使う */
   --accent-current: var(--theme-primary, var(--color-accent-primary));
-  --accent-current-glow: color-mix(
-    in srgb,
-    var(--accent-current) 35%,
-    transparent
-  );
-  --color-line: color-mix(in srgb, var(--accent-current) 14%, transparent);
-  --glow-accent: 0 0 12px var(--accent-current-glow);
-  --glow-green: 0 0 12px rgba(77, 255, 176, 0.35);
+  --accent-current-glow: transparent;
 
-  /* 色彩図鑑の状態パレット(可視化専用) */
-  --shape-idle: #3a3f4d;
-  --shape-guide: #5b6478;
-  --shape-active: var(--color-accent-primary);
+  /* 構造的な罫線は常にAsh固定(選択色に連動させない = OFF+BRANDの「線は着色しない」原則) */
+  --color-line: var(--color-ash);
+  --glow-accent: none;
+  --glow-green: none;
+
+  /* 図形可視化の状態パレット */
+  --shape-idle: var(--color-ash);
+  --shape-guide: #8f8d86;
+  --shape-active: var(--accent-current);
   --shape-final: var(--color-accent-green);
 
-  /* タイポグラフィ */
-  --font-display:
-    var(--font-display-raw), "Hiragino Kaku Gothic ProN", sans-serif;
-  --font-display-en: var(--font-display-en-raw), sans-serif;
-  --font-body:
-    var(--font-body-raw), "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
-  --font-mono: var(--font-mono-raw), "Source Han Code JP", monospace;
+  /*
+   * タイポグラフィ ― OFF+BRANDの "Ataero Retina OB Edition"(非公開の特注書体)は入手できないため、
+   * 同じく幾何学的な性格を持つ「Zen Kaku Gothic New」を代替とし、見出し・本文・ラベルすべてに
+   * 単一書体として使う(第二書体を持ち込まない、というOFF+BRANDの原則を踏襲)。
+   */
+  --font-display: var(--font-display-raw), "Hiragino Kaku Gothic ProN", sans-serif;
+  --font-display-en: var(--font-display);
+  --font-body: var(--font-display);
+  --font-mono: var(--font-display);
 
-  /* 間隔スケール */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-12: 3rem;
-  --space-16: 4rem;
+  --weight-regular: 400;
+  --weight-bold: 700;
+
+  /* タイプスケール(OFF+BRAND準拠) */
+  --text-caption: 11px;
+  --leading-caption: 1.4;
+  --tracking-caption: 0.05em;
+  --text-body-sm: 15px;
+  --leading-body-sm: 1.4;
+  --tracking-body-sm: 0.01em;
+  --text-body: 18px;
+  --leading-body: 1.4;
+  --tracking-body: 0.013em;
+  --text-subheading: 34px;
+  --leading-subheading: 1;
+  --tracking-subheading: 0.013em;
+  --text-heading-sm: 46px;
+  --leading-heading-sm: 1;
+  --tracking-heading-sm: 0.013em;
+  --text-heading: 70px;
+  --leading-heading: 0.8;
+  --tracking-heading: 0.013em;
+  --text-heading-lg: 76px;
+  --leading-heading-lg: 0.8;
+  --tracking-heading-lg: 0.013em;
+  --text-display: 103px;
+  --leading-display: 0.8;
+  --tracking-display: 0.013em;
+
+  /* 間隔スケール(4px基準、OFF+BRANDの数値に寄せる) */
+  --space-1: 4px;
+  --space-2: 6px;
+  --space-3: 8px;
+  --space-4: 15px;
+  --space-6: 19px;
+  --space-8: 30px;
+  --space-12: 46px;
+  --space-16: 76px;
+  --space-20: 119px;
+
+  --radius-card: 0px;
+  --radius-interactive: 10px;
+
+  --page-max-width: 1400px;
 }
 
 html {
   height: 100%;
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html,
@@ -68,24 +116,24 @@ body {
 
 body {
   min-height: 100%;
-  background: var(--color-bg-void);
-  color: var(--color-text);
+  background: var(--color-parchment);
+  color: var(--color-ink);
   font-family: var(--font-body);
+  font-weight: var(--weight-regular);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;
-  transition: background 0.3s ease;
 }
 
-/* グレインテクスチャ */
+/* 紙の質感を思わせる、ごく淡いグレインテクスチャ(彩度を持たない = 単色主義を崩さない) */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.05;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch' result='noise'/><feColorMatrix in='noise' type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
 }
 
 * {
@@ -115,6 +163,6 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: 0.01em;
+  font-weight: var(--weight-regular);
+  letter-spacing: 0.013em;
 }

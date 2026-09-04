@@ -23,7 +23,7 @@ export function ColorCatalog({ colors, featuredId }: ColorCatalogProps) {
       basePath="/colors"
       categoryOrder={COLOR_CATEGORY_ORDER}
       subcategoriesByCategory={COLOR_SUBCATEGORIES_BY_CATEGORY}
-      eyebrow="■ CATALOG 色彩図鑑"
+      eyebrow="CATALOG 色彩図鑑"
       titleLines={["色を、数値で読み解き、", "配色理論で組み立てる。"]}
       lead="色相・彩度・明度というモチーフを数値データとして体系化し、色彩検定対策と配色理論の可視化学習を同時に提供する図鑑です。"
       countLabel="件の色を収録"

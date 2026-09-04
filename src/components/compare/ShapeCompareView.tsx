@@ -126,7 +126,7 @@ export function ShapeCompareView({ shapes }: ShapeCompareViewProps) {
 
       {selected.length > 0 ? (
         <div className={styles.visualSection}>
-          <h2 className={styles.visualSectionLabel}>■ VISUALIZE 作図手順を見比べる</h2>
+          <h2 className={styles.visualSectionLabel}>VISUALIZE 作図手順を見比べる</h2>
           {selected.some((s) => hasShapeVisualizer(s.id)) ? (
             <div className={styles.visualGrid}>
               {selected

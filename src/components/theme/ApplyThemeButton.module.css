@@ -1,19 +1,22 @@
 .button {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  font-weight: var(--weight-bold);
   padding: var(--space-2) var(--space-4);
-  border-radius: 999px;
+  border-radius: var(--radius-interactive);
   border: 1px solid var(--accent-current);
   background: transparent;
   color: var(--accent-current);
   cursor: pointer;
   transition:
-    box-shadow 0.15s ease,
-    opacity 0.15s ease;
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .button:hover:not(:disabled) {
-  box-shadow: var(--glow-accent);
+  background: var(--accent-current);
+  color: var(--color-paper);
 }
 
 .button:disabled {
