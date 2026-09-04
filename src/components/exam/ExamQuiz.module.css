@@ -29,7 +29,7 @@
   display: block;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  color: var(--color-text-muted);
+  color: var(--color-ink-muted);
   margin-top: var(--space-1);
 }
 
@@ -47,7 +47,7 @@
   border: 1px solid var(--color-line);
   border-radius: var(--radius-interactive);
   background: transparent;
-  color: var(--color-text);
+  color: var(--color-ink);
   font-family: var(--font-body);
   font-size: var(--text-body-sm);
   cursor: pointer;
@@ -78,7 +78,7 @@
   margin-top: var(--space-4);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  color: var(--color-text-muted);
+  color: var(--color-ink-muted);
 }
 
 .link {

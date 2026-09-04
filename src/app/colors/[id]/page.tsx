@@ -83,7 +83,7 @@ export default async function ColorDetailPage({
             VISUALIZE 色相環・配色理論の可視化
           </h2>
           {colorValue && hasColorVisualizer(id) ? (
-            <ColorVisualizer colorId={id} hex={colorValue.hex} />
+            <ColorVisualizer hex={colorValue.hex} />
           ) : (
             <div className={styles.placeholder}>
               このエントリは色相環・配色理論の可視化には対応していません(colorValueを持つ色エントリのみ対応)。
