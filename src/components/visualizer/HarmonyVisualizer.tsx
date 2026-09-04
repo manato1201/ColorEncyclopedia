@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./HarmonyVisualizer.module.css";
-import { drawHueWheel, polarToXY } from "./hueWheelCanvas";
+import { drawHueWheel, getEffectiveDpr, polarToXY } from "./hueWheelCanvas";
 import { hexToHsv, hsvToHex } from "@/lib/color-math";
 
 const CANVAS_SIZE = 260;
@@ -46,7 +46,7 @@ export function HarmonyVisualizer({ hex }: HarmonyVisualizerProps) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = getEffectiveDpr();
     canvas.width = CANVAS_SIZE * dpr;
     canvas.height = CANVAS_SIZE * dpr;
     canvas.style.width = `${CANVAS_SIZE}px`;

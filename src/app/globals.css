@@ -1,7 +1,6 @@
 /*
  * デザイントークン ― OFF+BRAND. スタイルリファレンス(暖色パーチメント紙 × 単一幾何学サンセリフ × ゴーストUI)を
- * ColorEncyclopediaに適用したもの。旧トークン名(--color-bg-void等)は新パレットへのエイリアスとして残し、
- * 個々のコンポーネントCSSを書き換えなくても全体が新デザインへ移行するようにしている。
+ * ColorEncyclopediaに適用したもの。
  *
  * 唯一の例外は --accent-current(選択色から導出されるサイトテーマ)で、これはOFF+BRANDの
  * 「虹色球体 = ページ上でただ一つの有彩色イベント」という思想を、本サイトの核となる機能
@@ -17,20 +16,13 @@
   --color-stone: #cdcdc9;
   --color-ink-muted: #706f6b;
 
-  /* 旧トークン名 → 新パレットのエイリアス */
-  --color-bg-void: var(--color-parchment);
-  --color-bg-surface: var(--color-paper);
-  --color-bg-surface-2: var(--color-stone);
-  --color-text: var(--color-ink);
-  --color-text-muted: var(--color-ink-muted);
+  /* セマンティックカラー(固定・選択色に連動しない) */
   --color-accent-green: #2f6844;
   --color-accent-primary: #5b21b6;
 
   /* 選択色に応じたサイトテーマ(Phase 4: deriveThemeFromColor / ThemeFromColorProvider) */
   --theme-primary: var(--color-accent-primary);
   --theme-accent: var(--color-accent-green);
-  --theme-bg-tint: var(--color-paper);
-  --theme-text-on: dark;
 
   /* サイト全体の「今のアクセント色」。ゴーストリンク・選択中チップ・ヒーロー球にのみ使う */
   --accent-current: var(--theme-primary, var(--color-accent-primary));
@@ -52,7 +44,8 @@
    * 同じく幾何学的な性格を持つ「Zen Kaku Gothic New」を代替とし、見出し・本文・ラベルすべてに
    * 単一書体として使う(第二書体を持ち込まない、というOFF+BRANDの原則を踏襲)。
    */
-  --font-display: var(--font-display-raw), "Hiragino Kaku Gothic ProN", sans-serif;
+  --font-display:
+    var(--font-display-raw), "Hiragino Kaku Gothic ProN", sans-serif;
   --font-display-en: var(--font-display);
   --font-body: var(--font-display);
   --font-mono: var(--font-display);

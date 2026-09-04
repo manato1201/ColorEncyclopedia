@@ -1,39 +1,35 @@
-import {
-  contrastRatio,
-  hexToHsv,
-  hsvToHex,
-  WCAG_AA_NORMAL,
-} from "@/lib/color-math";
+import { contrastRatio, hexToHsv, hsvToHex, WCAG_AA_NORMAL } from "@/lib/color-math";
 
 export interface DerivedTheme {
   primary: string;
   accent: string;
-  bgTint: string;
-  textOn: "light" | "dark";
 }
+
+/**
+ * ページの地色(globals.cssの--color-parchment)。ここに一致させておくこと。
+ * WCAG判定は「選択色がこの実際に塗られている背景の上でどれだけ読めるか」を基準にする必要があり、
+ * 描画されないダミーの背景色を基準にすると判定が実態と乖離するため、直接この値を使う。
+ */
+const PAGE_CANVAS_HEX = "#E5E4E0";
 
 export const SAFE_FALLBACK_THEME: DerivedTheme = {
   primary: "#2B2B2B",
   accent: "#5B8DEF",
-  bgTint: "#F5F5F5",
-  textOn: "dark",
 };
 
 /**
- * 選択色(hex)から primary/accent/bgTint/textOn を導出する純関数。
- * WCAG AA(コントラスト比4.5:1)を満たさない組み合わせになった場合は SAFE_FALLBACK_THEME へ切り替える
- * (ColorEncyclopedia_DESIGN.md Phase 4: 色駆動テーマ機能を持ってもWCAG AAコントラストを維持する制約)。
+ * 選択色(hex)から primary/accent を導出する純関数。
+ * WCAG AA(コントラスト比4.5:1)を、選択色が実際に使われる文脈
+ * (パーチメント地の上のゴーストリンク文字色 / インク地の上の反転背景色)で満たさない場合は
+ * SAFE_FALLBACK_THEMEへ切り替える(ColorEncyclopedia_DESIGN.md Phase 4の制約)。
  */
 export function deriveThemeFromColor(hex: string): DerivedTheme {
   const { h, s, v } = hexToHsv(hex);
   const accent = hsvToHex({ h: (h + 180) % 360, s, v }); // 補色回転
-  const bgTint = hsvToHex({ h, s: Math.min(s, 18), v: 96 }); // 彩度クランプで淡色背景に
-  const textOn =
-    contrastRatio(hex, "#FFFFFF") >= WCAG_AA_NORMAL ? "light" : "dark";
 
-  if (contrastRatio(hex, bgTint) < WCAG_AA_NORMAL) {
+  if (contrastRatio(hex, PAGE_CANVAS_HEX) < WCAG_AA_NORMAL) {
     return SAFE_FALLBACK_THEME;
   }
 
-  return { primary: hex, accent, bgTint, textOn };
+  return { primary: hex, accent };
 }

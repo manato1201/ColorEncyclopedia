@@ -19,13 +19,13 @@
 .controlLabel {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--color-text-muted);
+  color: var(--color-ink-muted);
 }
 
 .hex {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--color-text);
+  color: var(--color-ink);
 }
 
 .preview {
@@ -51,7 +51,7 @@
 .ratio {
   font-family: var(--font-mono);
   font-size: 1rem;
-  color: var(--color-text);
+  color: var(--color-ink);
 }
 
 .ratio strong {
@@ -75,7 +75,7 @@
 .table thead th {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  color: var(--color-text-muted);
+  color: var(--color-ink-muted);
   font-weight: 400;
 }
 
@@ -90,6 +90,6 @@
 }
 
 .fail {
-  color: var(--color-text-muted);
+  color: var(--color-ink-muted);
   font-family: var(--font-mono);
 }

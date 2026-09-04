@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {
   deriveThemeFromColor,
   type DerivedTheme,
@@ -39,15 +32,11 @@ export function ThemeFromColorProvider({
     const root = document.documentElement;
     root.style.setProperty("--theme-primary", theme.primary);
     root.style.setProperty("--theme-accent", theme.accent);
-    root.style.setProperty("--theme-bg-tint", theme.bgTint);
-    root.style.setProperty("--theme-text-on", theme.textOn);
   }, [theme]);
 
-  const setHex = useCallback((hex: string) => setSelectedHex(hex), []);
-
   const value = useMemo(
-    () => ({ selectedHex, setSelectedHex: setHex, theme }),
-    [selectedHex, setHex, theme],
+    () => ({ selectedHex, setSelectedHex, theme }),
+    [selectedHex, theme],
   );
 
   return (
