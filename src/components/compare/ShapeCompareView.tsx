@@ -1,51 +1,23 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import Link from "next/link";
 import styles from "./ShapeCompareView.module.css";
+import { useCompareSelection } from "./useCompareSelection";
 import { ShapeVisualizer, hasShapeVisualizer } from "@/components/visualizer/ShapeVisualizer";
 import type { ShapeMeta } from "@/lib/content/shapes";
-
-const MAX_SELECTED = 4;
 
 type ShapeCompareViewProps = {
   shapes: ShapeMeta[];
 };
 
 /**
- * ColorCompareView.tsxと同じ選択UIパターンを図形側に転用したもの。
+ * ColorCompareView.tsxと同じ選択UIパターン(useCompareSelection)を図形側に転用したもの。
  * colorValueに相当する数値属性をshapesは持たないため(frontmatterはcategory/subcategory/summaryのみ)、
  * カテゴリ・概要の並列比較と、作図手順の可視化を見比べる構成にしている。
  */
 export function ShapeCompareView({ shapes }: ShapeCompareViewProps) {
-  const [query, setQuery] = useState("");
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
-  const byId = useMemo(() => new Map(shapes.map((s) => [s.id, s])), [shapes]);
-  const selected = selectedIds.map((id) => byId.get(id)).filter((s): s is ShapeMeta => !!s);
-
-  const trimmedQuery = query.trim().toLowerCase();
-  const candidates = useMemo(() => {
-    if (trimmedQuery.length === 0) return [];
-    return shapes
-      .filter((s) => !selectedIds.includes(s.id))
-      .filter((s) =>
-        [s.name, s.category, s.subcategory, s.summary].some((field) =>
-          field.toLowerCase().includes(trimmedQuery),
-        ),
-      )
-      .slice(0, 8);
-  }, [shapes, trimmedQuery, selectedIds]);
-
-  const addShape = (id: string) => {
-    if (selectedIds.length >= MAX_SELECTED || selectedIds.includes(id)) return;
-    setSelectedIds((current) => [...current, id]);
-    setQuery("");
-  };
-
-  const removeShape = (id: string) => {
-    setSelectedIds((current) => current.filter((x) => x !== id));
-  };
+  const { query, setQuery, selected, candidates, addItem, removeItem, isFull, MAX_SELECTED } =
+    useCompareSelection(shapes);
 
   return (
     <div className={styles.view}>
@@ -56,18 +28,18 @@ export function ShapeCompareView({ shapes }: ShapeCompareViewProps) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={
-            selectedIds.length >= MAX_SELECTED
+            isFull
               ? `最大${MAX_SELECTED}件まで選択済みです`
               : "比較に追加する図形を検索(例: 黄金比、対称性)"
           }
           aria-label="比較に追加する図形を検索"
-          disabled={selectedIds.length >= MAX_SELECTED}
+          disabled={isFull}
         />
         {candidates.length > 0 ? (
           <ul className={styles.candidateList}>
             {candidates.map((s) => (
               <li key={s.id}>
-                <button type="button" className={styles.candidateButton} onClick={() => addShape(s.id)}>
+                <button type="button" className={styles.candidateButton} onClick={() => addItem(s.id)}>
                   <span className={styles.candidateName}>{s.name}</span>
                   <span className={styles.candidateCategory}>{s.subcategory}</span>
                 </button>
@@ -93,7 +65,7 @@ export function ShapeCompareView({ shapes }: ShapeCompareViewProps) {
                     <button
                       type="button"
                       className={styles.removeButton}
-                      onClick={() => removeShape(s.id)}
+                      onClick={() => removeItem(s.id)}
                       aria-label={`${s.name}を比較から外す`}
                     >
                       ✕

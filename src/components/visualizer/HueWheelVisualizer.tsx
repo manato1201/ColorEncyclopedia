@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import styles from "./HueWheelVisualizer.module.css";
-import { drawHueWheel, polarToXY } from "./hueWheelCanvas";
+import { drawHueWheel, getEffectiveDpr, polarToXY } from "./hueWheelCanvas";
 import { hexToHsv } from "@/lib/color-math";
 
 const CANVAS_SIZE = 260;
@@ -24,7 +24,7 @@ export function HueWheelVisualizer({ hex }: HueWheelVisualizerProps) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = getEffectiveDpr();
     canvas.width = CANVAS_SIZE * dpr;
     canvas.height = CANVAS_SIZE * dpr;
     canvas.style.width = `${CANVAS_SIZE}px`;

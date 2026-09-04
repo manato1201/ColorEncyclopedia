@@ -1,15 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import Link from "next/link";
 import styles from "./ColorCompareView.module.css";
+import { useCompareSelection } from "./useCompareSelection";
 import { ExamLevelBadge } from "@/components/hud/ExamLevelBadge";
 import { ColorSwatch } from "@/components/hud/ColorSwatch";
 import { ColorVisualizer, hasColorVisualizer } from "@/components/visualizer/ColorVisualizer";
 import { contrastRatio, WCAG_AA_NORMAL, WCAG_AAA_NORMAL } from "@/lib/color-math";
 import type { ColorMeta } from "@/lib/content/colors";
-
-const MAX_SELECTED = 4;
 
 type ColorCompareViewProps = {
   colors: ColorMeta[];
@@ -17,39 +15,13 @@ type ColorCompareViewProps = {
 
 /**
  * The-Algorithm-IllustratedのCompareView.tsxの直接移植。
- * 検索で候補を絞り込みつつ、最大4件まで選択して並べて比較する。
+ * 検索で候補を絞り込みつつ、最大4件まで選択して並べて比較する(選択状態の管理はuseCompareSelectionに集約)。
  * colorValueを持つ2件以上を選ぶと、各ペアのWCAGコントラスト比をカード間に表示する
  * (計算式はderiveThemeFromColor/ContrastVisualizerとcolor-math.tsを共有)。
  */
 export function ColorCompareView({ colors }: ColorCompareViewProps) {
-  const [query, setQuery] = useState("");
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
-
-  const byId = useMemo(() => new Map(colors.map((c) => [c.id, c])), [colors]);
-  const selected = selectedIds.map((id) => byId.get(id)).filter((c): c is ColorMeta => !!c);
-
-  const trimmedQuery = query.trim().toLowerCase();
-  const candidates = useMemo(() => {
-    if (trimmedQuery.length === 0) return [];
-    return colors
-      .filter((c) => !selectedIds.includes(c.id))
-      .filter((c) =>
-        [c.name, c.category, c.subcategory, c.summary].some((field) =>
-          field.toLowerCase().includes(trimmedQuery),
-        ),
-      )
-      .slice(0, 8);
-  }, [colors, trimmedQuery, selectedIds]);
-
-  const addColor = (id: string) => {
-    if (selectedIds.length >= MAX_SELECTED || selectedIds.includes(id)) return;
-    setSelectedIds((current) => [...current, id]);
-    setQuery("");
-  };
-
-  const removeColor = (id: string) => {
-    setSelectedIds((current) => current.filter((x) => x !== id));
-  };
+  const { query, setQuery, selected, candidates, addItem, removeItem, isFull, MAX_SELECTED } =
+    useCompareSelection(colors);
 
   const withColorValue = selected.filter((c) => c.colorValue);
   const pairs: [ColorMeta, ColorMeta][] = [];
@@ -68,18 +40,18 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={
-            selectedIds.length >= MAX_SELECTED
+            isFull
               ? `最大${MAX_SELECTED}件まで選択済みです`
               : "比較に追加する色を検索(例: 暖色、朱色)"
           }
           aria-label="比較に追加する色を検索"
-          disabled={selectedIds.length >= MAX_SELECTED}
+          disabled={isFull}
         />
         {candidates.length > 0 ? (
           <ul className={styles.candidateList}>
             {candidates.map((c) => (
               <li key={c.id}>
-                <button type="button" className={styles.candidateButton} onClick={() => addColor(c.id)}>
+                <button type="button" className={styles.candidateButton} onClick={() => addItem(c.id)}>
                   {c.colorValue ? <ColorSwatch hex={c.colorValue.hex} size={14} /> : null}
                   <span className={styles.candidateName}>{c.name}</span>
                   <span className={styles.candidateCategory}>{c.category}</span>
@@ -107,7 +79,7 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
                     <button
                       type="button"
                       className={styles.removeButton}
-                      onClick={() => removeColor(c.id)}
+                      onClick={() => removeItem(c.id)}
                       aria-label={`${c.name}を比較から外す`}
                     >
                       ✕
@@ -191,7 +163,7 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
                     <Link href={`/colors/${c.id}`} className={styles.visualPanelTitle}>
                       {c.name}
                     </Link>
-                    <ColorVisualizer colorId={c.id} hex={c.colorValue!.hex} />
+                    <ColorVisualizer hex={c.colorValue!.hex} />
                   </div>
                 ))}
             </div>
