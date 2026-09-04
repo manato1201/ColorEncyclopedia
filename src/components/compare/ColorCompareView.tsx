@@ -156,7 +156,7 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
 
       {pairs.length > 0 ? (
         <div className={styles.contrastSection}>
-          <h2 className={styles.sectionLabel}>■ CONTRAST 各ペアのWCAGコントラスト比</h2>
+          <h2 className={styles.sectionLabel}>CONTRAST 各ペアのWCAGコントラスト比</h2>
           <ul className={styles.contrastList}>
             {pairs.map(([a, b]) => {
               const ratio = contrastRatio(a.colorValue!.hex, b.colorValue!.hex);
@@ -181,7 +181,7 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
 
       {selected.length > 0 ? (
         <div className={styles.visualSection}>
-          <h2 className={styles.visualSectionLabel}>■ VISUALIZE 色相環・配色理論を見比べる</h2>
+          <h2 className={styles.visualSectionLabel}>VISUALIZE 色相環・配色理論を見比べる</h2>
           {selected.some((c) => c.colorValue && hasColorVisualizer(c.id)) ? (
             <div className={styles.visualGrid}>
               {selected

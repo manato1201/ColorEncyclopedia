@@ -25,7 +25,7 @@
 
 .marker {
   fill: none;
-  stroke: var(--color-bg-void);
+  stroke: var(--color-ink);
   stroke-width: 2.5;
 }
 

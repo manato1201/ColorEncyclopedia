@@ -1,33 +1,15 @@
 import type { Metadata } from "next";
-import {
-  Zen_Kaku_Gothic_New,
-  Space_Grotesk,
-  Noto_Sans_JP,
-  JetBrains_Mono,
-} from "next/font/google";
+import { Zen_Kaku_Gothic_New } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/hud/AppShell";
 import { ThemeFromColorProvider } from "@/components/theme/ThemeFromColorProvider";
 
+// OFF+BRANDスタイルリファレンスの「単一の幾何学サンセリフ書体のみを使う」原則に合わせ、
+// 見出し・本文・ラベルすべてをこの1書体(400/700の2ウェイトのみ)でまかなう。
 const zenKakuGothicNew = Zen_Kaku_Gothic_New({
-  weight: ["500", "700", "900"],
+  weight: ["400", "700"],
   subsets: ["latin"],
   variable: "--font-display-raw",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-display-en-raw",
-});
-
-const notoSansJP = Noto_Sans_JP({
-  subsets: ["latin"],
-  variable: "--font-body-raw",
-});
-
-const jetBrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono-raw",
 });
 
 export const metadata: Metadata = {
@@ -42,10 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="ja"
-      className={`${zenKakuGothicNew.variable} ${spaceGrotesk.variable} ${notoSansJP.variable} ${jetBrainsMono.variable}`}
-    >
+    <html lang="ja" className={zenKakuGothicNew.variable}>
       <body>
         <ThemeFromColorProvider>
           <AppShell>{children}</AppShell>

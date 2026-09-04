@@ -6,8 +6,8 @@
 }
 
 .question {
-  border: 1px solid var(--color-line);
-  border-radius: 8px;
+  background: var(--color-paper);
+  border-radius: var(--radius-card);
   padding: var(--space-6);
 }
 
@@ -45,11 +45,11 @@
   text-align: left;
   padding: var(--space-3) var(--space-4);
   border: 1px solid var(--color-line);
-  border-radius: 4px;
+  border-radius: var(--radius-interactive);
   background: transparent;
   color: var(--color-text);
   font-family: var(--font-body);
-  font-size: 0.875rem;
+  font-size: var(--text-body-sm);
   cursor: pointer;
   transition:
     border-color 0.15s ease,
@@ -70,8 +70,8 @@
 }
 
 .incorrect {
-  border-color: #ff5470;
-  color: #ff5470;
+  border-color: #a4402f;
+  color: #a4402f;
 }
 
 .result {

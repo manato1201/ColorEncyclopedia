@@ -1,0 +1,5 @@
+.sphere {
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.4s ease;
+}

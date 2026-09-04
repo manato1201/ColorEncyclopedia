@@ -1,19 +1,22 @@
 .page {
-  padding: var(--space-6);
-  max-width: 72rem;
+  padding: var(--space-8);
+  max-width: var(--page-max-width);
   margin: 0 auto;
 }
 
 .backLink {
   display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: var(--color-text-muted);
-  margin-bottom: var(--space-6);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+  margin-bottom: var(--space-8);
 }
 
 .backLink:hover {
-  color: var(--accent-current);
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
 }
 
 .header {
@@ -25,24 +28,26 @@
 }
 
 .category {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--color-text-muted);
-  letter-spacing: 0.06em;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+  letter-spacing: var(--tracking-caption);
 }
 
 .title {
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
-  font-weight: 700;
+  font-size: clamp(1.75rem, 4vw, var(--text-heading-sm));
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-heading-sm);
   flex-basis: 100%;
 }
 
 .sectionLabel {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  color: var(--color-text-muted);
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
   margin-bottom: var(--space-4);
 }
 
@@ -71,11 +76,11 @@
 }
 
 .placeholder {
-  border: 1px dashed var(--color-line);
-  border-radius: 8px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
   padding: var(--space-8);
   font-family: var(--font-body);
-  color: var(--color-text-muted);
+  color: var(--color-ink-muted);
   text-align: center;
 }
 
@@ -85,16 +90,17 @@
 
 .markdownBody {
   font-family: var(--font-body);
-  line-height: 1.8;
-  color: var(--color-text-muted);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  color: var(--color-ink-muted);
 }
 
 .markdownBody h2 {
-  font-family: var(--font-display-en);
-  font-size: 0.9375rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: var(--accent-current);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink);
   margin-top: var(--space-8);
   margin-bottom: var(--space-3);
 }
@@ -117,11 +123,11 @@
 }
 
 .markdownBody strong {
-  color: var(--color-text);
+  color: var(--color-ink);
 }
 
 .markdownBody a {
-  color: var(--accent-current);
+  color: var(--color-ink);
   text-decoration: underline;
   text-underline-offset: 0.15em;
 }

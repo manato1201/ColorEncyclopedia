@@ -29,7 +29,7 @@ export default async function ExamLevelPage({ params }: ExamLevelPageProps) {
         ← 検定対策トップに戻る
       </Link>
       <header className={styles.header}>
-        <p className={styles.eyebrow}>■ EXAM {level}</p>
+        <p className={styles.eyebrow}>EXAM {level}</p>
         <h1 className={styles.title}>{level} 問題演習</h1>
       </header>
       {questions.length === 0 ? (

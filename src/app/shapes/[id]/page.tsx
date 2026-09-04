@@ -41,7 +41,7 @@ export default async function ShapeDetailPage({
       <div className={styles.layout}>
         <section className={styles.visualPane} aria-labelledby="visual-heading">
           <h2 id="visual-heading" className={styles.sectionLabel}>
-            ■ VISUALIZE 作図手順の可視化
+            VISUALIZE 作図手順の可視化
           </h2>
           {hasShapeVisualizer(id) ? (
             <ShapeVisualizer shapeId={id} />
@@ -57,7 +57,7 @@ export default async function ShapeDetailPage({
           aria-labelledby="explain-heading"
         >
           <h2 id="explain-heading" className={styles.sectionLabel}>
-            ■ ABOUT 概要
+            ABOUT 概要
           </h2>
           <div
             className={styles.markdownBody}
