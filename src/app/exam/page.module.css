@@ -59,6 +59,7 @@
   font-family: var(--font-display);
   font-size: var(--text-subheading);
   font-weight: var(--weight-regular);
+  color: var(--accent-current);
 }
 
 .levelCount {

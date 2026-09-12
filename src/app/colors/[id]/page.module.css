@@ -14,7 +14,7 @@
 }
 
 .backLink:hover {
-  color: var(--color-ink);
+  color: var(--accent-current);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
@@ -77,7 +77,7 @@
 .dataItem dd {
   font-family: var(--font-body);
   font-size: var(--text-body-sm);
-  color: var(--color-ink);
+  color: var(--accent-current);
 }
 
 .sectionLabel {
@@ -144,7 +144,7 @@
   font-size: var(--text-caption);
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-caption);
-  color: var(--color-ink);
+  color: var(--accent-current);
   margin-top: var(--space-8);
   margin-bottom: var(--space-3);
 }
@@ -171,7 +171,7 @@
 }
 
 .markdownBody a {
-  color: var(--color-ink);
+  color: var(--accent-current);
   text-decoration: underline;
   text-underline-offset: 0.15em;
 }

@@ -14,7 +14,7 @@
 }
 
 .backLink:hover {
-  color: var(--color-ink);
+  color: var(--accent-current);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }
@@ -75,7 +75,7 @@
 }
 
 .link {
-  color: var(--color-ink);
+  color: var(--accent-current);
   text-decoration: underline;
   text-underline-offset: 0.15em;
 }
@@ -114,7 +114,7 @@
   font-weight: var(--weight-bold);
   font-size: var(--text-caption);
   letter-spacing: var(--tracking-caption);
-  color: var(--color-ink);
+  color: var(--accent-current);
 }
 
 .propertyDesc {

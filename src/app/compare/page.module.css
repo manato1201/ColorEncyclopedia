@@ -11,7 +11,7 @@
 }
 
 .switchActive {
-  color: var(--color-ink);
+  color: var(--accent-current);
   font-weight: var(--weight-bold);
 }
 
@@ -20,5 +20,5 @@
 }
 
 .switchLink:hover {
-  color: var(--color-ink);
+  color: var(--accent-current);
 }

@@ -37,6 +37,6 @@
 .hexValue {
   font-family: var(--font-body);
   font-size: var(--text-caption);
-  color: var(--color-ink);
+  color: var(--accent-current);
   min-width: 4.5rem;
 }

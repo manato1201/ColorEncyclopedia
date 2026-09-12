@@ -71,7 +71,7 @@
   font-family: var(--font-display);
   font-size: var(--text-subheading);
   font-weight: var(--weight-regular);
-  color: var(--color-ink);
+  color: var(--accent-current);
 }
 
 .countLabel {
@@ -79,6 +79,30 @@
   font-size: var(--text-caption);
   letter-spacing: var(--tracking-caption);
   color: var(--color-ink-muted);
+}
+
+.sphereWrap {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 480px;
+  height: 480px;
+}
+
+.orbitSwatch {
+  position: absolute;
+  display: block;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--color-parchment);
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease;
+}
+
+.orbitSwatch:hover,
+.orbitSwatch:focus-visible {
+  transform: translate(-50%, -50%) scale(1.2);
 }
 
 @media (max-width: 900px) {
@@ -89,6 +113,17 @@
   }
 
   .heroRings {
+    display: none;
+  }
+
+  .sphereWrap {
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .orbitSwatch {
     display: none;
   }
 }
@@ -124,7 +159,7 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: var(--color-ink);
+  border-color: var(--accent-current);
 }
 
 .chipRow {
@@ -153,8 +188,8 @@
 }
 
 .chip:hover {
-  border-color: var(--color-ink);
-  color: var(--color-ink);
+  border-color: var(--accent-current);
+  color: var(--accent-current);
 }
 
 .chipSub {
@@ -162,8 +197,8 @@
 }
 
 .chipActive {
-  background: var(--color-ink);
-  border-color: var(--color-ink);
+  background: var(--accent-current);
+  border-color: var(--accent-current);
   color: var(--color-parchment);
 }
 
@@ -205,12 +240,12 @@
   background-image:
     linear-gradient(
       to right,
-      color-mix(in srgb, var(--color-ash) 45%, transparent) 1px,
+      color-mix(in srgb, var(--color-line) 45%, transparent) 1px,
       transparent 1px
     ),
     linear-gradient(
       to bottom,
-      color-mix(in srgb, var(--color-ash) 45%, transparent) 1px,
+      color-mix(in srgb, var(--color-line) 45%, transparent) 1px,
       transparent 1px
     );
   background-size: 28px 28px;
@@ -269,7 +304,7 @@
   font-size: var(--text-caption);
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-caption);
-  color: var(--color-ink);
+  color: var(--accent-current);
   margin-bottom: var(--space-3);
 }
 
@@ -325,7 +360,7 @@
   font-family: var(--font-body);
   font-size: var(--text-body-sm);
   font-weight: var(--weight-regular);
-  color: var(--color-ink);
+  color: var(--accent-current);
 }
 
 .listCategory {
