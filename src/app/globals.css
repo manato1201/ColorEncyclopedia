@@ -28,8 +28,10 @@
   --accent-current: var(--theme-primary, var(--color-accent-primary));
   --accent-current-glow: transparent;
 
-  /* 構造的な罫線は常にAsh固定(選択色に連動させない = OFF+BRANDの「線は着色しない」原則) */
-  --color-line: var(--color-ash);
+  /* 罫線はAshに選択色をごく薄く混ぜる。選択色に応じてサイト全体が変わる、という体験を
+     隅々まで行き渡らせるための調整(以前は完全固定にしていたが、変化しない箇所が多すぎるとの
+     フィードバックを受けて、構造を壊さない範囲で連動させるようにした)。 */
+  --color-line: color-mix(in srgb, var(--accent-current) 30%, var(--color-ash));
   --glow-accent: none;
   --glow-green: none;
 
@@ -158,4 +160,5 @@ h4 {
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
   letter-spacing: 0.013em;
+  color: var(--accent-current);
 }

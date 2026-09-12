@@ -20,7 +20,7 @@ export function ThemeSphere({ size = 560 }: ThemeSphereProps) {
   return (
     <div
       className={styles.sphere}
-      style={{ width: size, height: size, background: gradient }}
+      style={{ width: size, maxWidth: "100%", background: gradient }}
       aria-hidden="true"
     />
   );

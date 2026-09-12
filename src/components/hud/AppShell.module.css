@@ -19,6 +19,7 @@
   font-weight: var(--weight-bold);
   font-size: var(--text-caption);
   letter-spacing: var(--tracking-caption);
+  color: var(--accent-current);
 }
 
 .nav {
@@ -35,11 +36,12 @@
   color: var(--color-ink);
   padding: var(--space-1) 0;
   border-radius: var(--radius-interactive);
-  transition: opacity 0.15s ease;
+  transition: color 0.15s ease;
 }
 
 .navLink:hover,
 .navLink:focus-visible {
+  color: var(--accent-current);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }

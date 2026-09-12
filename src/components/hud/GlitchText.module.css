@@ -1,0 +1,37 @@
+.char {
+  display: inline-block;
+  animation: glitchFlicker 6.4s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.11s);
+}
+
+@keyframes glitchFlicker {
+  0%,
+  92%,
+  100% {
+    color: inherit;
+    transform: none;
+  }
+  93% {
+    color: var(--accent-current);
+    transform: translateY(-0.05em);
+  }
+  94% {
+    color: inherit;
+    transform: translateY(0.03em);
+  }
+  95% {
+    color: var(--accent-current);
+    transform: translateY(0);
+  }
+  96%,
+  100% {
+    color: inherit;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .char {
+    animation: none;
+  }
+}

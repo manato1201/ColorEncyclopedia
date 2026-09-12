@@ -21,7 +21,8 @@
 
 .button:hover:not(:disabled),
 .buttonPrimary:hover {
-  border-color: var(--color-ink);
+  border-color: var(--accent-current);
+  color: var(--accent-current);
 }
 
 .button:disabled {

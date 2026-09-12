@@ -28,13 +28,13 @@
 }
 
 .chip:hover {
-  border-color: var(--color-ink);
-  color: var(--color-ink);
+  border-color: var(--accent-current);
+  color: var(--accent-current);
 }
 
 .chipActive {
-  background: var(--color-ink);
-  border-color: var(--color-ink);
+  background: var(--accent-current);
+  border-color: var(--accent-current);
   color: var(--color-paper);
 }
 

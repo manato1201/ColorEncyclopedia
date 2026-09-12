@@ -5,6 +5,17 @@ import Link from "next/link";
 import styles from "./CatalogView.module.css";
 import { ThemeSphere } from "@/components/theme/ThemeSphere";
 import { ConcentricCircles } from "@/components/hud/ConcentricCircles";
+import { GlitchText } from "@/components/hud/GlitchText";
+
+/** ヒーロー球のまわりに散らす小さなスウォッチの位置プリセット(球体を囲む緩いリング状に配置)。 */
+const ORBIT_SLOTS = [
+  { top: "4%", left: "6%" },
+  { top: "12%", left: "78%" },
+  { top: "46%", left: "-6%" },
+  { top: "58%", left: "92%" },
+  { top: "82%", left: "18%" },
+  { top: "88%", left: "64%" },
+] as const;
 
 export type CatalogItem = {
   id: string;
@@ -29,6 +40,8 @@ type CatalogViewProps<T extends CatalogItem> = {
   visualizedLabel: string;
   renderBadge?: (item: T) => ReactNode;
   renderRowMeta?: (item: T) => ReactNode;
+  /** ヒーロー球のまわりに浮かべる、実在するエントリへのショートカット(色図鑑のみで使用)。 */
+  orbitSwatches?: { id: string; hex: string; name: string }[];
 };
 
 /**
@@ -51,6 +64,7 @@ export function CatalogView<T extends CatalogItem>({
   visualizedLabel,
   renderBadge,
   renderRowMeta,
+  orbitSwatches,
 }: CatalogViewProps<T>) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -159,9 +173,9 @@ export function CatalogView<T extends CatalogItem>({
         <div className={styles.heroText}>
           <p className={styles.eyebrow}>{eyebrow}</p>
           <h1 className={styles.heroTitle}>
-            {titleLines[0]}
+            <GlitchText text={titleLines[0]} />
             <br />
-            {titleLines[1]}
+            <GlitchText text={titleLines[1]} />
           </h1>
           <p className={styles.heroLead}>{lead}</p>
           <p className={styles.countLine}>
@@ -169,7 +183,23 @@ export function CatalogView<T extends CatalogItem>({
             <span className={styles.countLabel}>{countLabel}</span>
           </p>
         </div>
-        <ThemeSphere size={480} />
+        <div className={styles.sphereWrap}>
+          <ThemeSphere size={480} />
+          {orbitSwatches?.map((swatch, i) => (
+            <Link
+              key={swatch.id}
+              href={`${basePath}/${swatch.id}`}
+              className={styles.orbitSwatch}
+              style={{
+                top: ORBIT_SLOTS[i % ORBIT_SLOTS.length].top,
+                left: ORBIT_SLOTS[i % ORBIT_SLOTS.length].left,
+                backgroundColor: swatch.hex,
+              }}
+              title={swatch.name}
+              aria-label={swatch.name}
+            />
+          ))}
+        </div>
       </section>
 
       <section className={styles.filterBar}>
