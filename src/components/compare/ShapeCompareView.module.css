@@ -26,7 +26,7 @@
 
 .searchInput:focus {
   outline: none;
-  border-color: var(--color-ink);
+  border-color: var(--accent-current);
 }
 
 .searchInput:disabled {
@@ -120,7 +120,7 @@
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
   font-size: var(--text-body);
-  color: var(--color-ink);
+  color: var(--accent-current);
 }
 
 .shapeLink:hover {
@@ -136,7 +136,7 @@
 }
 
 .removeButton:hover {
-  color: var(--color-ink);
+  color: var(--accent-current);
 }
 
 .summaryCell {
@@ -181,7 +181,7 @@
   font-family: var(--font-display);
   font-weight: var(--weight-regular);
   font-size: var(--text-body);
-  color: var(--color-ink);
+  color: var(--accent-current);
   width: fit-content;
 }
 

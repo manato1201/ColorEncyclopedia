@@ -28,7 +28,8 @@
 }
 
 .zoomButton:hover:not(:disabled) {
-  border-color: var(--color-ink);
+  border-color: var(--accent-current);
+  color: var(--accent-current);
 }
 
 .zoomButton:disabled {
@@ -56,8 +57,8 @@
 }
 
 .resetButton:hover {
-  color: var(--color-ink);
-  border-color: var(--color-ink);
+  color: var(--accent-current);
+  border-color: var(--accent-current);
 }
 
 .viewport {

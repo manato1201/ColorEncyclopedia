@@ -16,7 +16,7 @@ export function ConcentricCircles({ className }: ConcentricCirclesProps) {
         cy="300"
         r="120"
         fill="none"
-        stroke="var(--color-ash)"
+        stroke="var(--color-line)"
         strokeWidth="1"
       />
       <circle
@@ -24,7 +24,7 @@ export function ConcentricCircles({ className }: ConcentricCirclesProps) {
         cy="300"
         r="220"
         fill="none"
-        stroke="var(--color-ash)"
+        stroke="var(--color-line)"
         strokeWidth="1"
       />
       <circle
@@ -32,7 +32,7 @@ export function ConcentricCircles({ className }: ConcentricCirclesProps) {
         cy="300"
         r="300"
         fill="none"
-        stroke="var(--color-ash)"
+        stroke="var(--color-line)"
         strokeWidth="1"
       />
     </svg>

@@ -29,7 +29,7 @@ export function AppShell({ children }: AppShellProps) {
         <nav className={styles.nav} aria-label="メインナビゲーション">
           {NAV_ITEMS.map((item) => (
             <Link key={item.href} href={item.href} className={styles.navLink}>
-              {item.label}
+              {item.label} <span aria-hidden="true">→</span>
             </Link>
           ))}
         </nav>

@@ -25,7 +25,7 @@
 .hex {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--color-ink);
+  color: var(--accent-current);
 }
 
 .preview {

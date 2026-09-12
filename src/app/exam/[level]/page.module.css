@@ -14,7 +14,7 @@
 }
 
 .backLink:hover {
-  color: var(--color-ink);
+  color: var(--accent-current);
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }

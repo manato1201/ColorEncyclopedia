@@ -11,11 +11,18 @@ type ColorCatalogProps = {
   featuredId: string;
 };
 
+/** ヒーロー球のまわりに浮かべる色(色相環上でばらけるよう意図的に選定)。 */
+const ORBIT_IDS = ["shuiro", "yamabukiiro", "wakakusairo", "ruriiro", "murasaki", "sakurairo"];
+
 /**
  * The-Algorithm-IllustratedのAlgorithmCatalog.tsxの直接移植。
  * 絞り込みチップの語彙を「色相/彩度/明度/配色理論」に差し替える以外はロジック互換を維持する。
  */
 export function ColorCatalog({ colors, featuredId }: ColorCatalogProps) {
+  const orbitSwatches = ORBIT_IDS.map((id) => colors.find((c) => c.id === id))
+    .filter((c): c is ColorMeta => !!c?.colorValue)
+    .map((c) => ({ id: c.id, hex: c.colorValue!.hex, name: c.name }));
+
   return (
     <CatalogView
       items={colors}
@@ -31,6 +38,7 @@ export function ColorCatalog({ colors, featuredId }: ColorCatalogProps) {
       visualizedLabel="可視化対応"
       renderBadge={(item) => (item.examLevel ? <ExamLevelBadge level={item.examLevel} /> : null)}
       renderRowMeta={(item) => (item.colorValue ? <ColorSwatch hex={item.colorValue.hex} /> : null)}
+      orbitSwatches={orbitSwatches}
     />
   );
 }
