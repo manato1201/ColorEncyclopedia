@@ -1,5 +1,6 @@
 ---
 name: 抹茶色(まっちゃいろ)
+nameEn: "Matcha-iro (Matcha Green)"
 category: 色相
 subcategory: 中性色
 colorValue:

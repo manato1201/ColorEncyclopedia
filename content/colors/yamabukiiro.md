@@ -1,5 +1,6 @@
 ---
 name: 山吹色(やまぶきいろ)
+nameEn: "Yamabuki-iro (Golden Yellow)"
 category: 色相
 subcategory: 暖色
 colorValue:

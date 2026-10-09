@@ -1,5 +1,6 @@
 ---
 name: 若草色(わかくさいろ)
+nameEn: "Wakakusa-iro (Young Grass Green)"
 category: 色相
 subcategory: 中性色
 colorValue:

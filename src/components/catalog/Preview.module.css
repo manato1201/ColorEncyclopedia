@@ -1,0 +1,85 @@
+/* カタログの中央「主役」(選択した色・図形の大きな見本と説明)。色・図形で共通。 */
+.preview {
+  display: flex;
+  gap: var(--space-8);
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  flex: 1;
+}
+
+.category {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: clamp(1.75rem, 3.4vw, var(--text-heading-sm));
+  line-height: var(--leading-heading-sm);
+  overflow-wrap: anywhere;
+}
+
+/* 値は「ラベル + 等幅の数値」。桁を揃えて読み比べられるように固定幅で右揃えにしている */
+.values {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.valueRow {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+.valueRow dt {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.valueRow dd {
+  font-size: var(--text-body-sm);
+  color: var(--accent-current);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.summary {
+  margin-top: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+  max-width: 40rem;
+}
+
+/* 図形: 作図手順の可視化を主役として埋め込む */
+.shapeStage {
+  width: 100%;
+  max-width: 26rem;
+}
+
+@media (max-width: 640px) {
+  .preview {
+    flex-direction: column;
+  }
+}

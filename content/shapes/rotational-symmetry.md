@@ -1,5 +1,6 @@
 ---
 name: 回転対称
+nameEn: "Rotational Symmetry"
 category: 図形理論
 subcategory: 対称性
 summary: 図形をある中心点のまわりに一定角度ずつ回転させても、元の図形と重なる性質。重なる回数を「位数」と呼ぶ。

@@ -1,0 +1,205 @@
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-8) var(--space-16);
+  overflow: hidden;
+}
+
+.rings {
+  position: absolute;
+  top: 50%;
+  right: -120px;
+  width: 640px;
+  height: 640px;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.text {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 40rem;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+  margin-bottom: var(--space-3);
+}
+
+/* 見出しは墨色にし、1語(体系)だけをアクセント色にする */
+.title {
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: clamp(2.5rem, 7vw, var(--text-display));
+  line-height: 1;
+  letter-spacing: var(--tracking-display);
+}
+
+.accentWord {
+  color: var(--accent-current);
+}
+
+.lead {
+  margin-top: var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  color: var(--color-ink-muted);
+  max-width: 34rem;
+}
+
+/* 主要数値: 数字は大きく、単位は小さく */
+.stats {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  margin-top: var(--space-8);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-line);
+  min-width: 7rem;
+}
+
+.statLabel {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.statValue {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+}
+
+.statNumber {
+  font-size: var(--text-heading-sm);
+  line-height: 1;
+  color: var(--accent-current);
+}
+
+.statUnit {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.statNote {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.cta {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-8);
+  padding: var(--space-3) var(--space-6);
+  border: 1px solid var(--accent-current);
+  border-radius: var(--radius-interactive);
+  color: var(--accent-current);
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-body-sm);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.cta:hover,
+.cta:focus-visible {
+  background: var(--accent-current);
+  color: var(--on-accent);
+}
+
+.visual {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  width: 440px;
+  height: 440px;
+}
+
+.orbit {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  transform: translateY(-50%);
+  padding: var(--space-1) var(--space-3) var(--space-1) var(--space-1);
+  background: var(--color-parchment);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-interactive);
+  transition: border-color 0.15s ease;
+}
+
+.orbit:hover,
+.orbit:focus-visible {
+  border-color: var(--accent-current);
+}
+
+.orbitLabel {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  line-height: 1.3;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.orbitHex {
+  color: var(--color-ink-muted);
+}
+
+@media (max-width: 960px) {
+  .hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--space-12) var(--space-6);
+  }
+
+  .rings {
+    display: none;
+  }
+
+  /* 縦積みでは球と見本のレイアウトが窮屈になるため、球だけを小さく出して見本は省く(見本はカタログから辿れる) */
+  .visual {
+    width: min(100%, 320px);
+    height: auto;
+    aspect-ratio: 1 / 1;
+  }
+
+  .orbit {
+    display: none;
+  }
+}

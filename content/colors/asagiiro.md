@@ -1,5 +1,6 @@
 ---
 name: 浅葱色(あさぎいろ)
+nameEn: "Asagi-iro (Light Teal Blue)"
 category: 色相
 subcategory: 寒色
 colorValue:

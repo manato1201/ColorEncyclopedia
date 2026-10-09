@@ -1,5 +1,6 @@
 ---
 name: 瑠璃色(るりいろ)
+nameEn: "Ruri-iro (Lapis Lazuli Blue)"
 category: 色相
 subcategory: 寒色
 colorValue:

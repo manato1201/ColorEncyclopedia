@@ -1,5 +1,6 @@
 ---
 name: √2長方形(平方根矩形)
+nameEn: "Root Rectangle"
 category: 図形理論
 subcategory: 比例・分割
 summary: 1:√n(n=2,3,5…)の比率を持つ矩形群の総称。対角線を用いた作図で正確に構成できる、実用性の高い比例分割。

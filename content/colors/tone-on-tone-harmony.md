@@ -1,5 +1,6 @@
 ---
 name: トーンオントーン配色
+nameEn: "Tone-on-Tone Harmony"
 category: 配色理論
 subcategory: トーン配色
 examLevel: 2級

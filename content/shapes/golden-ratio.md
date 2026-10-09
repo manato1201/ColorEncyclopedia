@@ -1,5 +1,6 @@
 ---
 name: 黄金比(黄金分割)
+nameEn: "Golden Ratio"
 category: 図形理論
 subcategory: 比例・分割
 summary: 約1:1.618の比率。均衡の取れた構図として建築・デザインで多用される古典的な幾何学的性質。

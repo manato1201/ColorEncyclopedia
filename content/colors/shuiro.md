@@ -1,5 +1,6 @@
 ---
 name: 朱色(しゅいろ)
+nameEn: "Shu-iro (Vermilion)"
 category: 色相
 subcategory: 暖色
 colorValue:

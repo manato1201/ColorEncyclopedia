@@ -1,5 +1,6 @@
 ---
 name: 準正則テセレーション
+nameEn: "Semi-Regular Tessellation"
 category: 図形理論
 subcategory: 平面充填
 summary: 2種類以上の正多角形を組み合わせ、すべての頂点で同じ並び方になるように敷き詰める平面充填。全8種類が知られる。

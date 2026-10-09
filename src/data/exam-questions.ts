@@ -15,6 +15,8 @@ export interface ExamQuestion {
   answerIndex: number;
   /** content/colors/*.md のid。詳細ページへのリンク先。 */
   explanationRef: string;
+  /** 問題文中の難しい用語と短い補足(あれば「R」バッジで開ける)。termは問題文に含まれること(verifyで検査)。 */
+  glossary?: { term: string; note: string }[];
 }
 
 export const EXAM_QUESTIONS: ExamQuestion[] = [
@@ -26,6 +28,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     choices: ["p(ペール)", "v(ビビッド)", "dk(ダーク)", "ltg(ライトグレイッシュ)"],
     answerIndex: 1,
     explanationRef: "shuiro",
+    glossary: [{ term: "トーン", note: "明度と彩度を合わせた色の調子。PCCSでは v・p・dk などの記号で表す。" }],
   },
   {
     id: "q-3-beniiro-01",
@@ -53,6 +56,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     choices: ["膨張して見える", "進出して見える", "収縮・後退して見える", "無彩色化して見える"],
     answerIndex: 2,
     explanationRef: "ruriiro",
+    glossary: [{ term: "寒色", note: "青系など、涼しさや冷たさを感じさせる色のグループ。" }],
   },
   {
     id: "q-3-asagiiro-01",
@@ -98,6 +102,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     choices: ["色相", "彩度", "明度", "トーン"],
     answerIndex: 2,
     explanationRef: "gofunniro",
+    glossary: [{ term: "無彩色", note: "白・灰・黒のように、色みを持たない色。" }],
   },
   {
     id: "q-2-complementary-01",
@@ -107,6 +112,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     choices: ["6", "9", "12", "18"],
     answerIndex: 2,
     explanationRef: "complementary-harmony",
+    glossary: [{ term: "24色相環", note: "色相を24段階に分けて、円環状に並べたもの。" }],
   },
   {
     id: "q-2-tone-on-tone-01",
@@ -125,6 +131,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     choices: ["v(ビビッド)", "s(ストロング)", "grayish(グレイッシュ)", "dp(ディープ)"],
     answerIndex: 2,
     explanationRef: "rikyunezumi",
+    glossary: [{ term: "彩度", note: "色の鮮やかさの度合い。" }],
   },
   {
     id: "q-1-triadic-01",
@@ -157,6 +164,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     choices: ["3:1以上", "4.5:1以上", "7:1以上", "10:1以上"],
     answerIndex: 1,
     explanationRef: "accessible-color-design",
+    glossary: [{ term: "WCAG", note: "Web Content Accessibility Guidelines。Webコンテンツのアクセシビリティ指針。" }],
   },
   {
     id: "q-uc-design-01",
@@ -166,6 +174,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     choices: ["彩度のみ", "模様・形・パターン", "色相のみ", "明度を極端に下げることのみ"],
     answerIndex: 1,
     explanationRef: "accessible-color-design",
+    glossary: [{ term: "ユニバーサルデザイン", note: "年齢や障害の有無にかかわらず、できるだけ多くの人が使えるよう配慮した設計。" }],
   },
   {
     id: "q-3-sakurairo-01",
@@ -220,6 +229,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     choices: ["彩度が低いため", "暖色・寒色両方の性質を併せ持つため", "無彩色に近いため", "明度が高いため"],
     answerIndex: 1,
     explanationRef: "murasaki",
+    glossary: [{ term: "中性色", note: "暖色にも寒色にも属さない色のグループ。" }],
   },
   {
     id: "q-3-kinariiro-01",
@@ -256,6 +266,7 @@ export const EXAM_QUESTIONS: ExamQuestion[] = [
     choices: ["後退して見える", "進出して見える", "無彩色化して見える", "収縮して見える"],
     answerIndex: 1,
     explanationRef: "hiiro",
+    glossary: [{ term: "暖色", note: "赤・橙・黄など、暖かさを感じさせる色のグループ。" }],
   },
   {
     id: "q-2-dominant-01",

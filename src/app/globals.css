@@ -17,8 +17,21 @@
   --color-ink-muted: #706f6b;
 
   /* セマンティックカラー(固定・選択色に連動しない) */
-  --color-accent-green: #2f6844;
+  --color-accent-green: #2f6844; /* 緑は「正解・確定」だけに使う(docs/ui-rules.md) */
+  --color-negative: #a4402f; /* 不正解 */
   --color-accent-primary: #5b21b6;
+
+  /* アクセント色の上に載せる文字色。アクセントは地色に対してAAを満たすよう導出されるため、
+     アクセント背景+この文字色の組み合わせも同じ比率でAAを満たす(deriveThemeFromColor参照)。 */
+  --on-accent: #ffffff;
+
+  /*
+   * 色見本まわりはテーマ(ライト/ダーク)で変えない(IMPROVEMENT_DESIGN_2026-10 §4.3)。
+   * 周囲の色で見え方が変わる(同時対比)ため、見本の表示領域は常に同じ中立灰にする。
+   */
+  --swatch-stage: #bdbdbd;
+  --swatch-ink: #1d1d1d;
+  --swatch-paper: #ffffff;
 
   /* 選択色に応じたサイトテーマ(Phase 4: deriveThemeFromColor / ThemeFromColorProvider) */
   --theme-primary: var(--color-accent-primary);
@@ -51,6 +64,11 @@
   --font-display-en: var(--font-display);
   --font-body: var(--font-display);
   --font-mono: var(--font-display);
+  /* 数値(HEX・RGB・HSV・Lab・コントラスト比)専用の等幅スタック。桁を揃えて読み比べるため(docs/ui-rules.md)。
+     Webフォントは読み込まず、端末の等幅フォントを使う。 */
+  --font-num:
+    ui-monospace, "SFMono-Regular", "Cascadia Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
 
   --weight-regular: 400;
   --weight-bold: 700;
@@ -98,9 +116,37 @@
   --page-max-width: 1400px;
 }
 
+/*
+ * ダークテーマ。<html data-theme="dark"> のときだけ有効(layout.tsxの初期化スクリプトが
+ * 保存済みの選択または端末設定から描画前にセットする)。入れ替えるのはUIの枠・文字・面の色だけで、
+ * 色見本まわり(--swatch-*)と、選択色から導出するアクセントの考え方は変えない。
+ * 地色を変えるので、アクセントのコントラスト保証もderiveThemeFromColor側でモード別に行う。
+ */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-parchment: #151412;
+  --color-ink: #ece9e2;
+  --color-paper: #1f1e1b;
+  --color-ash: #4a4843;
+  --color-stone: #2d2b28;
+  --color-ink-muted: #a3a099;
+  --color-accent-green: #6fcf97;
+  --color-negative: #e07a68;
+  --on-accent: #151412;
+  --shape-guide: #6a675f;
+}
+
 html {
   height: 100%;
   color-scheme: light;
+  scroll-behavior: smooth;
+}
+
+/* 数値は半角・等幅・桁揃え(IMPROVEMENT_DESIGN_2026-10 §3)。.numを付けた要素に適用する。 */
+.num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
 }
 
 html,
@@ -161,4 +207,27 @@ h4 {
   font-weight: var(--weight-regular);
   letter-spacing: 0.013em;
   color: var(--accent-current);
+}
+
+/* 見出しの下に灰色で添える英字の副題(2段見出し)。.subtitleをh1/h2直下のpに付ける。 */
+.subtitle {
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  letter-spacing: var(--tracking-body-sm);
+  color: var(--color-ink-muted);
+}
+
+/* 動きを好まない設定では、サイト全体のアニメーション・遷移・スムーススクロールを止める。 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

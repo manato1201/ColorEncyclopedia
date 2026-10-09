@@ -15,7 +15,8 @@ type ThemeSphereProps = {
  */
 export function ThemeSphere({ size = 560 }: ThemeSphereProps) {
   const { theme } = useThemeFromColor();
-  const gradient = `linear-gradient(255deg, ${theme.primary}, ${theme.accent} 55%, #ffffff 100%)`;
+  // 終端は紙面の色に溶ける(ライトでは白、ダークでは暗い紙面色)。固定の白だとダークで浮いてしまう
+  const gradient = `linear-gradient(255deg, ${theme.primary}, ${theme.accent} 55%, var(--color-paper) 100%)`;
 
   return (
     <div

@@ -1,67 +1,51 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
-const MAX_SELECTED = 4;
-
-type Searchable = {
-  id: string;
-  name: string;
-  category: string;
-  subcategory: string;
-  summary: string;
-};
+export const MAX_COMPARE_SELECTED = 4;
 
 /**
- * ColorCompareView/ShapeCompareViewで共通の「検索して最大4件まで選択する」状態管理。
- * 両ビューでほぼ同一のロジックが重複していたため一本化した(比較UIの見た目・追加のカラムは
- * 各コンポーネント側に残し、選択状態の管理だけをここに集約する)。
+ * 比較対象の選択状態(一覧の行クリックで追加/解除、最大4件)。
+ * ColorCompareView/ShapeCompareViewで共通。検索・チップ絞り込みは一覧側(EntryList + useEntryFilter)が受け持つ。
+ * initialIds(URLの?ids=から渡す)は最初の1回だけ使う。存在しないidは捨て、上限を超えた分も切る。
  */
-export function useCompareSelection<T extends Searchable>(items: T[]) {
-  const [query, setQuery] = useState("");
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+export function useCompareSelection<T extends { id: string }>(items: T[], initialIds: string[] = []) {
+  const [selectedIds, setSelectedIds] = useState<string[]>(() => {
+    const known = new Set(items.map((item) => item.id));
+    return [...new Set(initialIds)].filter((id) => known.has(id)).slice(0, MAX_COMPARE_SELECTED);
+  });
 
-  const byId = useMemo(
-    () => new Map(items.map((item) => [item.id, item])),
-    [items],
-  );
-  const selected = selectedIds
-    .map((id) => byId.get(id))
-    .filter((item): item is T => !!item);
+  const byId = useMemo(() => new Map(items.map((item) => [item.id, item])), [items]);
+  const selected = selectedIds.map((id) => byId.get(id)).filter((item): item is T => !!item);
+  const isFull = selectedIds.length >= MAX_COMPARE_SELECTED;
 
-  const trimmedQuery = query.trim().toLowerCase();
-  const candidates = useMemo(() => {
-    if (trimmedQuery.length === 0) return [];
-    return items
-      .filter((item) => !selectedIds.includes(item.id))
-      .filter((item) =>
-        [item.name, item.category, item.subcategory, item.summary].some(
-          (field) => field.toLowerCase().includes(trimmedQuery),
-        ),
-      )
-      .slice(0, 8);
-  }, [items, trimmedQuery, selectedIds]);
+  const isSelected = (id: string) => selectedIds.includes(id);
 
-  const isFull = selectedIds.length >= MAX_SELECTED;
-
-  const addItem = (id: string) => {
-    if (isFull || selectedIds.includes(id)) return;
-    setSelectedIds((current) => [...current, id]);
-    setQuery("");
+  const toggle = (id: string) => {
+    setSelectedIds((current) => {
+      if (current.includes(id)) return current.filter((x) => x !== id);
+      if (current.length >= MAX_COMPARE_SELECTED) return current;
+      return [...current, id];
+    });
   };
 
-  const removeItem = (id: string) => {
-    setSelectedIds((current) => current.filter((x) => x !== id));
-  };
+  const remove = (id: string) => setSelectedIds((current) => current.filter((x) => x !== id));
+  const clear = () => setSelectedIds([]);
 
-  return {
-    query,
-    setQuery,
-    selected,
-    candidates,
-    addItem,
-    removeItem,
-    isFull,
-    MAX_SELECTED,
-  };
+  return { selected, selectedIds, isSelected, isFull, toggle, remove, clear };
+}
+
+/**
+ * URLの ?ids=a,b,c を配列にして返す(カタログの「比較に追加」からの遷移で使う)。
+ * useSearchParamsを使うため、呼び出し側はSuspense境界の内側に置くこと
+ * (静的に生成されるページで、この部分だけクライアント側で描画させるため)。
+ */
+export function useIdsFromQuery(): string[] {
+  const params = useSearchParams();
+  const raw = params.get("ids") ?? "";
+  return raw
+    .split(",")
+    .map((id) => id.trim())
+    .filter(Boolean);
 }

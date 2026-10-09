@@ -80,7 +80,8 @@ export function HarmonyVisualizer({ hex }: HarmonyVisualizerProps) {
         ))}
       </div>
 
-      <div className={styles.stageWrap}>
+      <div className={styles.stage}>
+        <div className={styles.stageWrap}>
         <canvas ref={canvasRef} className={styles.canvas} role="img" aria-label="色相環" />
         <svg className={styles.overlay} viewBox={`0 0 ${CANVAS_SIZE} ${CANVAS_SIZE}`} aria-hidden="true">
           {harmonyMarkers.map((m, i) => (
@@ -92,6 +93,7 @@ export function HarmonyVisualizer({ hex }: HarmonyVisualizerProps) {
             <circle key={i} cx={m.x} cy={m.y} r={6} className={styles.harmonyMarker} />
           ))}
         </svg>
+      </div>
       </div>
 
       <ul className={styles.harmonyList}>

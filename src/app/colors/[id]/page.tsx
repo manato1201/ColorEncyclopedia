@@ -2,13 +2,16 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { ExamLevelBadge } from "@/components/hud/ExamLevelBadge";
-import { ColorSwatch } from "@/components/hud/ColorSwatch";
+import { SwatchStage } from "@/components/hud/SwatchStage";
 import { ApplyThemeButton } from "@/components/theme/ApplyThemeButton";
 import {
   ColorVisualizer,
   hasColorVisualizer,
 } from "@/components/visualizer/ColorVisualizer";
+import { ColorSystemsVisualizer } from "@/components/visualizer/ColorSystemsVisualizer";
 import { ContrastVisualizer } from "@/components/visualizer/ContrastVisualizer";
+import { hexToRgb } from "@/lib/color-math";
+import { formatHsv, formatLab, formatRgb } from "@/lib/color-format";
 import { colorLoader } from "@/lib/content/colors";
 
 type ColorDetailPageProps = {
@@ -33,19 +36,25 @@ export default async function ColorDetailPage({
 
   return (
     <div className={styles.page}>
-      <Link href="/" className={styles.backLink}>
+      <Link href="/colors" className={styles.backLink}>
         ← 色図鑑に戻る
       </Link>
 
       <header className={styles.header}>
-        {colorValue ? <ColorSwatch hex={colorValue.hex} size={40} /> : null}
+        {/* 見本は常に中立灰のステージの上に置く(テーマで周囲の色を変えない) */}
+        <SwatchStage hex={colorValue?.hex} size={160} />
         <div className={styles.headerText}>
           <span className={styles.category}>
             {color.category} ・ {color.subcategory}
           </span>
           <h1 className={styles.title}>{color.name}</h1>
+          <p className="subtitle">{color.nameEn}</p>
+          {color.examLevel ? (
+            <div className={styles.badges}>
+              <ExamLevelBadge level={color.examLevel} />
+            </div>
+          ) : null}
         </div>
-        {color.examLevel ? <ExamLevelBadge level={color.examLevel} /> : null}
       </header>
 
       {colorValue ? (
@@ -56,21 +65,19 @@ export default async function ColorDetailPage({
           <dl className={styles.dataGrid}>
             <div className={styles.dataItem}>
               <dt>HEX</dt>
-              <dd>{colorValue.hex}</dd>
+              <dd className="num">{colorValue.hex}</dd>
+            </div>
+            <div className={styles.dataItem}>
+              <dt>RGB</dt>
+              <dd className="num">{formatRgb(hexToRgb(colorValue.hex))}</dd>
             </div>
             <div className={styles.dataItem}>
               <dt>HSV</dt>
-              <dd>
-                H {colorValue.hsv.h}° / S {colorValue.hsv.s}% / V{" "}
-                {colorValue.hsv.v}%
-              </dd>
+              <dd className="num">{formatHsv(colorValue.hsv)}</dd>
             </div>
             <div className={styles.dataItem}>
               <dt>Lab</dt>
-              <dd>
-                L* {colorValue.lab.l} / a* {colorValue.lab.a} / b*{" "}
-                {colorValue.lab.b}
-              </dd>
+              <dd className="num">{formatLab(colorValue.lab)}</dd>
             </div>
           </dl>
           <ApplyThemeButton hex={colorValue.hex} />
@@ -89,13 +96,6 @@ export default async function ColorDetailPage({
               このエントリは色相環・配色理論の可視化には対応していません(colorValueを持つ色エントリのみ対応)。
             </div>
           )}
-
-          {colorValue ? (
-            <div className={styles.contrastBlock}>
-              <h2 className={styles.sectionLabel}>CONTRAST WCAGコントラスト比を確認する</h2>
-              <ContrastVisualizer initialForeground={colorValue.hex} initialBackground="#FFFFFF" />
-            </div>
-          ) : null}
         </section>
 
         <section
@@ -112,6 +112,27 @@ export default async function ColorDetailPage({
           />
         </section>
       </div>
+
+      {colorValue ? (
+        <div className={styles.tools}>
+          <section className={styles.tool} aria-labelledby="systems-heading">
+            <h2 id="systems-heading" className={styles.sectionLabel}>
+              SYSTEMS 同じ色を別の方式で並べる
+            </h2>
+            <ColorSystemsVisualizer hex={colorValue.hex} />
+          </section>
+
+          <section className={styles.tool} aria-labelledby="contrast-heading">
+            <h2 id="contrast-heading" className={styles.sectionLabel}>
+              CONTRAST WCAGコントラスト比を確認する
+            </h2>
+            <ContrastVisualizer
+              initialForeground={colorValue.hex}
+              initialBackground="#FFFFFF"
+            />
+          </section>
+        </div>
+      ) : null}
     </div>
   );
 }

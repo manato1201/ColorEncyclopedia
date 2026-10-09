@@ -1,5 +1,6 @@
 ---
 name: 空色(そらいろ)
+nameEn: "Sora-iro (Sky Blue)"
 category: 色相
 subcategory: 寒色
 colorValue:
