@@ -1,5 +1,6 @@
 ---
 name: フィボナッチ螺旋
+nameEn: "Fibonacci Spiral"
 category: 図形理論
 subcategory: 比例・分割
 summary: フィボナッチ数列を辺の長さとする正方形を並べて描く近似螺旋。黄金螺旋との違いがしばしば混同される。

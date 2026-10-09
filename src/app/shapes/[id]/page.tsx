@@ -36,6 +36,7 @@ export default async function ShapeDetailPage({
           {shape.category} ・ {shape.subcategory}
         </span>
         <h1 className={styles.title}>{shape.name}</h1>
+        <p className="subtitle">{shape.nameEn}</p>
       </header>
 
       <div className={styles.layout}>

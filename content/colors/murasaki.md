@@ -1,5 +1,6 @@
 ---
 name: 紫(むらさき)
+nameEn: "Murasaki (Purple)"
 category: 色相
 subcategory: 中性色
 colorValue:

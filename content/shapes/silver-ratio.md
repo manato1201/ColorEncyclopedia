@@ -1,5 +1,6 @@
 ---
 name: 白銀比(大和比)
+nameEn: "Silver Ratio (Yamato Ratio)"
 category: 図形理論
 subcategory: 比例・分割
 summary: 約1:1.414(1:√2)の比率。日本の建築・工芸で好まれ「大和比」とも呼ばれる。A判・B判用紙の比率でもある。

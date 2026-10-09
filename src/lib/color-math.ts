@@ -64,6 +64,57 @@ export function hexToHsv(hex: string): Hsv {
   return rgbToHsv(hexToRgb(hex));
 }
 
+export type Hsl = { h: number; s: number; l: number };
+export type Lab = { l: number; a: number; b: number };
+export type Lch = { l: number; c: number; h: number };
+
+/** sRGB → HSL。色相はHSVと同じ定義(0〜360°)、s/lは0〜100%の整数に丸める。 */
+export function rgbToHsl({ r, g, b }: Rgb): Hsl {
+  const { h } = rgbToHsv({ r, g, b });
+  const rn = r / 255;
+  const gn = g / 255;
+  const bn = b / 255;
+  const max = Math.max(rn, gn, bn);
+  const min = Math.min(rn, gn, bn);
+  const l = (max + min) / 2;
+  const d = max - min;
+  const s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+  return { h, s: Math.round(s * 100), l: Math.round(l * 100) };
+}
+
+export function hexToHsl(hex: string): Hsl {
+  return rgbToHsl(hexToRgb(hex));
+}
+
+/**
+ * sRGB(D65) → CIE L*a*b*。frontmatterのcolorValue.labと同じ式。丸めずに返す(表示側で桁を揃える)。
+ * 標準の変換行列とCIE定義の f(t) をそのまま使っており、独自の近似は含まない。
+ */
+export function rgbToLab({ r, g, b }: Rgb): Lab {
+  const rl = srgbChannelToLinear(r);
+  const gl = srgbChannelToLinear(g);
+  const bl = srgbChannelToLinear(b);
+  const x = rl * 0.4124 + gl * 0.3576 + bl * 0.1805;
+  const y = rl * 0.2126 + gl * 0.7152 + bl * 0.0722;
+  const z = rl * 0.0193 + gl * 0.1192 + bl * 0.9505;
+  const f = (t: number) => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
+  const fx = f(x / 0.95047);
+  const fy = f(y / 1.0);
+  const fz = f(z / 1.08883);
+  return { l: 116 * fy - 16, a: 500 * (fx - fy), b: 200 * (fy - fz) };
+}
+
+export function hexToLab(hex: string): Lab {
+  return rgbToLab(hexToRgb(hex));
+}
+
+/** Lab → LCh(円筒座標)。c=彩度に相当する距離√(a²+b²)、h=色相角(0〜360°)。 */
+export function labToLch({ l, a, b }: Lab): Lch {
+  const c = Math.sqrt(a * a + b * b);
+  const h = (Math.atan2(b, a) * 180) / Math.PI;
+  return { l, c, h: (h + 360) % 360 };
+}
+
 export function hsvToHex(hsv: Hsv): string {
   return rgbToHex(hsvToRgb({ ...hsv, h: ((hsv.h % 360) + 360) % 360 }));
 }

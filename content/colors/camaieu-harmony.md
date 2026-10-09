@@ -1,5 +1,6 @@
 ---
 name: カマイユ配色
+nameEn: "Camaïeu Harmony"
 category: 配色理論
 subcategory: その他技法
 examLevel: 1級

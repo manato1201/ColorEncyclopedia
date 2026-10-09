@@ -1,5 +1,6 @@
 ---
 name: 黄金螺旋(対数螺旋)
+nameEn: "Golden Spiral (Logarithmic Spiral)"
 category: 図形理論
 subcategory: 比例・分割
 summary: 中心からの距離が角度に対して指数関数的に増える螺旋。黄金比の矩形分割から連続的に導かれる理論上の曲線。

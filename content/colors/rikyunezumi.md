@@ -1,5 +1,6 @@
 ---
 name: 利休鼠(りきゅうねずみ)
+nameEn: "Rikyu-nezumi (Rikyu Gray)"
 category: 彩度
 subcategory: 低彩度
 colorValue:

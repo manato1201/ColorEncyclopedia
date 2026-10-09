@@ -1,9 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import styles from "./ShapeCompareView.module.css";
-import { useCompareSelection } from "./useCompareSelection";
+import styles from "./Compare.module.css";
+import { useCompareSelection, useIdsFromQuery, MAX_COMPARE_SELECTED } from "./useCompareSelection";
+import { ActionButton, ActionLink } from "@/components/hud/ActionLink";
+import { IconArrowRight, IconRefresh } from "@/components/icons/Icons";
+import { EntryList } from "@/components/explorer/EntryList";
+import { useEntryFilter } from "@/components/explorer/useEntryFilter";
 import { ShapeVisualizer, hasShapeVisualizer } from "@/components/visualizer/ShapeVisualizer";
+import { SHAPE_CATEGORY_ORDER, SHAPE_SUBCATEGORIES_BY_CATEGORY } from "@/lib/shape-categories";
 import type { ShapeMeta } from "@/lib/content/shapes";
 
 type ShapeCompareViewProps = {
@@ -11,99 +16,81 @@ type ShapeCompareViewProps = {
 };
 
 /**
- * ColorCompareView.tsxと同じ選択UIパターン(useCompareSelection)を図形側に転用したもの。
- * colorValueに相当する数値属性をshapesは持たないため(frontmatterはcategory/subcategory/summaryのみ)、
- * カテゴリ・概要の並列比較と、作図手順の可視化を見比べる構成にしている。
+ * 図形の比較。ColorCompareViewと同じ型(左=チップと一覧 / 中央=比較 / 下=操作)。
+ * 図形は数値属性を持たないため、カテゴリ・概要の並列比較と作図手順の可視化を見比べる構成。
  */
 export function ShapeCompareView({ shapes }: ShapeCompareViewProps) {
-  const { query, setQuery, selected, candidates, addItem, removeItem, isFull, MAX_SELECTED } =
-    useCompareSelection(shapes);
+  const initialIds = useIdsFromQuery();
+  const filter = useEntryFilter(shapes, SHAPE_CATEGORY_ORDER);
+  const { selected, isSelected, isFull, toggle, remove, clear } = useCompareSelection(shapes, initialIds);
+  const visualized = selected.filter((s) => hasShapeVisualizer(s.id));
+  const unsupported = selected.filter((s) => !hasShapeVisualizer(s.id));
 
   return (
     <div className={styles.view}>
-      <div className={styles.searchArea}>
-        <input
-          className={styles.searchInput}
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={
-            isFull
-              ? `最大${MAX_SELECTED}件まで選択済みです`
-              : "比較に追加する図形を検索(例: 黄金比、対称性)"
-          }
-          aria-label="比較に追加する図形を検索"
-          disabled={isFull}
-        />
-        {candidates.length > 0 ? (
-          <ul className={styles.candidateList}>
-            {candidates.map((s) => (
-              <li key={s.id}>
-                <button type="button" className={styles.candidateButton} onClick={() => addItem(s.id)}>
-                  <span className={styles.candidateName}>{s.name}</span>
-                  <span className={styles.candidateCategory}>{s.subcategory}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : null}
-      </div>
+      <header className={styles.header}>
+        <span className={styles.eyebrow}>COMPARE</span>
+        <h1 className={styles.title}>図形を比較</h1>
+        <p className="subtitle">Compare Shapes</p>
+        <p className={styles.lead}>
+          左の一覧から最大{MAX_COMPARE_SELECTED}件の図形を選ぶと、概要と作図手順を並べて確認できます。
+        </p>
+      </header>
 
-      {selected.length === 0 ? (
-        <div className={styles.emptyState}>上の検索欄から図形を追加すると、ここに比較表が表示されます。</div>
-      ) : (
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th className={styles.rowLabel}></th>
-                {selected.map((s) => (
-                  <th key={s.id} className={styles.colHeader}>
-                    <Link href={`/shapes/${s.id}`} className={styles.shapeLink}>
+      <div className={styles.explorer}>
+        <div className={styles.listPane}>
+          <EntryList
+            filter={filter}
+            categoryOrder={SHAPE_CATEGORY_ORDER}
+            subcategoriesByCategory={SHAPE_SUBCATEGORIES_BY_CATEGORY}
+            searchPlaceholder="図形名・英字名・カテゴリで検索"
+            visualizedLabel="可視化対応"
+            listLabel="比較に追加する図形の一覧"
+            isSelected={isSelected}
+            onSelect={toggle}
+            isDisabled={(shape) => isFull && !isSelected(shape.id)}
+            hint={isFull ? `(最大${MAX_COMPARE_SELECTED}件まで選択済み)` : `(${selected.length}/${MAX_COMPARE_SELECTED}件を選択中)`}
+            renderValue={(shape) => (shape.hasVisualizer ? "可視化" : "")}
+          />
+        </div>
+
+        <div className={styles.stagePane}>
+          {selected.length === 0 ? (
+            <div className={styles.emptyState}>左の一覧から図形を選ぶと、ここに比較が表示されます。</div>
+          ) : (
+            <ul className={styles.cards}>
+              {selected.map((s) => (
+                <li key={s.id} className={styles.card}>
+                  <div className={styles.cardHead}>
+                    <Link href={`/shapes/${s.id}`} className={styles.cardName}>
                       {s.name}
                     </Link>
                     <button
                       type="button"
                       className={styles.removeButton}
-                      onClick={() => removeItem(s.id)}
+                      onClick={() => remove(s.id)}
                       aria-label={`${s.name}を比較から外す`}
                     >
-                      ✕
+                      ✕ 外す
                     </button>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th className={styles.rowLabel}>カテゴリ</th>
-                {selected.map((s) => (
-                  <td key={s.id}>
+                  </div>
+                  <span className="subtitle">{s.nameEn}</span>
+                  <span className={styles.cardCategory}>
                     {s.category} ・ {s.subcategory}
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <th className={styles.rowLabel}>概要</th>
-                {selected.map((s) => (
-                  <td key={s.id} className={styles.summaryCell}>
-                    {s.summary}
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      )}
+                  </span>
+                  <p className={styles.cardSummary}>{s.summary}</p>
+                </li>
+              ))}
+            </ul>
+          )}
 
-      {selected.length > 0 ? (
-        <div className={styles.visualSection}>
-          <h2 className={styles.visualSectionLabel}>VISUALIZE 作図手順を見比べる</h2>
-          {selected.some((s) => hasShapeVisualizer(s.id)) ? (
-            <div className={styles.visualGrid}>
-              {selected
-                .filter((s) => hasShapeVisualizer(s.id))
-                .map((s) => (
+          {visualized.length > 0 ? (
+            <section className={styles.section} aria-labelledby="cmp-shape-visual">
+              <h2 id="cmp-shape-visual" className={styles.sectionLabel}>
+                VISUALIZE 作図手順を見比べる
+              </h2>
+              <div className={styles.visualGrid}>
+                {visualized.map((s) => (
                   <div key={s.id} className={styles.visualPanel}>
                     <Link href={`/shapes/${s.id}`} className={styles.visualPanelTitle}>
                       {s.name}
@@ -111,17 +98,23 @@ export function ShapeCompareView({ shapes }: ShapeCompareViewProps) {
                     <ShapeVisualizer shapeId={s.id} />
                   </div>
                 ))}
-            </div>
-          ) : (
-            <div className={styles.emptyState}>選択した図形はまだ可視化に対応していません。</div>
-          )}
-          {selected.some((s) => !hasShapeVisualizer(s.id)) ? (
-            <p className={styles.visualNote}>
-              可視化未対応: {selected.filter((s) => !hasShapeVisualizer(s.id)).map((s) => s.name).join("、")}
-            </p>
+              </div>
+              {unsupported.length > 0 ? (
+                <p className={styles.visualNote}>可視化未対応: {unsupported.map((s) => s.name).join("、")}</p>
+              ) : null}
+            </section>
           ) : null}
+
+          <div className={styles.actions}>
+            <ActionButton icon={<IconRefresh />} onClick={clear} disabled={selected.length === 0}>
+              選択をクリア
+            </ActionButton>
+            <ActionLink href="/compare" icon={<IconArrowRight />}>
+              色を比較する
+            </ActionLink>
+          </div>
         </div>
-      ) : null}
+      </div>
     </div>
   );
 }

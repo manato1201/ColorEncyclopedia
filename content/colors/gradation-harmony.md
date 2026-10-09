@@ -1,5 +1,6 @@
 ---
 name: グラデーション配色
+nameEn: "Gradation Harmony"
 category: 配色理論
 subcategory: その他技法
 examLevel: 2級

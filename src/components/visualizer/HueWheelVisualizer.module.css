@@ -5,6 +5,12 @@
   align-items: center;
 }
 
+/* 色見本(色相環)の表示領域。テーマ(ライト/ダーク)で変えない中立灰にする */
+.stage {
+  padding: var(--space-6);
+  background: var(--swatch-stage);
+}
+
 .stageWrap {
   position: relative;
   width: 260px;
@@ -25,12 +31,12 @@
 
 .marker {
   fill: none;
-  stroke: var(--color-ink);
+  stroke: var(--swatch-ink);
   stroke-width: 2.5;
 }
 
 .markerCore {
-  fill: #fff;
+  fill: var(--swatch-paper);
 }
 
 .probeMarker {

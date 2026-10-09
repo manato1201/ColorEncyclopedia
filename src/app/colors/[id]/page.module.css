@@ -21,10 +21,16 @@
 
 .header {
   display: flex;
-  align-items: center;
-  gap: var(--space-4);
+  align-items: flex-end;
+  gap: var(--space-8);
   flex-wrap: wrap;
   margin-bottom: var(--space-8);
+}
+
+.badges {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
 }
 
 .headerText {
@@ -60,7 +66,7 @@
 
 .dataGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
   gap: var(--space-4);
   width: 100%;
 }
@@ -74,10 +80,12 @@
   margin-bottom: var(--space-1);
 }
 
+/* 値は等幅・固定幅の半角で桁を揃える(.numと併用。空白を詰めない) */
 .dataItem dd {
-  font-family: var(--font-body);
   font-size: var(--text-body-sm);
   color: var(--accent-current);
+  white-space: pre;
+  overflow-x: auto;
 }
 
 .sectionLabel {
@@ -103,14 +111,7 @@
 }
 
 .visualPane {
-  position: sticky;
-  top: var(--space-6);
-}
-
-@media (max-width: 768px) {
-  .visualPane {
-    position: static;
-  }
+  min-width: 0;
 }
 
 .placeholder {
@@ -122,10 +123,18 @@
   text-align: center;
 }
 
-.contrastBlock {
-  margin-top: var(--space-8);
-  padding-top: var(--space-6);
+/* 方式比較・コントラスト確認は横幅いっぱいの段に置く */
+.tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: var(--space-8);
+  margin-top: var(--space-12);
+  padding-top: var(--space-8);
   border-top: 1px solid var(--color-line);
+}
+
+.tool {
+  min-width: 0;
 }
 
 .explainPane {

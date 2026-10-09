@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Zen_Kaku_Gothic_New } from "next/font/google";
 import "./globals.css";
 import { AppShell } from "@/components/hud/AppShell";
 import { ThemeFromColorProvider } from "@/components/theme/ThemeFromColorProvider";
+import { THEME_INIT_SCRIPT } from "@/lib/theme/theme-mode";
 
 // OFF+BRANDスタイルリファレンスの「単一の幾何学サンセリフ書体のみを使う」原則に合わせ、
 // 見出し・本文・ラベルすべてをこの1書体(400/700の2ウェイトのみ)でまかなう。
@@ -24,8 +26,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className={zenKakuGothicNew.variable}>
+    // data-theme は描画前の初期化スクリプトが付けるため、サーバー出力との属性差はsuppressHydrationWarningで許容する
+    <html lang="ja" className={zenKakuGothicNew.variable} suppressHydrationWarning>
       <body>
+        <Script id="theme-init" strategy="beforeInteractive">
+          {THEME_INIT_SCRIPT}
+        </Script>
         <ThemeFromColorProvider>
           <AppShell>{children}</AppShell>
         </ThemeFromColorProvider>

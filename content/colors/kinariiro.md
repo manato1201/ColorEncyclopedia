@@ -1,5 +1,6 @@
 ---
 name: 生成り色(きなりいろ)
+nameEn: "Kinari-iro (Ecru)"
 category: 明度
 subcategory: 高明度
 colorValue:

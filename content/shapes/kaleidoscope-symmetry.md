@@ -1,5 +1,6 @@
 ---
 name: 万華鏡対称(二面体群)
+nameEn: "Kaleidoscope Symmetry (Dihedral Group)"
 category: 図形理論
 subcategory: 対称性
 summary: 複数の鏡映(線対称)と回転を組み合わせた対称性。万華鏡の中で像が反射を繰り返して作る、放射状に広がる模様の数学的な仕組み。

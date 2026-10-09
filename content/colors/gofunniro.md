@@ -1,5 +1,6 @@
 ---
 name: 胡粉色(ごふんいろ)
+nameEn: "Gofun-iro (Shell White)"
 category: 明度
 subcategory: 高明度
 colorValue:

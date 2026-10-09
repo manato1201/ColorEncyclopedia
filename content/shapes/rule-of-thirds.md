@@ -1,5 +1,6 @@
 ---
 name: 三分割法
+nameEn: "Rule of Thirds"
 category: 図形理論
 subcategory: 比例・分割
 summary: 画面を縦横3等分し、その交点付近に主題を配置する構図法。写真・デザインで広く使われる実務的な比例分割。

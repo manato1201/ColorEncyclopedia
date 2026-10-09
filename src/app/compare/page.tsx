@@ -1,19 +1,13 @@
-import Link from "next/link";
+import { Suspense } from "react";
 import { ColorCompareView } from "@/components/compare/ColorCompareView";
 import { colorLoader } from "@/lib/content/colors";
-import styles from "./page.module.css";
 
 export default function ComparePage() {
   const colors = colorLoader.getAllMeta();
+  // ?ids= を読むクライアント部分だけをSuspenseの内側に置き、それ以外は静的に生成する
   return (
-    <div>
-      <div className={styles.switchBar}>
-        <span className={styles.switchActive}>色を比較</span>
-        <Link href="/compare/shapes" className={styles.switchLink}>
-          図形を比較 →
-        </Link>
-      </div>
+    <Suspense fallback={null}>
       <ColorCompareView colors={colors} />
-    </div>
+    </Suspense>
   );
 }

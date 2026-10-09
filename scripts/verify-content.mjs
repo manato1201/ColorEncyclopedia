@@ -8,12 +8,21 @@
 // 3. examLevel が色彩検定の実在する級(1級/2級/3級/UC級)のいずれかであること
 // 4. shapes側エントリに colorValue/examLevel が混入していないこと
 // 5. category/subcategory が対応する CATEGORY_TAXONOMY に存在する組み合わせであること
+// 6. nameEn(見出しの下に添える英字の副題)が全エントリにあること
+// 7. colorValue.hsv / colorValue.lab が hex から再計算した値と一致すること(転記ミスの検出)
+// 8. 検定問題(src/data/exam-questions.ts)のid重複・選択肢・答えの範囲・explanationRefの解決
 
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
 import { COLOR_CATEGORY_TAXONOMY } from "../src/lib/color-categories.ts";
 import { SHAPE_CATEGORY_TAXONOMY } from "../src/lib/shape-categories.ts";
+import { hexToHsv, hexToLab } from "../src/lib/color-math.ts";
+import { EXAM_QUESTIONS } from "../src/data/exam-questions.ts";
+
+/** frontmatterのhsvは整数丸め(±1)、labは小数1桁丸めなので、再計算値との許容差を持たせる。 */
+const HSV_TOLERANCE = 1;
+const LAB_TOLERANCE = 0.2;
 
 const HEX_PATTERN = /^#[0-9A-Fa-f]{6}$/;
 const VALID_EXAM_LEVELS = new Set(["1級", "2級", "3級", "UC級"]);
@@ -44,8 +53,8 @@ function verifyColors() {
     const raw = fs.readFileSync(path.join(dir, file), "utf8");
     const { data } = matter(raw);
 
-    if (!data.name || !data.category || !data.subcategory || !data.summary) {
-      fail(file, "name/category/subcategory/summary のいずれかが欠落している");
+    if (!data.name || !data.nameEn || !data.category || !data.subcategory || !data.summary) {
+      fail(file, "name/nameEn/category/subcategory/summary のいずれかが欠落している");
       continue;
     }
 
@@ -80,6 +89,35 @@ function verifyColors() {
       if (!lab || !isFiniteNumber(lab.l) || !isFiniteNumber(lab.a) || !isFiniteNumber(lab.b) || lab.l < 0 || lab.l > 100) {
         fail(file, "colorValue.lab の値が不正(l:0-100、a/bは数値である必要がある)");
       }
+
+      // hexから再計算した値と突き合わせる(型・範囲が正しくても、値の転記ミスは検出できないため)
+      if (typeof hex === "string" && HEX_PATTERN.test(hex)) {
+        if (hsv && isFiniteNumber(hsv.h) && isFiniteNumber(hsv.s) && isFiniteNumber(hsv.v)) {
+          const calc = hexToHsv(hex);
+          // 色相は0°と360°が同一の色なので、円環上の差で比べる
+          const hueDiff = Math.min(Math.abs(calc.h - hsv.h), 360 - Math.abs(calc.h - hsv.h));
+          if (
+            hueDiff > HSV_TOLERANCE ||
+            Math.abs(calc.s - hsv.s) > HSV_TOLERANCE ||
+            Math.abs(calc.v - hsv.v) > HSV_TOLERANCE
+          ) {
+            fail(file, `colorValue.hsv が hex(${hex})からの再計算値 H${calc.h} S${calc.s} V${calc.v} と一致しない`);
+          }
+        }
+        if (lab && isFiniteNumber(lab.l) && isFiniteNumber(lab.a) && isFiniteNumber(lab.b)) {
+          const calc = hexToLab(hex);
+          if (
+            Math.abs(calc.l - lab.l) > LAB_TOLERANCE ||
+            Math.abs(calc.a - lab.a) > LAB_TOLERANCE ||
+            Math.abs(calc.b - lab.b) > LAB_TOLERANCE
+          ) {
+            fail(
+              file,
+              `colorValue.lab が hex(${hex})からの再計算値 L${calc.l.toFixed(1)} a${calc.a.toFixed(1)} b${calc.b.toFixed(1)} と一致しない`,
+            );
+          }
+        }
+      }
     }
   }
 
@@ -95,8 +133,8 @@ function verifyShapes() {
     const raw = fs.readFileSync(path.join(dir, file), "utf8");
     const { data } = matter(raw);
 
-    if (!data.name || !data.category || !data.subcategory || !data.summary) {
-      fail(file, "name/category/subcategory/summary のいずれかが欠落している");
+    if (!data.name || !data.nameEn || !data.category || !data.subcategory || !data.summary) {
+      fail(file, "name/nameEn/category/subcategory/summary のいずれかが欠落している");
       continue;
     }
 
@@ -116,8 +154,36 @@ function verifyShapes() {
   console.log(`shapes: ${files.length}件を検証`);
 }
 
+function verifyExamQuestions() {
+  const colorIds = new Set(
+    fs
+      .readdirSync(path.join(process.cwd(), "content", "colors"))
+      .filter((f) => f.endsWith(".md"))
+      .map((f) => f.replace(/\.md$/, "")),
+  );
+  const seen = new Set();
+
+  for (const q of EXAM_QUESTIONS) {
+    const label = `exam-questions:${q.id}`;
+    if (seen.has(q.id)) fail(label, "idが重複している");
+    seen.add(q.id);
+    if (!VALID_EXAM_LEVELS.has(q.level)) fail(label, `level "${q.level}" は実在する級ではない`);
+    if (!Array.isArray(q.choices) || q.choices.length < 2) fail(label, "選択肢が2つ未満");
+    else if (!Number.isInteger(q.answerIndex) || q.answerIndex < 0 || q.answerIndex >= q.choices.length) {
+      fail(label, `answerIndex ${q.answerIndex} が選択肢の範囲外`);
+    }
+    if (!colorIds.has(q.explanationRef)) fail(label, `explanationRef "${q.explanationRef}" が content/colors に存在しない`);
+    for (const g of q.glossary ?? []) {
+      if (!q.questionText.includes(g.term)) fail(label, `glossary の用語 "${g.term}" が問題文に含まれない`);
+    }
+  }
+
+  console.log(`exam-questions: ${EXAM_QUESTIONS.length}問を検証`);
+}
+
 verifyColors();
 verifyShapes();
+verifyExamQuestions();
 
 if (errors > 0) {
   console.error(`${errors}件のfrontmatter検証エラー`);

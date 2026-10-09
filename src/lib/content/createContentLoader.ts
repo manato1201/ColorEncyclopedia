@@ -5,6 +5,8 @@ import { marked } from "marked";
 
 export interface ContentFrontmatterBase {
   name: string;
+  /** 見出しの下に灰色で添える英字の副題(IMPROVEMENT_DESIGN_2026-10 §3「見出し+副題の2段」)。 */
+  nameEn: string;
   category: string;
   subcategory: string;
   summary: string;

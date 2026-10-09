@@ -1,5 +1,6 @@
 ---
 name: ドミナントカラー配色
+nameEn: "Dominant Color Harmony"
 category: 配色理論
 subcategory: その他技法
 examLevel: 2級

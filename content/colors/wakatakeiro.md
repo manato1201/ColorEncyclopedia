@@ -1,5 +1,6 @@
 ---
 name: 若竹色(わかたけいろ)
+nameEn: "Wakatake-iro (Young Bamboo Green)"
 category: 色相
 subcategory: 中性色
 colorValue:

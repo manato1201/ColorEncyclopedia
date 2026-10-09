@@ -70,8 +70,8 @@
 }
 
 .incorrect {
-  border-color: #a4402f;
-  color: #a4402f;
+  border-color: var(--color-negative);
+  color: var(--color-negative);
 }
 
 .result {
@@ -85,4 +85,116 @@
   color: var(--accent-current);
   text-decoration: underline;
   text-underline-offset: 0.15em;
+}
+
+/* ---- 正答数(フリップ数字) ---- */
+.score {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  margin-bottom: var(--space-6);
+  padding: var(--space-3) 0;
+  background: var(--color-parchment);
+  border-bottom: 1px solid var(--color-line);
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  color: var(--color-ink-muted);
+}
+
+.scoreItem {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.scoreItem :global(.num) {
+  color: var(--accent-current);
+}
+
+/* ---- 問題へのリンク(#q-…)で来たとき ---- */
+.question {
+  position: relative;
+  scroll-margin-top: 4.5rem;
+}
+
+.question:target {
+  outline: 2px solid var(--accent-current);
+  outline-offset: 2px;
+}
+
+/* ---- 用語の「R」バッジ ---- */
+.term {
+  white-space: nowrap;
+  border-bottom: 1px dotted var(--color-ink-muted);
+}
+
+.rBadge,
+.rBadgeStatic {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-left: 0.25rem;
+  border: 1px solid var(--accent-current);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--accent-current);
+  font-family: var(--font-num, var(--font-mono));
+  font-size: 0.625rem;
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  vertical-align: 0.1em;
+}
+
+.rBadge {
+  cursor: pointer;
+}
+
+.rBadge:hover,
+.rBadge[aria-expanded="true"],
+.rBadge:focus-visible {
+  background: var(--accent-current);
+  color: var(--on-accent);
+}
+
+.rBadgeStatic {
+  margin: 0 0.5rem 0 0;
+}
+
+.glossaryNote {
+  margin-bottom: var(--space-4);
+  padding: var(--space-2) var(--space-3);
+  border-left: 3px solid var(--accent-current);
+  background: var(--color-stone);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+}
+
+/* ---- 選択肢を押したときの波紋(DOMへ動的に追加される) ---- */
+.choiceButton {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.25;
+  pointer-events: none;
+  transform: scale(0);
+  animation: ripple 0.6s ease-out forwards;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
 }

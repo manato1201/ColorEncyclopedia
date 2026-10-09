@@ -1,5 +1,6 @@
 ---
 name: 紺色(こんいろ)
+nameEn: "Kon-iro (Navy)"
 category: 色相
 subcategory: 寒色
 colorValue:

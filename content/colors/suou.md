@@ -1,5 +1,6 @@
 ---
 name: 蘇芳(すおう)
+nameEn: "Suō (Sappanwood Red)"
 category: 色相
 subcategory: 暖色
 colorValue:

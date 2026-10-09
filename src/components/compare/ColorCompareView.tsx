@@ -1,27 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import styles from "./ColorCompareView.module.css";
-import { useCompareSelection } from "./useCompareSelection";
+import styles from "./Compare.module.css";
+import { useCompareSelection, useIdsFromQuery, MAX_COMPARE_SELECTED } from "./useCompareSelection";
 import { ExamLevelBadge } from "@/components/hud/ExamLevelBadge";
 import { ColorSwatch } from "@/components/hud/ColorSwatch";
+import { ActionButton, ActionLink } from "@/components/hud/ActionLink";
+import { IconArrowRight, IconRefresh } from "@/components/icons/Icons";
+import { EntryList } from "@/components/explorer/EntryList";
+import { useEntryFilter } from "@/components/explorer/useEntryFilter";
 import { ColorVisualizer, hasColorVisualizer } from "@/components/visualizer/ColorVisualizer";
-import { contrastRatio, WCAG_AA_NORMAL, WCAG_AAA_NORMAL } from "@/lib/color-math";
+import { ColorSystemsVisualizer } from "@/components/visualizer/ColorSystemsVisualizer";
+import { contrastRatio, hexToRgb, WCAG_AA_NORMAL, WCAG_AAA_NORMAL } from "@/lib/color-math";
+import { formatHsv, formatRgb } from "@/lib/color-format";
+import { COLOR_CATEGORY_ORDER, COLOR_SUBCATEGORIES_BY_CATEGORY } from "@/lib/color-categories";
 import type { ColorMeta } from "@/lib/content/colors";
 
 type ColorCompareViewProps = {
   colors: ColorMeta[];
 };
 
+/** HEX値でも検索できるようにする。参照が安定するようモジュール定数にする。 */
+const colorSearchFields = (color: ColorMeta): string[] =>
+  color.colorValue ? [color.colorValue.hex, color.colorValue.hex.replace("#", "")] : [];
+
 /**
- * The-Algorithm-IllustratedのCompareView.tsxの直接移植。
- * 検索で候補を絞り込みつつ、最大4件まで選択して並べて比較する(選択状態の管理はuseCompareSelectionに集約)。
- * colorValueを持つ2件以上を選ぶと、各ペアのWCAGコントラスト比をカード間に表示する
+ * 色の比較。左=チップと一覧(行クリックで追加/解除、最大4件)、中央=並べた比較、下=操作。
+ * colorValueを持つ2件以上を選ぶと、各ペアのWCAGコントラスト比を表示する
  * (計算式はderiveThemeFromColor/ContrastVisualizerとcolor-math.tsを共有)。
+ * カタログの「比較に追加」から ?ids= で渡された色を最初から選択済みにする。
  */
 export function ColorCompareView({ colors }: ColorCompareViewProps) {
-  const { query, setQuery, selected, candidates, addItem, removeItem, isFull, MAX_SELECTED } =
-    useCompareSelection(colors);
+  const initialIds = useIdsFromQuery();
+  const filter = useEntryFilter(colors, COLOR_CATEGORY_ORDER, { extraSearchFields: colorSearchFields });
+  const { selected, isSelected, isFull, toggle, remove, clear } = useCompareSelection(colors, initialIds);
 
   const withColorValue = selected.filter((c) => c.colorValue);
   const pairs: [ColorMeta, ColorMeta][] = [];
@@ -30,135 +42,132 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
       pairs.push([withColorValue[i], withColorValue[j]]);
     }
   }
+  const visualized = selected.filter((c) => c.colorValue && hasColorVisualizer(c.id));
 
   return (
     <div className={styles.view}>
-      <div className={styles.searchArea}>
-        <input
-          className={styles.searchInput}
-          type="search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={
-            isFull
-              ? `最大${MAX_SELECTED}件まで選択済みです`
-              : "比較に追加する色を検索(例: 暖色、朱色)"
-          }
-          aria-label="比較に追加する色を検索"
-          disabled={isFull}
-        />
-        {candidates.length > 0 ? (
-          <ul className={styles.candidateList}>
-            {candidates.map((c) => (
-              <li key={c.id}>
-                <button type="button" className={styles.candidateButton} onClick={() => addItem(c.id)}>
-                  {c.colorValue ? <ColorSwatch hex={c.colorValue.hex} size={14} /> : null}
-                  <span className={styles.candidateName}>{c.name}</span>
-                  <span className={styles.candidateCategory}>{c.category}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : null}
-      </div>
+      <header className={styles.header}>
+        <span className={styles.eyebrow}>COMPARE</span>
+        <h1 className={styles.title}>色を比較</h1>
+        <p className="subtitle">Compare Colors</p>
+        <p className={styles.lead}>
+          左の一覧から最大{MAX_COMPARE_SELECTED}件の色を選ぶと、見本・数値・コントラスト比を並べて確認できます。
+        </p>
+      </header>
 
-      {selected.length === 0 ? (
-        <div className={styles.emptyState}>上の検索欄から色を追加すると、ここに比較表が表示されます。</div>
-      ) : (
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th className={styles.rowLabel}></th>
-                {selected.map((c) => (
-                  <th key={c.id} className={styles.colHeader}>
-                    {c.colorValue ? <ColorSwatch hex={c.colorValue.hex} size={28} /> : null}
-                    <Link href={`/colors/${c.id}`} className={styles.colorLink}>
-                      {c.name}
-                    </Link>
+      <div className={styles.explorer}>
+        <div className={styles.listPane}>
+          <EntryList
+            filter={filter}
+            categoryOrder={COLOR_CATEGORY_ORDER}
+            subcategoriesByCategory={COLOR_SUBCATEGORIES_BY_CATEGORY}
+            searchPlaceholder="色名・英字名・HEX・カテゴリで検索"
+            visualizedLabel="可視化対応"
+            listLabel="比較に追加する色の一覧"
+            isSelected={isSelected}
+            onSelect={toggle}
+            isDisabled={(color) => isFull && !isSelected(color.id)}
+            hint={isFull ? `(最大${MAX_COMPARE_SELECTED}件まで選択済み)` : `(${selected.length}/${MAX_COMPARE_SELECTED}件を選択中)`}
+            renderLead={(color) => (color.colorValue ? <ColorSwatch hex={color.colorValue.hex} size={14} /> : null)}
+            renderValue={(color) => color.colorValue?.hex ?? ""}
+          />
+        </div>
+
+        <div className={styles.stagePane}>
+          <p className={styles.notice}>
+            画面上の色は環境により異なります(ディスプレイの設定・周囲の明るさ・見本の周りの色で見え方が変わります)。
+          </p>
+
+          {selected.length === 0 ? (
+            <div className={styles.emptyState}>左の一覧から色を選ぶと、ここに比較が表示されます。</div>
+          ) : (
+            <ul className={styles.cards}>
+              {selected.map((c) => (
+                <li key={c.id} className={styles.card}>
+                  <div className={styles.cardHead}>
+                    {c.colorValue ? <ColorSwatch hex={c.colorValue.hex} size={40} /> : <span />}
                     <button
                       type="button"
                       className={styles.removeButton}
-                      onClick={() => removeItem(c.id)}
+                      onClick={() => remove(c.id)}
                       aria-label={`${c.name}を比較から外す`}
                     >
-                      ✕
+                      ✕ 外す
                     </button>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th className={styles.rowLabel}>カテゴリ</th>
-                {selected.map((c) => (
-                  <td key={c.id}>
+                  </div>
+                  <Link href={`/colors/${c.id}`} className={styles.cardName}>
+                    {c.name}
+                  </Link>
+                  <span className="subtitle">{c.nameEn}</span>
+                  <span className={styles.cardCategory}>
                     {c.category} ・ {c.subcategory}
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <th className={styles.rowLabel}>検定級</th>
-                {selected.map((c) => (
-                  <td key={c.id}>{c.examLevel ? <ExamLevelBadge level={c.examLevel} /> : "—"}</td>
-                ))}
-              </tr>
-              <tr>
-                <th className={styles.rowLabel}>HEX / HSV</th>
-                {selected.map((c) => (
-                  <td key={c.id} className={styles.mono}>
-                    {c.colorValue
-                      ? `${c.colorValue.hex} / H${c.colorValue.hsv.h}° S${c.colorValue.hsv.s}% V${c.colorValue.hsv.v}%`
-                      : "—"}
-                  </td>
-                ))}
-              </tr>
-              <tr>
-                <th className={styles.rowLabel}>概要</th>
-                {selected.map((c) => (
-                  <td key={c.id} className={styles.summaryCell}>
-                    {c.summary}
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {pairs.length > 0 ? (
-        <div className={styles.contrastSection}>
-          <h2 className={styles.sectionLabel}>CONTRAST 各ペアのWCAGコントラスト比</h2>
-          <ul className={styles.contrastList}>
-            {pairs.map(([a, b]) => {
-              const ratio = contrastRatio(a.colorValue!.hex, b.colorValue!.hex);
-              const aa = ratio >= WCAG_AA_NORMAL;
-              const aaa = ratio >= WCAG_AAA_NORMAL;
-              return (
-                <li key={`${a.id}-${b.id}`} className={styles.contrastRow}>
-                  <ColorSwatch hex={a.colorValue!.hex} size={16} />
-                  <span>{a.name}</span>
-                  <span className={styles.contrastX}>×</span>
-                  <ColorSwatch hex={b.colorValue!.hex} size={16} />
-                  <span>{b.name}</span>
-                  <span className={styles.contrastRatio}>{ratio.toFixed(2)} : 1</span>
-                  <span className={aa ? styles.pass : styles.fail}>{aa ? "AA適合" : "AA未達"}</span>
-                  <span className={aaa ? styles.pass : styles.fail}>{aaa ? "AAA適合" : "AAA未達"}</span>
+                  </span>
+                  {c.examLevel ? <ExamLevelBadge level={c.examLevel} /> : null}
+                  {c.colorValue ? (
+                    <div className={`num ${styles.cardValues}`}>
+                      <span>{c.colorValue.hex}</span>
+                      <span>{formatRgb(hexToRgb(c.colorValue.hex))}</span>
+                      <span>{formatHsv(c.colorValue.hsv)}</span>
+                    </div>
+                  ) : null}
+                  <p className={styles.cardSummary}>{c.summary}</p>
                 </li>
-              );
-            })}
-          </ul>
-        </div>
-      ) : null}
+              ))}
+            </ul>
+          )}
 
-      {selected.length > 0 ? (
-        <div className={styles.visualSection}>
-          <h2 className={styles.visualSectionLabel}>VISUALIZE 色相環・配色理論を見比べる</h2>
-          {selected.some((c) => c.colorValue && hasColorVisualizer(c.id)) ? (
-            <div className={styles.visualGrid}>
-              {selected
-                .filter((c) => c.colorValue && hasColorVisualizer(c.id))
-                .map((c) => (
+          {pairs.length > 0 ? (
+            <section className={styles.section} aria-labelledby="cmp-contrast">
+              <h2 id="cmp-contrast" className={styles.sectionLabel}>
+                CONTRAST 各ペアのWCAGコントラスト比
+              </h2>
+              <ul className={styles.pairList}>
+                {pairs.map(([a, b]) => {
+                  const ratio = contrastRatio(a.colorValue!.hex, b.colorValue!.hex);
+                  const aa = ratio >= WCAG_AA_NORMAL;
+                  const aaa = ratio >= WCAG_AAA_NORMAL;
+                  return (
+                    <li key={`${a.id}-${b.id}`} className={styles.pairRow}>
+                      <ColorSwatch hex={a.colorValue!.hex} size={14} />
+                      <span>{a.name}</span>
+                      <span className={styles.pairX}>×</span>
+                      <ColorSwatch hex={b.colorValue!.hex} size={14} />
+                      <span>{b.name}</span>
+                      <span className={`num ${styles.pairRatio}`}>{ratio.toFixed(2)} : 1</span>
+                      <span className={aa ? styles.pass : styles.fail}>{aa ? "AA適合" : "AA未達"}</span>
+                      <span className={aaa ? styles.pass : styles.fail}>{aaa ? "AAA適合" : "AAA未達"}</span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          ) : null}
+
+          {withColorValue.length > 0 ? (
+            <section className={styles.section} aria-labelledby="cmp-systems">
+              <h2 id="cmp-systems" className={styles.sectionLabel}>
+                SYSTEMS 同じ色を別の方式で並べる
+              </h2>
+              <div className={styles.visualGrid}>
+                {withColorValue.map((c) => (
+                  <div key={c.id} className={styles.visualPanel}>
+                    <Link href={`/colors/${c.id}`} className={styles.visualPanelTitle}>
+                      {c.name}
+                    </Link>
+                    <ColorSystemsVisualizer hex={c.colorValue!.hex} />
+                  </div>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {visualized.length > 0 ? (
+            <section className={styles.section} aria-labelledby="cmp-visual">
+              <h2 id="cmp-visual" className={styles.sectionLabel}>
+                VISUALIZE 色相環・配色理論を見比べる
+              </h2>
+              <div className={styles.visualGrid}>
+                {visualized.map((c) => (
                   <div key={c.id} className={styles.visualPanel}>
                     <Link href={`/colors/${c.id}`} className={styles.visualPanelTitle}>
                       {c.name}
@@ -166,12 +175,20 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
                     <ColorVisualizer hex={c.colorValue!.hex} />
                   </div>
                 ))}
-            </div>
-          ) : (
-            <div className={styles.emptyState}>選択した色はまだ可視化に対応していません。</div>
-          )}
+              </div>
+            </section>
+          ) : null}
+
+          <div className={styles.actions}>
+            <ActionButton icon={<IconRefresh />} onClick={clear} disabled={selected.length === 0}>
+              選択をクリア
+            </ActionButton>
+            <ActionLink href="/compare/shapes" icon={<IconArrowRight />}>
+              図形を比較する
+            </ActionLink>
+          </div>
         </div>
-      ) : null}
+      </div>
     </div>
   );
 }

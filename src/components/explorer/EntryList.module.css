@@ -1,0 +1,204 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.searchBar {
+  width: 100%;
+}
+
+.searchInput {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-interactive);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  transition: border-color 0.15s ease;
+}
+
+.searchInput::placeholder {
+  color: var(--color-ink-muted);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--accent-current);
+}
+
+.chipRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-interactive);
+  padding: var(--space-2) var(--space-4);
+  background: transparent;
+  color: var(--color-ink-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.chip:hover {
+  border-color: var(--accent-current);
+  color: var(--accent-current);
+}
+
+.chipSub {
+  padding: var(--space-1) var(--space-3);
+}
+
+.chipActive {
+  background: var(--accent-current);
+  border-color: var(--accent-current);
+  color: var(--on-accent);
+}
+
+.chipActive:hover {
+  color: var(--on-accent);
+}
+
+.chipCount {
+  font-size: 0.6875rem;
+  opacity: 0.7;
+}
+
+.status {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.hint {
+  margin-left: var(--space-3);
+}
+
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.groupHeading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caption);
+  color: var(--accent-current);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.groupCount {
+  font-size: var(--text-caption);
+  font-weight: var(--weight-regular);
+  color: var(--color-ink-muted);
+}
+
+.rows {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 行 = 見本の丸 + 名前 + 灰色の英字副題 + 値(右揃え・等幅) */
+.row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-3);
+  border: none;
+  border-left: 3px solid transparent;
+  border-bottom: 1px solid var(--color-line);
+  background: transparent;
+  color: var(--color-ink);
+  text-align: left;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.row:hover:not(:disabled) {
+  background: var(--color-stone);
+}
+
+.row:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.rowSelected {
+  border-left-color: var(--accent-current);
+  background: var(--color-paper);
+}
+
+.rowLead {
+  display: inline-flex;
+  min-width: 0;
+}
+
+.rowLead:empty {
+  display: none;
+}
+
+.rowText {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.rowName {
+  font-size: var(--text-body-sm);
+  color: var(--color-ink);
+  overflow-wrap: anywhere;
+}
+
+.rowSubtitle {
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+  overflow-wrap: anywhere;
+}
+
+.rowValue {
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.emptyState {
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  padding: var(--space-8) 0;
+  text-align: center;
+  font-family: var(--font-body);
+  color: var(--color-ink-muted);
+}

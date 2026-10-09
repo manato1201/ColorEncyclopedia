@@ -1,5 +1,6 @@
 ---
 name: スプリットコンプリメンタリ配色
+nameEn: "Split-Complementary Harmony"
 category: 配色理論
 subcategory: スプリットコンプリメンタリ
 examLevel: 1級

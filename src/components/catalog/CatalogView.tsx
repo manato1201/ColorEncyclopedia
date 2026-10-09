@@ -1,427 +1,117 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
-import Link from "next/link";
+import { useRef, useState, type ReactNode } from "react";
 import styles from "./CatalogView.module.css";
-import { ThemeSphere } from "@/components/theme/ThemeSphere";
-import { ConcentricCircles } from "@/components/hud/ConcentricCircles";
-import { GlitchText } from "@/components/hud/GlitchText";
+import { EntryList } from "@/components/explorer/EntryList";
+import { useEntryFilter, type Entry } from "@/components/explorer/useEntryFilter";
 
-/** ヒーロー球のまわりに散らす小さなスウォッチの位置プリセット(球体を囲む緩いリング状に配置)。 */
-const ORBIT_SLOTS = [
-  { top: "4%", left: "6%" },
-  { top: "12%", left: "78%" },
-  { top: "46%", left: "-6%" },
-  { top: "58%", left: "92%" },
-  { top: "82%", left: "18%" },
-  { top: "88%", left: "64%" },
-] as const;
-
-export type CatalogItem = {
-  id: string;
-  name: string;
-  category: string;
-  subcategory: string;
-  summary: string;
-  hasVisualizer: boolean;
-};
+export type CatalogItem = Entry;
 
 type CatalogViewProps<T extends CatalogItem> = {
   items: T[];
+  /** 最初に中央へ表示する項目のid。 */
   featuredId: string;
-  basePath: string;
   categoryOrder: readonly string[];
   subcategoriesByCategory: Record<string, readonly string[]>;
   eyebrow: string;
-  titleLines: [string, string];
+  title: string;
+  titleEn: string;
   lead: string;
   countLabel: string;
   searchPlaceholder: string;
   visualizedLabel: string;
-  renderBadge?: (item: T) => ReactNode;
-  renderRowMeta?: (item: T) => ReactNode;
-  /** ヒーロー球のまわりに浮かべる、実在するエントリへのショートカット(色図鑑のみで使用)。 */
-  orbitSwatches?: { id: string; hex: string; name: string }[];
+  listLabel: string;
+  /** 一覧の行の先頭(色見本の丸など)。 */
+  renderLead?: (item: T) => ReactNode;
+  /** 一覧の行の右端(HEX値など)。 */
+  renderValue?: (item: T) => ReactNode;
+  /** 検索対象に加える文字列(HEX値など)。モジュール定数など、参照が安定した関数を渡すこと。 */
+  extraSearchFields?: (item: T) => string[];
+  /** 中央の「主役」(選択した項目の大きな見本と説明)。 */
+  renderPreview: (item: T) => ReactNode;
+  /** 下の「操作」(詳細へ・比較に追加・クイズへ など)。 */
+  renderActions: (item: T) => ReactNode;
 };
 
+/** 「選択項目を中央に出す」画面幅の境目。これ以下では縦積みになるため、選択時に主役へスクロールさせる。 */
+const STACKED_QUERY = "(max-width: 900px)";
+
 /**
- * The-Algorithm-IllustratedのAlgorithmCatalog.tsxを汎化した共通カタログ実装。
- * ColorCatalog/ShapeCatalogの両方がこの内部実装をpropsだけ変えて利用する
- * (createContentLoader<T>の汎化と同じ発想を、UIコンポーネント側にも一箇所だけ適用したもの)。
- * 見た目はOFF+BRANDスタイルリファレンス(暖色パーチメント紙 × 単一幾何学サンセリフ)に準拠する。
+ * 色・図形の図鑑カタログの共通の型(IMPROVEMENT_DESIGN_2026-10 §4.2)。
+ * 左=検索+チップ+一覧、中央=主役(選択した項目)、下=操作。ColorCatalog/ShapeCatalogがpropsだけ変えて使う。
  */
 export function CatalogView<T extends CatalogItem>({
   items,
   featuredId,
-  basePath,
   categoryOrder,
   subcategoriesByCategory,
   eyebrow,
-  titleLines,
+  title,
+  titleEn,
   lead,
   countLabel,
   searchPlaceholder,
   visualizedLabel,
-  renderBadge,
-  renderRowMeta,
-  orbitSwatches,
+  listLabel,
+  renderLead,
+  renderValue,
+  extraSearchFields,
+  renderPreview,
+  renderActions,
 }: CatalogViewProps<T>) {
-  const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [activeSubcategory, setActiveSubcategory] = useState<string | null>(
-    null,
-  );
-  const [visualizedOnly, setVisualizedOnly] = useState(false);
-  const trimmedQuery = query.trim().toLowerCase();
-  const isSearching = trimmedQuery.length > 0;
-  const isFiltering = isSearching || activeCategory !== null || visualizedOnly;
+  const filter = useEntryFilter(items, categoryOrder, { extraSearchFields });
+  const [selectedId, setSelectedId] = useState(featuredId);
+  const previewRef = useRef<HTMLElement>(null);
 
-  const visualizedCount = useMemo(
-    () =>
-      items.reduce((count, item) => count + (item.hasVisualizer ? 1 : 0), 0),
-    [items],
-  );
+  const selected = items.find((item) => item.id === selectedId) ?? items[0];
 
-  const featured = items.find((item) => item.id === featuredId) ?? items[0];
-
-  const categoryCounts = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const item of items) {
-      counts.set(item.category, (counts.get(item.category) ?? 0) + 1);
+  const handleSelect = (id: string) => {
+    setSelectedId(id);
+    // 縦積みの画面では主役が一覧の上にあり見えなくなるため、選んだら主役へ戻す
+    if (window.matchMedia(STACKED_QUERY).matches) {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      previewRef.current?.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
     }
-    return counts;
-  }, [items]);
-
-  const subcategoryCounts = useMemo(() => {
-    const counts = new Map<string, number>();
-    if (!activeCategory) return counts;
-    for (const item of items) {
-      if (item.category !== activeCategory) continue;
-      counts.set(item.subcategory, (counts.get(item.subcategory) ?? 0) + 1);
-    }
-    return counts;
-  }, [items, activeCategory]);
-
-  const handleCategoryClick = (category: string) => {
-    setActiveCategory((current) => (current === category ? null : category));
-    setActiveSubcategory(null);
   };
 
-  const handleSubcategoryClick = (subcategory: string) => {
-    setActiveSubcategory((current) =>
-      current === subcategory ? null : subcategory,
-    );
-  };
-
-  const filteredResults = useMemo(() => {
-    if (!isFiltering) return [];
-    return items.filter((item) => {
-      if (activeCategory && item.category !== activeCategory) return false;
-      if (activeSubcategory && item.subcategory !== activeSubcategory)
-        return false;
-      if (visualizedOnly && !item.hasVisualizer) return false;
-      if (
-        trimmedQuery &&
-        ![item.name, item.category, item.subcategory, item.summary].some(
-          (field) => field.toLowerCase().includes(trimmedQuery),
-        )
-      ) {
-        return false;
-      }
-      return true;
-    });
-  }, [
-    items,
-    activeCategory,
-    activeSubcategory,
-    visualizedOnly,
-    trimmedQuery,
-    isFiltering,
-  ]);
-
-  const filterLabelParts: string[] = [];
-  if (activeCategory) {
-    filterLabelParts.push(
-      activeSubcategory
-        ? `${activeCategory} ・ ${activeSubcategory}`
-        : activeCategory,
-    );
-  }
-  if (visualizedOnly) filterLabelParts.push(`${visualizedLabel}のみ`);
-  if (isSearching) filterLabelParts.push(`「${query}」`);
-  const filterLabel = filterLabelParts.join(" ／ ");
-
-  const groupedByCategory = useMemo(() => {
-    const rest = items.filter((item) => item.id !== featured?.id);
-    const groups = new Map<string, T[]>();
-    for (const item of rest) {
-      const list = groups.get(item.category) ?? [];
-      list.push(item);
-      groups.set(item.category, list);
-    }
-    return categoryOrder
-      .filter((category) => groups.has(category))
-      .map((category) => ({ category, items: groups.get(category)! }));
-  }, [items, featured?.id, categoryOrder]);
-
-  if (!featured) return null;
+  if (!selected) return null;
 
   return (
     <div className={styles.page}>
-      <section className={styles.hero}>
-        <ConcentricCircles className={styles.heroRings} />
-        <div className={styles.heroText}>
-          <p className={styles.eyebrow}>{eyebrow}</p>
-          <h1 className={styles.heroTitle}>
-            <GlitchText text={titleLines[0]} />
-            <br />
-            <GlitchText text={titleLines[1]} />
-          </h1>
-          <p className={styles.heroLead}>{lead}</p>
-          <p className={styles.countLine}>
-            <span className={styles.countNumber}>{items.length}</span>
-            <span className={styles.countLabel}>{countLabel}</span>
-          </p>
-        </div>
-        <div className={styles.sphereWrap}>
-          <ThemeSphere size={480} />
-          {orbitSwatches?.map((swatch, i) => (
-            <Link
-              key={swatch.id}
-              href={`${basePath}/${swatch.id}`}
-              className={styles.orbitSwatch}
-              style={{
-                top: ORBIT_SLOTS[i % ORBIT_SLOTS.length].top,
-                left: ORBIT_SLOTS[i % ORBIT_SLOTS.length].left,
-                backgroundColor: swatch.hex,
-              }}
-              title={swatch.name}
-              aria-label={swatch.name}
-            />
-          ))}
-        </div>
-      </section>
+      <header className={styles.header}>
+        <p className={styles.eyebrow}>{eyebrow}</p>
+        <h1 className={styles.title}>{title}</h1>
+        <p className="subtitle">{titleEn}</p>
+        <p className={styles.lead}>{lead}</p>
+        <p className={styles.countLine}>
+          <span className={`num ${styles.countNumber}`}>{items.length}</span>
+          <span className={styles.countLabel}>{countLabel}</span>
+        </p>
+      </header>
 
-      <section className={styles.filterBar}>
-        <form
-          className={styles.searchBar}
-          role="search"
-          onSubmit={(event) => event.preventDefault()}
-        >
-          <input
-            className={styles.searchInput}
-            type="search"
-            name="q"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder={searchPlaceholder}
-            aria-label="検索"
+      {/* DOM順は「左の一覧 → 中央の主役」(キーボード・読み上げの順序を画面の左→右に揃える)。
+          縦積みの画面ではCSSのorderで主役を一覧の上に出す。 */}
+      <div className={styles.explorer}>
+        <aside className={styles.listPane}>
+          <EntryList
+            filter={filter}
+            categoryOrder={categoryOrder}
+            subcategoriesByCategory={subcategoriesByCategory}
+            searchPlaceholder={searchPlaceholder}
+            visualizedLabel={visualizedLabel}
+            isSelected={(id) => id === selected.id}
+            onSelect={handleSelect}
+            renderLead={renderLead}
+            renderValue={renderValue}
+            listLabel={listLabel}
           />
-        </form>
+        </aside>
 
-        <div
-          className={styles.chipRow}
-          role="group"
-          aria-label="カテゴリで絞り込む"
-        >
-          <button
-            type="button"
-            className={`${styles.chip} ${activeCategory === null ? styles.chipActive : ""}`}
-            aria-pressed={activeCategory === null}
-            onClick={() => {
-              setActiveCategory(null);
-              setActiveSubcategory(null);
-            }}
-          >
-            すべて
-          </button>
-          {categoryOrder
-            .filter((category) => categoryCounts.has(category))
-            .map((category) => (
-              <button
-                key={category}
-                type="button"
-                className={`${styles.chip} ${activeCategory === category ? styles.chipActive : ""}`}
-                aria-pressed={activeCategory === category}
-                onClick={() => handleCategoryClick(category)}
-              >
-                {category}
-                <span className={styles.chipCount}>
-                  {categoryCounts.get(category)}
-                </span>
-              </button>
-            ))}
-        </div>
-
-        {activeCategory ? (
-          <div
-            className={styles.chipRow}
-            role="group"
-            aria-label="サブカテゴリで絞り込む"
-          >
-            {(subcategoriesByCategory[activeCategory] ?? [])
-              .filter((subcategory) => subcategoryCounts.has(subcategory))
-              .map((subcategory) => (
-                <button
-                  key={subcategory}
-                  type="button"
-                  className={`${styles.chip} ${styles.chipSub} ${activeSubcategory === subcategory ? styles.chipActive : ""}`}
-                  aria-pressed={activeSubcategory === subcategory}
-                  onClick={() => handleSubcategoryClick(subcategory)}
-                >
-                  {subcategory}
-                  <span className={styles.chipCount}>
-                    {subcategoryCounts.get(subcategory)}
-                  </span>
-                </button>
-              ))}
-          </div>
-        ) : null}
-
-        <div
-          className={styles.chipRow}
-          role="group"
-          aria-label={`${visualizedLabel}で絞り込む`}
-        >
-          <button
-            type="button"
-            className={`${styles.chip} ${visualizedOnly ? styles.chipActive : ""}`}
-            aria-pressed={visualizedOnly}
-            onClick={() => setVisualizedOnly((current) => !current)}
-          >
-            {visualizedLabel}のみ
-            <span className={styles.chipCount}>{visualizedCount}</span>
-          </button>
-        </div>
-      </section>
-
-      {isFiltering ? (
-        <section className={styles.results} aria-labelledby="results-heading">
-          <h2 id="results-heading" className={styles.sectionLabel}>
-            {filterLabel}の絞り込み結果 — {filteredResults.length}件
-          </h2>
-          {filteredResults.length === 0 ? (
-            <div className={styles.emptyState}>
-              該当する項目が見つかりませんでした。別のキーワードやカテゴリでお試しください。
-            </div>
-          ) : (
-            <ul className={styles.listItems}>
-              {filteredResults.map((item) => (
-                <ItemRow
-                  key={item.id}
-                  item={item}
-                  basePath={basePath}
-                  showCategory
-                  visualizedLabel={visualizedLabel}
-                  renderBadge={renderBadge}
-                  renderRowMeta={renderRowMeta}
-                />
-              ))}
-            </ul>
-          )}
+        <section className={styles.preview} ref={previewRef} aria-label="選択中の項目">
+          <div className={styles.previewBody}>{renderPreview(selected)}</div>
+          <div className={styles.actions}>{renderActions(selected)}</div>
         </section>
-      ) : (
-        <>
-          <section
-            className={styles.showcase}
-            aria-labelledby="featured-heading"
-          >
-            <h2 id="featured-heading" className={styles.sectionLabel}>
-              FEATURED — 代表エントリ
-            </h2>
-            <Link
-              href={`${basePath}/${featured.id}`}
-              className={styles.featuredCard}
-            >
-              <div className={styles.featuredMeta}>
-                <span className={styles.category}>
-                  {featured.category} ・ {featured.subcategory}
-                </span>
-                {renderBadge ? renderBadge(featured) : null}
-                {featured.hasVisualizer ? (
-                  <VisualizedBadge label={visualizedLabel} />
-                ) : null}
-              </div>
-              <h3 className={styles.featuredName}>{featured.name}</h3>
-              <p className={styles.featuredDesc}>{featured.summary}</p>
-            </Link>
-          </section>
-
-          <section className={styles.list} aria-labelledby="list-heading">
-            <h2 id="list-heading" className={styles.sectionLabel}>
-              INDEX — 一覧
-            </h2>
-            {groupedByCategory.map(({ category, items: groupItems }) => (
-              <div key={category} className={styles.categoryGroup}>
-                <h3 className={styles.categoryHeading}>
-                  {category}
-                  <span className={styles.categoryCount}>
-                    {groupItems.length}
-                  </span>
-                </h3>
-                <ul className={styles.listItems}>
-                  {groupItems.map((item) => (
-                    <ItemRow
-                      key={item.id}
-                      item={item}
-                      basePath={basePath}
-                      visualizedLabel={visualizedLabel}
-                      renderBadge={renderBadge}
-                      renderRowMeta={renderRowMeta}
-                    />
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </section>
-        </>
-      )}
+      </div>
     </div>
-  );
-}
-
-function ItemRow<T extends CatalogItem>({
-  item,
-  basePath,
-  showCategory = false,
-  visualizedLabel,
-  renderBadge,
-  renderRowMeta,
-}: {
-  item: T;
-  basePath: string;
-  showCategory?: boolean;
-  visualizedLabel: string;
-  renderBadge?: (item: T) => ReactNode;
-  renderRowMeta?: (item: T) => ReactNode;
-}) {
-  return (
-    <li className={styles.listRow}>
-      <Link href={`${basePath}/${item.id}`} className={styles.listRowHead}>
-        {renderRowMeta ? renderRowMeta(item) : null}
-        <span className={styles.listName}>{item.name}</span>
-        {showCategory ? (
-          <span className={styles.listCategory}>
-            {item.category} ・ {item.subcategory}
-          </span>
-        ) : null}
-        {renderBadge ? renderBadge(item) : null}
-        {item.hasVisualizer ? (
-          <VisualizedBadge label={visualizedLabel} />
-        ) : null}
-      </Link>
-      <p className={styles.listSummary}>{item.summary}</p>
-    </li>
-  );
-}
-
-function VisualizedBadge({ label }: { label: string }) {
-  return (
-    <span
-      className={styles.visualizedBadge}
-      title={`この項目は${label}に対応済みです`}
-    >
-      {label}
-    </span>
   );
 }

@@ -1,5 +1,6 @@
 ---
 name: 線対称
+nameEn: "Line Symmetry (Reflection)"
 category: 図形理論
 subcategory: 対称性
 summary: ある直線(対称軸)を折り目として折ったとき、図形がぴったり重なる性質。鏡映対称とも呼ばれる。

@@ -1,5 +1,6 @@
 ---
 name: 群青色(ぐんじょういろ)
+nameEn: "Gunjo-iro (Ultramarine)"
 category: 色相
 subcategory: 寒色
 colorValue:

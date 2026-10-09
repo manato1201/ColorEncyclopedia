@@ -1,5 +1,6 @@
 ---
 name: フラクタルと自己相似
+nameEn: "Fractals & Self-Similarity"
 category: 図形理論
 subcategory: 比例・分割
 summary: 図形の一部を拡大すると全体と同じ(または似た)構造が現れる性質。シェルピンスキーの三角形が代表例。

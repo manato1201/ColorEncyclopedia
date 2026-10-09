@@ -35,11 +35,17 @@
 .chipActive {
   background: var(--accent-current);
   border-color: var(--accent-current);
-  color: var(--color-paper);
+  color: var(--on-accent);
 }
 
 .chipActive:hover {
-  color: var(--color-paper);
+  color: var(--on-accent);
+}
+
+/* 色見本(色相環)の表示領域。テーマ(ライト/ダーク)で変えない中立灰にする */
+.stage {
+  padding: var(--space-6);
+  background: var(--swatch-stage);
 }
 
 .stageWrap {
@@ -66,13 +72,13 @@
 
 .baseMarker {
   fill: none;
-  stroke: var(--color-ink);
+  stroke: var(--swatch-ink);
   stroke-width: 3;
 }
 
 .harmonyMarker {
   fill: none;
-  stroke: var(--color-paper);
+  stroke: var(--swatch-paper);
   stroke-width: 2.5;
 }
 

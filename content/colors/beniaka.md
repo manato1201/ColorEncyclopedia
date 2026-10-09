@@ -1,5 +1,6 @@
 ---
 name: 紅赤(べにあか)
+nameEn: "Beni-aka (Crimson Red)"
 category: 彩度
 subcategory: 高彩度
 colorValue:

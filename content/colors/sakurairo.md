@@ -1,5 +1,6 @@
 ---
 name: 桜色(さくらいろ)
+nameEn: "Sakura-iro (Cherry Blossom)"
 category: 色相
 subcategory: 暖色
 colorValue:

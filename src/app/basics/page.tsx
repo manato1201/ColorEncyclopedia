@@ -10,7 +10,7 @@ export default function BasicsPage() {
   return (
     <div className={styles.page}>
       <Link href="/" className={styles.backLink}>
-        ← 色図鑑に戻る
+        ← トップに戻る
       </Link>
       <header className={styles.header}>
         <p className={styles.eyebrow}>BASICS はじめての方へ</p>
@@ -26,7 +26,7 @@ export default function BasicsPage() {
           ColorEncyclopedia(色彩図鑑)は、色相・彩度・明度・配色理論といった色のモチーフを<strong>数値データとして体系化</strong>し、カタログ・詳細・可視化の3層で見せる学習ダッシュボードです。感覚的に「なんとなく合う配色」を選ぶのではなく、色相環上の角度・WCAGコントラスト比といった具体的な数値に基づいて配色を判断できるようになることを目指しています。
         </p>
         <p className={styles.paragraph}>
-          扱うコンテンツは<Link href="/" className={styles.link}>色(色相・彩度・明度・配色理論)</Link>と
+          扱うコンテンツは<Link href="/colors" className={styles.link}>色(色相・彩度・明度・配色理論)</Link>と
           <Link href="/shapes" className={styles.link}>図形(比例・分割・対称性・平面充填)</Link>の2カテゴリで、独立したディレクトリ(
           <code className={styles.code}>content/colors/</code> / <code className={styles.code}>content/shapes/</code>)で管理されています。
         </p>
@@ -93,7 +93,7 @@ export default function BasicsPage() {
       <section className={styles.section}>
         <h2 className={styles.sectionLabel}>NEXT 次に読むと良いページ</h2>
         <p className={styles.paragraph}>
-          準備ができたら、<Link href="/" className={styles.link}>色図鑑</Link>または
+          準備ができたら、<Link href="/colors" className={styles.link}>色図鑑</Link>または
           <Link href="/shapes" className={styles.link}>図形図鑑</Link>から気になるエントリを選んで詳細ページを開いてみてください。複数のエントリを並べて比較したい場合は
           <Link href="/compare" className={styles.link}>比較画面</Link>も活用してください。
         </p>

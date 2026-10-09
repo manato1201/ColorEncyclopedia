@@ -1,5 +1,6 @@
 ---
 name: 類似色相配色(アナロガス)
+nameEn: "Analogous Harmony"
 category: 配色理論
 subcategory: 類似色
 examLevel: 2級

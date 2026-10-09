@@ -1,5 +1,6 @@
 ---
 name: 橙色(だいだいいろ)
+nameEn: "Daidai-iro (Orange)"
 category: 色相
 subcategory: 暖色
 colorValue:

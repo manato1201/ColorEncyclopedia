@@ -1,5 +1,6 @@
 ---
 name: 紅色(べにいろ)
+nameEn: "Beni-iro (Safflower Red)"
 category: 色相
 subcategory: 暖色
 colorValue:

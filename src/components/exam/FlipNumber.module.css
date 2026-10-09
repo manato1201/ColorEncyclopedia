@@ -1,0 +1,26 @@
+.flip {
+  display: inline-block;
+  min-width: 1.4em;
+  overflow: hidden;
+  vertical-align: bottom;
+  text-align: center;
+  line-height: 1.2;
+  perspective: 200px;
+}
+
+.digit {
+  display: inline-block;
+  transform-origin: 50% 0;
+  animation: flipIn 0.45s ease-out;
+}
+
+@keyframes flipIn {
+  from {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotateX(0);
+    opacity: 1;
+  }
+}

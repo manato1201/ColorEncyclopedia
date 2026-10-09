@@ -1,5 +1,6 @@
 ---
 name: トライアド配色
+nameEn: "Triadic Harmony"
 category: 配色理論
 subcategory: トライアド
 examLevel: 1級

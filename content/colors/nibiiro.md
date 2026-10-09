@@ -1,5 +1,6 @@
 ---
 name: 鈍色(にびいろ)
+nameEn: "Nibi-iro (Dull Gray)"
 category: 彩度
 subcategory: 低彩度
 colorValue:
