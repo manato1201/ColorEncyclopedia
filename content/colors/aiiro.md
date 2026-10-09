@@ -1,5 +1,6 @@
 ---
 name: 藍色(あいいろ)
+nameEn: "Ai-iro (Indigo)"
 category: 色相
 subcategory: 寒色
 colorValue:

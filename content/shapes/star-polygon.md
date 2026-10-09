@@ -1,5 +1,6 @@
 ---
 name: 星型正多角形(星型五角形)
+nameEn: "Star Polygon (Pentagram)"
 category: 図形理論
 subcategory: 対称性
 summary: 正多角形の頂点を1つ飛ばしで結んでできる星型の図形。五芒星(ペンタグラム)が代表例で、黄金比が随所に現れる。

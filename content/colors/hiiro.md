@@ -1,5 +1,6 @@
 ---
 name: 緋色(ひいろ)
+nameEn: "Hi-iro (Scarlet)"
 category: 彩度
 subcategory: 高彩度
 colorValue:

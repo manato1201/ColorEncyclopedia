@@ -1,5 +1,6 @@
 ---
 name: 鶯色(うぐいすいろ)
+nameEn: "Uguisu-iro (Bush Warbler Green)"
 category: 色相
 subcategory: 中性色
 colorValue:

@@ -1,5 +1,6 @@
 ---
 name: 黄金三角形(ゴールデングノモン)
+nameEn: "Golden Triangle & Golden Gnomon"
 category: 図形理論
 subcategory: 比例・分割
 summary: 底角72°・頂角36°の二等辺三角形で、辺の比が黄金比になる図形。底角の二等分線で自己相似的に分割できる。

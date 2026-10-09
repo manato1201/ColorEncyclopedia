@@ -1,5 +1,6 @@
 ---
 name: 墨色(すみいろ)
+nameEn: "Sumi-iro (Ink Black)"
 category: 明度
 subcategory: 低明度
 colorValue:

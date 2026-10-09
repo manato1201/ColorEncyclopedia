@@ -1,5 +1,6 @@
 ---
 name: 色のユニバーサルデザインとコントラスト
+nameEn: "Color Universal Design & Contrast"
 category: 配色理論
 subcategory: ユニバーサルデザイン
 examLevel: UC級

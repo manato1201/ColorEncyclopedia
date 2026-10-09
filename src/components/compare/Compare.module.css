@@ -1,0 +1,271 @@
+/* 色の比較・図形の比較で共通の型: 左=チップと一覧 / 中央=主役(並べた比較) / 下=操作 */
+.view {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-8) var(--space-20);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 44rem;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: clamp(2rem, 4.5vw, var(--text-heading-sm));
+  line-height: var(--leading-heading-sm);
+}
+
+.lead {
+  margin-top: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+}
+
+.explorer {
+  display: grid;
+  grid-template-columns: minmax(20rem, 26rem) minmax(0, 1fr);
+  gap: var(--space-12);
+  align-items: start;
+}
+
+.listPane {
+  min-width: 0;
+}
+
+.stagePane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  min-width: 0;
+}
+
+.emptyState {
+  padding: var(--space-12) var(--space-8);
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  text-align: center;
+  font-family: var(--font-body);
+  color: var(--color-ink-muted);
+}
+
+/* 画面上の色は環境により異なる、という固定の注記(比較画面に常設) */
+.notice {
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--accent-current);
+  background: var(--color-paper);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  line-height: 1.7;
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.cards {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: var(--space-4);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-4);
+  background: var(--color-paper);
+  border-radius: var(--radius-card);
+}
+
+.cardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.cardName {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-body);
+  line-height: 1.3;
+  color: var(--accent-current);
+  overflow-wrap: anywhere;
+}
+
+.cardName:hover,
+.cardName:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.removeButton {
+  flex-shrink: 0;
+  padding: 0 var(--space-2);
+  border: none;
+  background: transparent;
+  color: var(--color-ink-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  cursor: pointer;
+}
+
+.removeButton:hover,
+.removeButton:focus-visible {
+  color: var(--accent-current);
+}
+
+.cardCategory {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.cardValues {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: var(--space-1);
+  font-size: var(--text-caption);
+  color: var(--color-ink);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.cardSummary {
+  margin-top: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-line);
+}
+
+.sectionLabel {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.visualGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: var(--space-6);
+}
+
+.visualPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--color-paper);
+}
+
+.visualPanelTitle {
+  width: fit-content;
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-body);
+  color: var(--accent-current);
+}
+
+.visualPanelTitle:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.visualNote {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+}
+
+/* 下=操作 */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-line);
+}
+
+@media (max-width: 900px) {
+  .view {
+    padding: var(--space-6) var(--space-6) var(--space-16);
+  }
+
+  .explorer {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
+  }
+
+  /* 縦積みでは、比較結果(主役)を一覧より上に出す */
+  .stagePane {
+    order: -1;
+  }
+}
+
+/* コントラスト比のペア一覧 */
+.pairList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.pairRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-line);
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+}
+
+.pairX {
+  color: var(--color-ink-muted);
+}
+
+.pairRatio {
+  margin-left: auto;
+  color: var(--color-ink);
+}
+
+.pass {
+  color: var(--accent-current);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+}
+
+.fail {
+  color: var(--color-negative);
+  font-size: var(--text-caption);
+}

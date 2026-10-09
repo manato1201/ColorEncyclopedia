@@ -1,5 +1,6 @@
 ---
 name: 濡烏(ぬれがらす)
+nameEn: "Nure-garasu (Raven Black)"
 category: 明度
 subcategory: 低明度
 colorValue:

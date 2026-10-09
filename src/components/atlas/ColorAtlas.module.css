@@ -1,0 +1,180 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-8) var(--space-20);
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-width: 44rem;
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: clamp(2rem, 4.5vw, var(--text-heading-sm));
+  line-height: var(--leading-heading-sm);
+}
+
+.lead {
+  margin-top: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+  gap: var(--space-12);
+  align-items: start;
+}
+
+.plotPane {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.tab {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-interactive);
+  background: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  cursor: pointer;
+}
+
+.tab:hover {
+  border-color: var(--accent-current);
+}
+
+.tabActive,
+.tabActive:hover {
+  border-color: var(--accent-current);
+  background: var(--accent-current);
+  color: var(--on-accent);
+}
+
+.plot {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+}
+
+/* 点の地は、テーマで変えない中立灰 */
+.stage {
+  fill: var(--swatch-stage);
+}
+
+.grid {
+  fill: none;
+  stroke: var(--swatch-ink);
+  stroke-opacity: 0.18;
+  stroke-width: 1;
+}
+
+.axisText {
+  fill: var(--color-ink-muted);
+  font-size: 12px;
+}
+
+.dot {
+  stroke: var(--swatch-paper);
+  stroke-width: 2;
+  cursor: pointer;
+  transition: r 0.15s ease;
+}
+
+.dot:hover,
+.dot:focus-visible {
+  stroke: var(--swatch-ink);
+}
+
+.dotSelected {
+  stroke: var(--swatch-ink);
+  stroke-width: 3;
+}
+
+.note {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-subheading);
+}
+
+.values {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.values dt {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.values dd {
+  font-size: var(--text-body-sm);
+  color: var(--accent-current);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+@media (max-width: 900px) {
+  .page {
+    padding: var(--space-6) var(--space-6) var(--space-16);
+  }
+
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-8);
+  }
+}

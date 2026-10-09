@@ -1,0 +1,10 @@
+/* 色見本を持たない概念エントリ(配色理論)の行頭。見本の丸と同じ幅にそろえて文字の開始位置をずらさない */
+.conceptMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 15px;
+  color: var(--color-ink-muted);
+}

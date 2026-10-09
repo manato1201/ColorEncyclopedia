@@ -1,5 +1,6 @@
 ---
 name: 点対称
+nameEn: "Point Symmetry"
 category: 図形理論
 subcategory: 対称性
 summary: 図形をある1点(対称の中心)のまわりに180°回転させると元の図形に重なる性質。

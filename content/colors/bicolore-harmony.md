@@ -1,5 +1,6 @@
 ---
 name: ビコロール/トリコロール配色
+nameEn: "Bicolore / Tricolore Harmony"
 category: 配色理論
 subcategory: その他技法
 examLevel: 1級

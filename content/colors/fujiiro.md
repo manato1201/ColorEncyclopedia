@@ -1,5 +1,6 @@
 ---
 name: 藤色(ふじいろ)
+nameEn: "Fuji-iro (Wisteria)"
 category: 色相
 subcategory: 中性色
 colorValue:

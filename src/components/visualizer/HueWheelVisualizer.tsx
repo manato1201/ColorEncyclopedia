@@ -58,7 +58,8 @@ export function HueWheelVisualizer({ hex }: HueWheelVisualizerProps) {
 
   return (
     <div className={styles.visualizer}>
-      <div className={styles.stageWrap}>
+      <div className={styles.stage}>
+        <div className={styles.stageWrap}>
         <canvas
           ref={canvasRef}
           className={styles.canvas}
@@ -87,6 +88,7 @@ export function HueWheelVisualizer({ hex }: HueWheelVisualizerProps) {
             />
           ) : null}
         </svg>
+      </div>
       </div>
       <p className={styles.description} role="status">
         {probe

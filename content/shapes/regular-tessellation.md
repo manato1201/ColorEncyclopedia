@@ -1,5 +1,6 @@
 ---
 name: 正則テセレーション(正多角形の平面充填)
+nameEn: "Regular Tessellation"
 category: 図形理論
 subcategory: 平面充填
 summary: 同じ正多角形だけで隙間なく平面を埋め尽くす敷き詰め方。成立するのは正三角形・正方形・正六角形の3種類だけ。

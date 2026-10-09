@@ -1,5 +1,6 @@
 ---
 name: 補色配色(コンプリメンタリー)
+nameEn: "Complementary Harmony"
 category: 配色理論
 subcategory: 補色
 examLevel: 2級

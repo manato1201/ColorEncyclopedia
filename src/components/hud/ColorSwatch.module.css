@@ -1,6 +1,9 @@
 .swatch {
   display: inline-block;
+  box-sizing: border-box;
   border-radius: 50%;
-  border: 1px solid var(--color-line);
+  border-style: solid;
+  border-color: var(--swatch-stage);
+  background-clip: padding-box;
   flex-shrink: 0;
 }

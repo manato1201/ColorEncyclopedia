@@ -1,0 +1,23 @@
+.stage {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--swatch-stage);
+  border-radius: var(--radius-card);
+}
+
+.color {
+  display: block;
+  width: 62%;
+  height: 62%;
+  border-radius: 50%;
+}
+
+.stage > svg {
+  width: 38%;
+  height: 38%;
+  color: var(--swatch-ink);
+  opacity: 0.55;
+}
