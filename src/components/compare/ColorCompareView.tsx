@@ -10,6 +10,7 @@ import { IconArrowRight, IconRefresh } from "@/components/icons/Icons";
 import { EntryList } from "@/components/explorer/EntryList";
 import { useEntryFilter } from "@/components/explorer/useEntryFilter";
 import { ColorVisualizer, hasColorVisualizer } from "@/components/visualizer/ColorVisualizer";
+import { ColorTuneLab } from "./ColorTuneLab";
 import { ColorSystemsVisualizer } from "@/components/visualizer/ColorSystemsVisualizer";
 import { contrastRatio, hexToRgb, WCAG_AA_NORMAL, WCAG_AAA_NORMAL } from "@/lib/color-math";
 import { formatHsv, formatRgb } from "@/lib/color-format";
@@ -83,7 +84,11 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
           ) : (
             <ul className={styles.cards}>
               {selected.map((c) => (
-                <li key={c.id} className={styles.card}>
+                <li
+                  key={c.id}
+                  className={`${styles.card} stagger`}
+                  style={{ "--i": selected.indexOf(c) } as React.CSSProperties}
+                >
                   <div className={styles.cardHead}>
                     {c.colorValue ? <ColorSwatch hex={c.colorValue.hex} size={40} /> : <span />}
                     <button
@@ -140,6 +145,15 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
                   );
                 })}
               </ul>
+            </section>
+          ) : null}
+
+          {withColorValue.length > 0 ? (
+            <section className={styles.section} aria-labelledby="cmp-lab">
+              <h2 id="cmp-lab" className={styles.sectionLabel}>
+                LAB 彩度・明度を動かして比べる
+              </h2>
+              <ColorTuneLab key={withColorValue[0].id} name={withColorValue[0].name} hex={withColorValue[0].colorValue!.hex} />
             </section>
           ) : null}
 

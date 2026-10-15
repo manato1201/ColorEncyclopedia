@@ -8,11 +8,18 @@ import {
   ColorVisualizer,
   hasColorVisualizer,
 } from "@/components/visualizer/ColorVisualizer";
+import { RelatedCarousel } from "@/components/colors/RelatedCarousel";
+import { TermNotes } from "@/components/colors/TermNotes";
+import { SectionNav, type SectionNavItem } from "@/components/ui/SectionNav";
+import { Tooltip } from "@/components/ui/Tooltip";
 import { ColorSystemsVisualizer } from "@/components/visualizer/ColorSystemsVisualizer";
 import { ContrastVisualizer } from "@/components/visualizer/ContrastVisualizer";
 import { hexToRgb } from "@/lib/color-math";
 import { formatHsv, formatLab, formatRgb } from "@/lib/color-format";
+import { COLOR_VALUE_TERMS } from "@/lib/color-terms";
 import { colorLoader } from "@/lib/content/colors";
+import { findRelatedColors } from "@/lib/related-colors";
+import { COLOR_TERM_NOTES } from "@/data/term-notes";
 
 type ColorDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -33,6 +40,18 @@ export default async function ColorDetailPage({
   }
 
   const { colorValue } = color;
+  const note = COLOR_TERM_NOTES[id];
+  const related = findRelatedColors(id, colorLoader.getAllMeta());
+
+  // ページ内の目次(存在する節だけ)
+  const sections: SectionNavItem[] = [
+    ...(colorValue ? [{ id: "sec-data", label: "DATA 数値" }] : []),
+    { id: "sec-visual", label: "VISUALIZE 可視化" },
+    { id: "sec-about", label: "ABOUT 概要" },
+    ...(colorValue ? [{ id: "sec-systems", label: "SYSTEMS 方式比較" }, { id: "sec-contrast", label: "CONTRAST" }] : []),
+    ...(note ? [{ id: "sec-notes", label: "NOTES 見分け方" }] : []),
+    ...(related.length > 0 ? [{ id: "sec-related", label: "RELATED 近い色" }] : []),
+  ];
 
   return (
     <div className={styles.page}>
@@ -58,25 +77,33 @@ export default async function ColorDetailPage({
       </header>
 
       {colorValue ? (
-        <section className={styles.dataPanel} aria-labelledby="data-heading">
+        <section id="sec-data" className={styles.dataPanel} aria-labelledby="data-heading">
           <h2 id="data-heading" className={styles.sectionLabel}>
             DATA 数値データ
           </h2>
           <dl className={styles.dataGrid}>
             <div className={styles.dataItem}>
-              <dt>HEX</dt>
+              <dt>
+                <Tooltip label={COLOR_VALUE_TERMS.HEX}>HEX</Tooltip>
+              </dt>
               <dd className="num">{colorValue.hex}</dd>
             </div>
             <div className={styles.dataItem}>
-              <dt>RGB</dt>
+              <dt>
+                <Tooltip label={COLOR_VALUE_TERMS.RGB}>RGB</Tooltip>
+              </dt>
               <dd className="num">{formatRgb(hexToRgb(colorValue.hex))}</dd>
             </div>
             <div className={styles.dataItem}>
-              <dt>HSV</dt>
+              <dt>
+                <Tooltip label={COLOR_VALUE_TERMS.HSV}>HSV</Tooltip>
+              </dt>
               <dd className="num">{formatHsv(colorValue.hsv)}</dd>
             </div>
             <div className={styles.dataItem}>
-              <dt>Lab</dt>
+              <dt>
+                <Tooltip label={COLOR_VALUE_TERMS.Lab}>Lab</Tooltip>
+              </dt>
               <dd className="num">{formatLab(colorValue.lab)}</dd>
             </div>
           </dl>
@@ -84,8 +111,10 @@ export default async function ColorDetailPage({
         </section>
       ) : null}
 
+      <SectionNav items={sections} />
+
       <div className={styles.layout}>
-        <section className={styles.visualPane} aria-labelledby="visual-heading">
+        <section id="sec-visual" className={styles.visualPane} aria-labelledby="visual-heading">
           <h2 id="visual-heading" className={styles.sectionLabel}>
             VISUALIZE 色相環・配色理論の可視化
           </h2>
@@ -99,6 +128,7 @@ export default async function ColorDetailPage({
         </section>
 
         <section
+          id="sec-about"
           className={styles.explainPane}
           aria-labelledby="explain-heading"
         >
@@ -115,14 +145,14 @@ export default async function ColorDetailPage({
 
       {colorValue ? (
         <div className={styles.tools}>
-          <section className={styles.tool} aria-labelledby="systems-heading">
+          <section id="sec-systems" className={styles.tool} aria-labelledby="systems-heading">
             <h2 id="systems-heading" className={styles.sectionLabel}>
               SYSTEMS 同じ色を別の方式で並べる
             </h2>
             <ColorSystemsVisualizer hex={colorValue.hex} />
           </section>
 
-          <section className={styles.tool} aria-labelledby="contrast-heading">
+          <section id="sec-contrast" className={styles.tool} aria-labelledby="contrast-heading">
             <h2 id="contrast-heading" className={styles.sectionLabel}>
               CONTRAST WCAGコントラスト比を確認する
             </h2>
@@ -132,6 +162,24 @@ export default async function ColorDetailPage({
             />
           </section>
         </div>
+      ) : null}
+
+      {note ? (
+        <section id="sec-notes" className={styles.extra} aria-labelledby="notes-heading">
+          <h2 id="notes-heading" className={styles.sectionLabel}>
+            NOTES 見るポイントと混同しやすい点
+          </h2>
+          <TermNotes note={note} />
+        </section>
+      ) : null}
+
+      {related.length > 0 ? (
+        <section id="sec-related" className={styles.extra} aria-labelledby="related-heading">
+          <h2 id="related-heading" className={styles.sectionLabel}>
+            RELATED 近い色
+          </h2>
+          <RelatedCarousel items={related} />
+        </section>
       ) : null}
     </div>
   );
