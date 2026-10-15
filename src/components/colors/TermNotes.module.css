@@ -1,0 +1,27 @@
+.list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-4);
+}
+
+.item {
+  padding: var(--space-4);
+  background: var(--color-paper);
+  border-top: 2px solid var(--accent-current);
+}
+
+.label {
+  margin-bottom: var(--space-2);
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.body {
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  line-height: 1.7;
+  color: var(--color-ink);
+}

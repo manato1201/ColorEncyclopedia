@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { IconArrowRight } from "@/components/icons/Icons";
+import { ReviewCountBadge } from "./ReviewCountBadge";
 import { ThemeColorPicker } from "@/components/theme/ThemeColorPicker";
 import { ThemeModeToggle } from "@/components/theme/ThemeModeToggle";
 import styles from "./AppShell.module.css";
@@ -31,7 +32,9 @@ export function AppShell({ children }: AppShellProps) {
         <nav className={styles.nav} aria-label="メインナビゲーション">
           {NAV_ITEMS.map((item) => (
             <Link key={item.href} href={item.href} className={styles.navLink}>
-              {item.label} <IconArrowRight className={styles.navArrow} />
+              {item.label}
+              {item.href === "/exam" ? <ReviewCountBadge /> : null}{" "}
+              <IconArrowRight className={styles.navArrow} />
             </Link>
           ))}
         </nav>

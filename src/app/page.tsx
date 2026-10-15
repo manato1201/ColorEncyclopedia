@@ -35,10 +35,13 @@ export default function HomePage() {
     <>
       <LandingHero stats={stats} orbitSwatches={orbitSwatches} />
       <EntranceCards
-        explore={[
+        all={[
+          { href: "/basics", label: "基礎", labelEn: "Basics" },
           { href: "/colors", label: "色図鑑", labelEn: "Color Encyclopedia", count: colors.length, unit: "項目" },
           { href: "/shapes", label: "図形図鑑", labelEn: "Shape Encyclopedia", count: shapes.length, unit: "項目" },
-          { href: "/atlas", label: "色彩Atlas", labelEn: "Color Atlas" },
+          { href: "/atlas", label: "色彩Atlas", labelEn: "Color Atlas", count: colors.filter((c) => c.colorValue).length, unit: "色" },
+          { href: "/compare", label: "比較", labelEn: "Compare" },
+          { href: "/exam", label: "検定対策", labelEn: "Exam", count: EXAM_QUESTIONS.length, unit: "問" },
         ]}
       />
     </>
