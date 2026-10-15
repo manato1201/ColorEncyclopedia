@@ -11,6 +11,7 @@
 // 6. nameEn(見出しの下に添える英字の副題)が全エントリにあること
 // 7. colorValue.hsv / colorValue.lab が hex から再計算した値と一致すること(転記ミスの検出)
 // 8. 検定問題(src/data/exam-questions.ts)のid重複・選択肢・答えの範囲・explanationRefの解決
+// 9. 全エントリに定型項目(src/data/term-notes.ts: 見るポイント/混同しやすい点/使うときの注意)があること
 
 import fs from "node:fs";
 import path from "node:path";
@@ -19,6 +20,7 @@ import { COLOR_CATEGORY_TAXONOMY } from "../src/lib/color-categories.ts";
 import { SHAPE_CATEGORY_TAXONOMY } from "../src/lib/shape-categories.ts";
 import { hexToHsv, hexToLab } from "../src/lib/color-math.ts";
 import { EXAM_QUESTIONS } from "../src/data/exam-questions.ts";
+import { COLOR_TERM_NOTES, SHAPE_TERM_NOTES } from "../src/data/term-notes.ts";
 
 /** frontmatterのhsvは整数丸め(±1)、labは小数1桁丸めなので、再計算値との許容差を持たせる。 */
 const HSV_TOLERANCE = 1;
@@ -181,9 +183,38 @@ function verifyExamQuestions() {
   console.log(`exam-questions: ${EXAM_QUESTIONS.length}問を検証`);
 }
 
+function verifyTermNotes() {
+  for (const [dirName, notes] of [
+    ["colors", COLOR_TERM_NOTES],
+    ["shapes", SHAPE_TERM_NOTES],
+  ]) {
+    const dir = path.join(process.cwd(), "content", dirName);
+    const ids = fs
+      .readdirSync(dir)
+      .filter((f) => f.endsWith(".md"))
+      .map((f) => f.replace(/.md$/, ""));
+    for (const id of ids) {
+      const label = `term-notes:${dirName}/${id}`;
+      const note = notes[id];
+      if (!note) {
+        fail(label, "定型項目(look/confuse/caution)が未登録");
+        continue;
+      }
+      for (const key of ["look", "confuse", "caution"]) {
+        if (typeof note[key] !== "string" || note[key].trim() === "") fail(label, `${key} が空`);
+      }
+    }
+    for (const id of Object.keys(notes)) {
+      if (!ids.includes(id)) fail(`term-notes:${dirName}/${id}`, "対応するcontentファイルが存在しない");
+    }
+  }
+  console.log("term-notes: 全エントリの定型項目を検証");
+}
+
 verifyColors();
 verifyShapes();
 verifyExamQuestions();
+verifyTermNotes();
 
 if (errors > 0) {
   console.error(`${errors}件のfrontmatter検証エラー`);

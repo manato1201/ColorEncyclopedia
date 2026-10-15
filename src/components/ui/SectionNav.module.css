@@ -1,0 +1,39 @@
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  margin-bottom: var(--space-8);
+  background: var(--color-parchment);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  gap: var(--space-6);
+  overflow-x: auto;
+  padding: var(--space-3) 0;
+}
+
+.link {
+  display: inline-block;
+  white-space: nowrap;
+  padding-bottom: 2px;
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--accent-current);
+}
+
+.active,
+.active:hover {
+  color: var(--accent-current);
+  border-bottom-color: var(--accent-current);
+  font-weight: var(--weight-bold);
+}

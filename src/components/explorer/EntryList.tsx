@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import styles from "./EntryList.module.css";
 import type { Entry, EntryFilter } from "./useEntryFilter";
 
@@ -165,11 +165,15 @@ export function EntryList<T extends Entry>({
                 </span>
               </h3>
               <ul className={styles.rows}>
-                {items.map((item) => {
+                {items.map((item, index) => {
                   const selected = isSelected(item.id);
                   const disabled = isDisabled?.(item) ?? false;
                   return (
-                    <li key={item.id}>
+                    <li
+                      key={item.id}
+                      className="stagger"
+                      style={{ "--i": index } as CSSProperties}
+                    >
                       <button
                         type="button"
                         className={`${styles.row} ${selected ? styles.rowSelected : ""}`}

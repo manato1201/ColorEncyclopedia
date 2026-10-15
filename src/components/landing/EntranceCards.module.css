@@ -124,3 +124,17 @@
   font-size: var(--text-caption);
   color: var(--color-ink-muted);
 }
+
+/* 入口の段の見出し(まずはここから / 試験対策から) */
+.tierHeading {
+  margin-top: var(--space-8);
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.tierHeading + .cards {
+  margin-top: var(--space-4);
+}

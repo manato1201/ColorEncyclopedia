@@ -146,3 +146,11 @@ export const WCAG_AA_NORMAL = 4.5;
 export const WCAG_AA_LARGE = 3;
 export const WCAG_AAA_NORMAL = 7;
 export const WCAG_AAA_LARGE = 4.5;
+
+/**
+ * 2色のLab上のユークリッド距離(CIE76のΔE)。小さいほど近い色に見える。
+ * 厳密な知覚差にはΔE2000などがあるが、ここでは「近い色の並べ替え」と比較表示に使う簡易指標。
+ */
+export function deltaE76(a: Lab, b: Lab): number {
+  return Math.sqrt((a.l - b.l) ** 2 + (a.a - b.a) ** 2 + (a.b - b.b) ** 2);
+}

@@ -1,0 +1,15 @@
+.backdrop {
+  min-height: 100%;
+  background-color: transparent;
+  transition: background-color 0.7s ease;
+}
+
+/* ライト: 彩度24%・明度92%(どの色相でもキャンバスより明るい) */
+.tinted {
+  background-color: hsl(var(--backdrop-hue) 24% 92%);
+}
+
+/* ダーク: 彩度24%・明度6%(どの色相でもキャンバスより暗い) */
+:global(:root[data-theme="dark"]) .tinted {
+  background-color: hsl(var(--backdrop-hue) 24% 6%);
+}

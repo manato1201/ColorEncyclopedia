@@ -184,3 +184,18 @@
   text-decoration: underline;
   text-underline-offset: 0.15em;
 }
+
+/* 目次の移動先が固定の目次に隠れないようにする */
+.dataPanel,
+.visualPane,
+.explainPane,
+.tool,
+.extra {
+  scroll-margin-top: 4rem;
+}
+
+.extra {
+  margin-top: var(--space-12);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-line);
+}

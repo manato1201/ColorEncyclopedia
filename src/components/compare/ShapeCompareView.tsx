@@ -60,7 +60,11 @@ export function ShapeCompareView({ shapes }: ShapeCompareViewProps) {
           ) : (
             <ul className={styles.cards}>
               {selected.map((s) => (
-                <li key={s.id} className={styles.card}>
+                <li
+                  key={s.id}
+                  className={`${styles.card} stagger`}
+                  style={{ "--i": selected.indexOf(s) } as React.CSSProperties}
+                >
                   <div className={styles.cardHead}>
                     <Link href={`/shapes/${s.id}`} className={styles.cardName}>
                       {s.name}

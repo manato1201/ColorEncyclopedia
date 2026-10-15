@@ -1,0 +1,89 @@
+.carousel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.note {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.buttons {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.button {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--accent-current);
+  border-radius: var(--radius-interactive);
+  background: transparent;
+  color: var(--accent-current);
+  font-size: var(--text-body-sm);
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled),
+.button:focus-visible {
+  background: var(--accent-current);
+  color: var(--on-accent);
+}
+
+.button:disabled {
+  border-color: var(--color-line);
+  color: var(--color-ink-muted);
+  cursor: default;
+}
+
+.track {
+  list-style: none;
+  display: flex;
+  gap: var(--space-4);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: var(--space-3);
+}
+
+.card {
+  flex: 0 0 min(13rem, 70%);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-paper);
+  scroll-snap-align: start;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  color: var(--accent-current);
+}
+
+.name:hover,
+.name:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.hex {
+  font-size: var(--text-body-sm);
+  color: var(--color-ink);
+}
+
+.delta {
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+}

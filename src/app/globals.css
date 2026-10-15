@@ -231,3 +231,30 @@ h4 {
     transition-duration: 0.001ms !important;
   }
 }
+
+/*
+ * スタッガー(IMPROVEMENT_DESIGN「スタッガー(03)」): 一覧のカードが順に現れる。
+ * 使い方: className に "stagger"、style に { "--i": index }。遅延は12番目で頭打ち(長い一覧でも待たせない)。
+ * 動きを減らす設定では、遅延ごと無効にして最初から表示する(アニメーションは付けない)。
+ */
+.stagger {
+  animation: stagger-in 0.4s ease-out both;
+  animation-delay: calc(min(var(--i, 0), 12) * 40ms);
+}
+
+@keyframes stagger-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger {
+    animation: none;
+  }
+}

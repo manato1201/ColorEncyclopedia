@@ -5,6 +5,8 @@ import {
   ShapeVisualizer,
   hasShapeVisualizer,
 } from "@/components/visualizer/ShapeVisualizer";
+import { TermNotes } from "@/components/colors/TermNotes";
+import { SHAPE_TERM_NOTES } from "@/data/term-notes";
 import { shapeLoader } from "@/lib/content/shapes";
 
 type ShapeDetailPageProps = {
@@ -24,6 +26,8 @@ export default async function ShapeDetailPage({
   if (!shape) {
     notFound();
   }
+
+  const note = SHAPE_TERM_NOTES[id];
 
   return (
     <div className={styles.page}>
@@ -67,6 +71,15 @@ export default async function ShapeDetailPage({
           />
         </section>
       </div>
+
+      {note ? (
+        <section className={styles.extra} aria-labelledby="notes-heading">
+          <h2 id="notes-heading" className={styles.sectionLabel}>
+            NOTES 見るポイントと混同しやすい点
+          </h2>
+          <TermNotes note={note} />
+        </section>
+      ) : null}
     </div>
   );
 }
