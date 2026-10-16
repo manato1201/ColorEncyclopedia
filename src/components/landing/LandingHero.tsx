@@ -3,6 +3,7 @@ import styles from "./LandingHero.module.css";
 import { ConcentricCircles } from "@/components/hud/ConcentricCircles";
 import { ColorSwatch } from "@/components/hud/ColorSwatch";
 import { GlitchText } from "@/components/hud/GlitchText";
+import { CountUp } from "@/components/ui/CountUp";
 import { IconArrowDown } from "@/components/icons/Icons";
 import { ThemeSphere } from "@/components/theme/ThemeSphere";
 
@@ -57,7 +58,7 @@ export function LandingHero({ stats, orbitSwatches }: LandingHeroProps) {
             <li key={stat.label} className={styles.stat}>
               <span className={styles.statLabel}>{stat.label}</span>
               <span className={styles.statValue}>
-                <span className={`num ${styles.statNumber}`}>{stat.value}</span>
+                <CountUp value={stat.value} className={`num ${styles.statNumber}`} />
                 <span className={styles.statUnit}>{stat.unit}</span>
               </span>
               {stat.note ? <span className={styles.statNote}>{stat.note}</span> : null}
@@ -78,10 +79,13 @@ export function LandingHero({ stats, orbitSwatches }: LandingHeroProps) {
             key={swatch.id}
             href={`/colors/${swatch.id}`}
             className={styles.orbit}
-            style={{
-              top: ORBIT_SLOTS[i % ORBIT_SLOTS.length].top,
-              left: ORBIT_SLOTS[i % ORBIT_SLOTS.length].left,
-            }}
+            style={
+              {
+                top: ORBIT_SLOTS[i % ORBIT_SLOTS.length].top,
+                left: ORBIT_SLOTS[i % ORBIT_SLOTS.length].left,
+                "--i": i,
+              } as React.CSSProperties
+            }
           >
             <ColorSwatch hex={swatch.hex} size={18} />
             {/* 色だけで伝えない: 見本には必ず名前と値を併記する */}

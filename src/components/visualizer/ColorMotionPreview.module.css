@@ -1,0 +1,205 @@
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+/* 見本の地は、テーマで変えない中立灰。四隅のカッコと LIVE 表示で「動いている」ことを示す */
+.stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  min-height: 15rem;
+  padding: var(--space-8) var(--space-4) var(--space-6);
+  background: var(--swatch-stage);
+  border-radius: var(--radius-card);
+  color: var(--swatch-ink);
+}
+
+.corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 0 solid var(--swatch-ink);
+  opacity: 0.5;
+}
+
+.corner[data-pos="tl"] {
+  top: 10px;
+  left: 10px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+}
+
+.corner[data-pos="tr"] {
+  top: 10px;
+  right: 10px;
+  border-top-width: 1px;
+  border-right-width: 1px;
+}
+
+.corner[data-pos="bl"] {
+  bottom: 10px;
+  left: 10px;
+  border-bottom-width: 1px;
+  border-left-width: 1px;
+}
+
+.corner[data-pos="br"] {
+  right: 10px;
+  bottom: 10px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+}
+
+.live {
+  position: absolute;
+  top: 12px;
+  right: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-num, monospace);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+}
+
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--swatch-ink);
+  opacity: 0.35;
+}
+
+.liveOn {
+  opacity: 1;
+  animation: livePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+.color {
+  display: block;
+  width: 9rem;
+  height: 9rem;
+  border-radius: 50%;
+  border: 4px solid var(--swatch-paper);
+  box-sizing: border-box;
+}
+
+.readout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--text-caption);
+  white-space: pre;
+}
+
+.axis {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.axisHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.axisLabel {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.axisValue {
+  font-size: var(--text-body-sm);
+  color: var(--accent-current);
+  white-space: pre;
+}
+
+.track {
+  position: relative;
+  height: 10px;
+  border: 1px solid var(--swatch-stage);
+}
+
+.marker {
+  position: absolute;
+  top: -6px;
+  width: 2px;
+  height: 20px;
+  margin-left: -1px;
+  background: var(--color-ink);
+  box-shadow: 0 0 0 1px var(--color-paper);
+}
+
+.caption {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.steps {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--color-ink-muted);
+}
+
+.stepActive {
+  color: var(--accent-current);
+  font-weight: var(--weight-bold);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.speeds {
+  display: inline-flex;
+  margin-left: auto;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-interactive);
+  overflow: hidden;
+}
+
+.speed {
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  background: transparent;
+  color: var(--color-ink);
+  font-size: var(--text-caption);
+  cursor: pointer;
+}
+
+.speed:hover,
+.speed:focus-visible {
+  color: var(--accent-current);
+}
+
+.speedActive,
+.speedActive:hover {
+  background: var(--accent-current);
+  color: var(--on-accent);
+}

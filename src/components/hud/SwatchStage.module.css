@@ -13,6 +13,8 @@
   width: 62%;
   height: 62%;
   border-radius: 50%;
+  /* 選択が変わったとき、色がなめらかに移る(カタログの主役の見本) */
+  transition: background-color 0.5s ease;
 }
 
 .stage > svg {

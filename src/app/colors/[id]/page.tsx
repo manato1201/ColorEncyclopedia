@@ -12,6 +12,7 @@ import { RelatedCarousel } from "@/components/colors/RelatedCarousel";
 import { TermNotes } from "@/components/colors/TermNotes";
 import { SectionNav, type SectionNavItem } from "@/components/ui/SectionNav";
 import { Tooltip } from "@/components/ui/Tooltip";
+import { ColorMotionPreview } from "@/components/visualizer/ColorMotionPreview";
 import { ColorSystemsVisualizer } from "@/components/visualizer/ColorSystemsVisualizer";
 import { ContrastVisualizer } from "@/components/visualizer/ContrastVisualizer";
 import { hexToRgb } from "@/lib/color-math";
@@ -48,7 +49,7 @@ export default async function ColorDetailPage({
     ...(colorValue ? [{ id: "sec-data", label: "DATA 数値" }] : []),
     { id: "sec-visual", label: "VISUALIZE 可視化" },
     { id: "sec-about", label: "ABOUT 概要" },
-    ...(colorValue ? [{ id: "sec-systems", label: "SYSTEMS 方式比較" }, { id: "sec-contrast", label: "CONTRAST" }] : []),
+    ...(colorValue ? [{ id: "sec-live", label: "LIVE 軸を動かす" }, { id: "sec-systems", label: "SYSTEMS 方式比較" }, { id: "sec-contrast", label: "CONTRAST" }] : []),
     ...(note ? [{ id: "sec-notes", label: "NOTES 見分け方" }] : []),
     ...(related.length > 0 ? [{ id: "sec-related", label: "RELATED 近い色" }] : []),
   ];
@@ -145,6 +146,13 @@ export default async function ColorDetailPage({
 
       {colorValue ? (
         <div className={styles.tools}>
+          <section id="sec-live" className={styles.tool} aria-labelledby="live-heading">
+            <h2 id="live-heading" className={styles.sectionLabel}>
+              LIVE 彩度・明度・色相を1つずつ動かす
+            </h2>
+            <ColorMotionPreview hex={colorValue.hex} />
+          </section>
+
           <section id="sec-systems" className={styles.tool} aria-labelledby="systems-heading">
             <h2 id="systems-heading" className={styles.sectionLabel}>
               SYSTEMS 同じ色を別の方式で並べる
