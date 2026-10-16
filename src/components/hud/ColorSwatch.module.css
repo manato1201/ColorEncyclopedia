@@ -6,4 +6,5 @@
   border-color: var(--swatch-stage);
   background-clip: padding-box;
   flex-shrink: 0;
+  transition: background-color 0.3s ease;
 }

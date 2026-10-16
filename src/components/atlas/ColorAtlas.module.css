@@ -178,3 +178,17 @@
     gap: var(--space-8);
   }
 }
+
+/* 見方の切り替え: 目盛りは重なって入れ替わり、点は新しい座標へ移動する */
+.layer {
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.layerHidden {
+  opacity: 0;
+}
+
+.dotWrap {
+  transition: transform 0.9s cubic-bezier(0.22, 0.8, 0.24, 1);
+}
