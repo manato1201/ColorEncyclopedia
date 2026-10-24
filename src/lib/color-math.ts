@@ -154,3 +154,52 @@ export const WCAG_AAA_LARGE = 4.5;
 export function deltaE76(a: Lab, b: Lab): number {
   return Math.sqrt((a.l - b.l) ** 2 + (a.a - b.a) ** 2 + (a.b - b.b) ** 2);
 }
+
+// ---- LCh → sRGB(逆変換)と、sRGBに収まる最大の彩度 ----
+
+/** rgbToLabと同じ白色点(D65)・行列の逆変換。範囲外の値はそのまま返す(収まるかどうかは inGamut で判定)。 */
+export function labToRgbUnclamped({ l, a, b }: Lab): { r: number; g: number; b: number } {
+  const fy = (l + 16) / 116;
+  const fx = fy + a / 500;
+  const fz = fy - b / 200;
+  const finv = (t: number) => (t ** 3 > 0.008856 ? t ** 3 : (t - 16 / 116) / 7.787);
+  const x = finv(fx) * 0.95047;
+  const y = finv(fy) * 1.0;
+  const z = finv(fz) * 1.08883;
+  const rl = 3.2406 * x - 1.5372 * y - 0.4986 * z;
+  const gl = -0.9689 * x + 1.8758 * y + 0.0415 * z;
+  const bl = 0.0557 * x - 0.204 * y + 1.057 * z;
+  const gamma = (c: number) => (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055);
+  return { r: gamma(rl) * 255, g: gamma(gl) * 255, b: gamma(bl) * 255 };
+}
+
+/** LCh(明度L*・彩度C*・色相h°)がsRGBの範囲に収まるか。 */
+export function lchInGamut({ l, c, h }: Lch, epsilon = 0.5): boolean {
+  const rad = (h * Math.PI) / 180;
+  const { r, g, b } = labToRgbUnclamped({ l, a: c * Math.cos(rad), b: c * Math.sin(rad) });
+  return [r, g, b].every((v) => v >= -epsilon && v <= 255 + epsilon);
+}
+
+/**
+ * 同じ明度L*・色相hで、sRGBに収まる最大の彩度C*(二分探索)。
+ * 色相によって出せる彩度の上限は大きく違う(例: 同じ明度でも、青や赤は余地が大きく、黄緑〜青緑は小さい)。
+ */
+export function maxChromaInGamut(l: number, h: number): number {
+  let lo = 0;
+  let hi = 160;
+  for (let i = 0; i < 24; i++) {
+    const mid = (lo + hi) / 2;
+    if (lchInGamut({ l, c: mid, h })) lo = mid;
+    else hi = mid;
+  }
+  return lo;
+}
+
+/** LCh → HEX。sRGBに収まらない場合は、同じ明度・色相で収まる最大の彩度に抑えて返す(clipped で知らせる)。 */
+export function lchToHex({ l, c, h }: Lch): { hex: string; clipped: boolean; chroma: number } {
+  const max = maxChromaInGamut(l, h);
+  const chroma = Math.min(c, max);
+  const rad = (h * Math.PI) / 180;
+  const rgb = labToRgbUnclamped({ l, a: chroma * Math.cos(rad), b: chroma * Math.sin(rad) });
+  return { hex: rgbToHex(rgb), clipped: c > max, chroma };
+}

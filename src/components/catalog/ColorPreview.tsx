@@ -1,7 +1,9 @@
 import styles from "./Preview.module.css";
 import { ExamLevelBadge } from "@/components/hud/ExamLevelBadge";
+import { PaletteSwatches } from "@/components/colors/PaletteSwatches";
+import { PracticeBadge } from "@/components/hud/PracticeBadge";
 import { SwatchStage } from "@/components/hud/SwatchStage";
-import { hexToRgb } from "@/lib/color-math";
+import { deriveColorValues } from "@/lib/color-values";
 import { formatHsv, formatLab, formatRgb } from "@/lib/color-format";
 import type { ColorMeta } from "@/lib/content/colors";
 
@@ -14,15 +16,17 @@ type ColorPreviewProps = {
  * 色見本は必ず名前と値を一緒に出す(色だけで伝えない)。数値は等幅・固定幅で桁を揃える。
  */
 export function ColorPreview({ color }: ColorPreviewProps) {
-  const value = color.colorValue;
+  // 画面の数値は、HEXからの単一の変換で出す(deriveColorValues)
+  const value = color.colorValue ? deriveColorValues(color.colorValue.hex) : null;
 
   return (
     <article className={styles.preview}>
-      <SwatchStage hex={value?.hex} size={220} />
+      {color.palette && !value ? null : <SwatchStage hex={value?.hex} size={220} />}
       <div className={styles.text}>
         <p className={styles.category}>
           {color.category} ・ {color.subcategory}
           {color.examLevel ? <ExamLevelBadge level={color.examLevel} /> : null}
+          {color.beyondExam ? <PracticeBadge /> : null}
         </p>
         <h2 className={styles.name}>{color.name}</h2>
         <p className="subtitle">{color.nameEn}</p>
@@ -34,7 +38,7 @@ export function ColorPreview({ color }: ColorPreviewProps) {
             </div>
             <div className={styles.valueRow}>
               <dt>RGB</dt>
-              <dd className="num">{formatRgb(hexToRgb(value.hex))}</dd>
+              <dd className="num">{formatRgb(value.rgb)}</dd>
             </div>
             <div className={styles.valueRow}>
               <dt>HSV</dt>
@@ -47,6 +51,7 @@ export function ColorPreview({ color }: ColorPreviewProps) {
           </dl>
         ) : null}
         <p className={styles.summary}>{color.summary}</p>
+        {color.palette ? <PaletteSwatches items={color.palette} compact /> : null}
       </div>
     </article>
   );

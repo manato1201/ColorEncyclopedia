@@ -12,6 +12,7 @@
 // 7. colorValue.hsv / colorValue.lab が hex から再計算した値と一致すること(転記ミスの検出)
 // 8. 検定問題(src/data/exam-questions.ts)のid重複・選択肢・答えの範囲・explanationRefの解決
 // 9. 全エントリに定型項目(src/data/term-notes.ts: 見るポイント/混同しやすい点/使うときの注意)があること
+// 10. beyondExam(実務の用語)は examLevel を持たず、palette は #RRGGBB の見本であること
 
 import fs from "node:fs";
 import path from "node:path";
@@ -63,6 +64,25 @@ function verifyColors() {
     const pair = `${data.category}::${data.subcategory}`;
     if (!pairs.has(pair)) {
       fail(file, `"${data.category} / ${data.subcategory}" が COLOR_CATEGORY_TAXONOMY に存在しない`);
+    }
+
+    if (data.beyondExam !== undefined && data.beyondExam !== true) {
+      fail(file, "beyondExam は true のときだけ書く(検定範囲として確認していない実務の用語の印)");
+    }
+    if (data.beyondExam === true && data.examLevel !== undefined) {
+      fail(file, "beyondExam と examLevel は同時に持てない(検定範囲として確認していない用語に級を付けない)");
+    }
+    if (data.palette !== undefined) {
+      if (!Array.isArray(data.palette) || data.palette.length === 0) {
+        fail(file, "palette は1件以上の配列である必要がある");
+      } else {
+        for (const item of data.palette) {
+          if (!item || typeof item.name !== "string" || item.name.trim() === "") fail(file, "palette の項目に name がない");
+          if (!item || typeof item.hex !== "string" || !HEX_PATTERN.test(item.hex)) {
+            fail(file, `palette の hex "${item?.hex}" が #RRGGBB 形式ではない`);
+          }
+        }
+      }
     }
 
     if (data.examLevel !== undefined && !VALID_EXAM_LEVELS.has(data.examLevel)) {

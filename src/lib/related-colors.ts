@@ -1,4 +1,4 @@
-import { deltaE76 } from "@/lib/color-math";
+import { deltaE76, hexToLab } from "@/lib/color-math";
 import type { ColorMeta } from "@/lib/content/colors";
 
 export const RELATED_COUNT = 6;
@@ -14,7 +14,7 @@ export function findRelatedColors(
 ) {
   const base = all.find((color) => color.id === baseId);
   if (!base?.colorValue) return [];
-  const baseLab = base.colorValue.lab;
+  const baseLab = hexToLab(base.colorValue.hex);
   return all
     .flatMap((color) =>
       color.id !== baseId && color.colorValue
@@ -24,7 +24,7 @@ export function findRelatedColors(
               name: color.name,
               nameEn: color.nameEn,
               hex: color.colorValue.hex,
-              deltaE: deltaE76(baseLab, color.colorValue.lab),
+              deltaE: deltaE76(baseLab, hexToLab(color.colorValue.hex)),
             },
           ]
         : [],

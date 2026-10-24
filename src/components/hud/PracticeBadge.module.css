@@ -1,0 +1,11 @@
+.badge {
+  display: inline-block;
+  padding: 0.125rem var(--space-2);
+  border: 1px dashed var(--color-ink-muted);
+  border-radius: var(--radius-interactive);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+}

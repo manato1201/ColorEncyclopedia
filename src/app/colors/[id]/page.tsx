@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
+import { PaletteSwatches } from "@/components/colors/PaletteSwatches";
+import { PracticeBadge } from "@/components/hud/PracticeBadge";
 import { ExamLevelBadge } from "@/components/hud/ExamLevelBadge";
 import { SwatchStage } from "@/components/hud/SwatchStage";
 import { ApplyThemeButton } from "@/components/theme/ApplyThemeButton";
@@ -15,7 +17,7 @@ import { Tooltip } from "@/components/ui/Tooltip";
 import { ColorMotionPreview } from "@/components/visualizer/ColorMotionPreview";
 import { ColorSystemsVisualizer } from "@/components/visualizer/ColorSystemsVisualizer";
 import { ContrastVisualizer } from "@/components/visualizer/ContrastVisualizer";
-import { hexToRgb } from "@/lib/color-math";
+import { deriveColorValues } from "@/lib/color-values";
 import { formatHsv, formatLab, formatRgb } from "@/lib/color-format";
 import { COLOR_VALUE_TERMS } from "@/lib/color-terms";
 import { colorLoader } from "@/lib/content/colors";
@@ -40,13 +42,16 @@ export default async function ColorDetailPage({
     notFound();
   }
 
-  const { colorValue } = color;
+  const { colorValue: storedValue } = color;
+  // 画面の数値は、HEXからの単一の変換で出す(deriveColorValues)。記載値との一致は npm run verify が確認する
+  const colorValue = storedValue ? deriveColorValues(storedValue.hex) : null;
   const note = COLOR_TERM_NOTES[id];
   const related = findRelatedColors(id, colorLoader.getAllMeta());
 
   // ページ内の目次(存在する節だけ)
   const sections: SectionNavItem[] = [
     ...(colorValue ? [{ id: "sec-data", label: "DATA 数値" }] : []),
+    ...(color.palette ? [{ id: "sec-palette", label: "PALETTE 見本" }] : []),
     { id: "sec-visual", label: "VISUALIZE 可視化" },
     { id: "sec-about", label: "ABOUT 概要" },
     ...(colorValue ? [{ id: "sec-live", label: "LIVE 軸を動かす" }, { id: "sec-systems", label: "SYSTEMS 方式比較" }, { id: "sec-contrast", label: "CONTRAST" }] : []),
@@ -74,6 +79,11 @@ export default async function ColorDetailPage({
               <ExamLevelBadge level={color.examLevel} />
             </div>
           ) : null}
+          {color.beyondExam ? (
+            <div className={styles.badges}>
+              <PracticeBadge />
+            </div>
+          ) : null}
         </div>
       </header>
 
@@ -93,7 +103,7 @@ export default async function ColorDetailPage({
               <dt>
                 <Tooltip label={COLOR_VALUE_TERMS.RGB}>RGB</Tooltip>
               </dt>
-              <dd className="num">{formatRgb(hexToRgb(colorValue.hex))}</dd>
+              <dd className="num">{formatRgb(colorValue.rgb)}</dd>
             </div>
             <div className={styles.dataItem}>
               <dt>
@@ -113,6 +123,15 @@ export default async function ColorDetailPage({
       ) : null}
 
       <SectionNav items={sections} />
+
+      {color.palette ? (
+        <section id="sec-palette" className={styles.extra} aria-labelledby="palette-heading">
+          <h2 id="palette-heading" className={styles.sectionLabel}>
+            PALETTE 見本(自作の配色。名前とHEXを併記)
+          </h2>
+          <PaletteSwatches items={color.palette} />
+        </section>
+      ) : null}
 
       <div className={styles.layout}>
         <section id="sec-visual" className={styles.visualPane} aria-labelledby="visual-heading">

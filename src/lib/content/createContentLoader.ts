@@ -19,6 +19,13 @@ export interface ColorFrontmatter extends ContentFrontmatterBase {
     lab: { l: number; a: number; b: number };
   };
   examLevel?: "1級" | "2級" | "3級" | "UC級";
+  /**
+   * 色彩検定の出題範囲として確認していない、実務(映像・撮影など)の用語。trueのとき examLevel は持たない。
+   * 画面では「実務の用語」と区別して表示する。
+   */
+  beyondExam?: boolean;
+  /** 自前の見本(単一のcolorValueでは表せない、複数色で見せる用語用)。hexはverifyで形式を検査する。 */
+  palette?: { name: string; hex: string }[];
 }
 
 export type ShapeFrontmatter = ContentFrontmatterBase;
