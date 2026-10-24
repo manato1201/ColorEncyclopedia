@@ -10,10 +10,13 @@ import { IconArrowRight, IconRefresh } from "@/components/icons/Icons";
 import { EntryList } from "@/components/explorer/EntryList";
 import { useEntryFilter } from "@/components/explorer/useEntryFilter";
 import { ColorVisualizer, hasColorVisualizer } from "@/components/visualizer/ColorVisualizer";
+import { ChromaLab } from "./ChromaLab";
 import { ColorTuneLab } from "./ColorTuneLab";
+import { HarmonySets } from "./HarmonySets";
 import { ColorSystemsVisualizer } from "@/components/visualizer/ColorSystemsVisualizer";
-import { contrastRatio, hexToRgb, WCAG_AA_NORMAL, WCAG_AAA_NORMAL } from "@/lib/color-math";
-import { formatHsv, formatRgb } from "@/lib/color-format";
+import { contrastRatio, WCAG_AA_NORMAL, WCAG_AAA_NORMAL } from "@/lib/color-math";
+import { deriveColorValues } from "@/lib/color-values";
+import { formatHsv, formatLab, formatRgb } from "@/lib/color-format";
 import { COLOR_CATEGORY_ORDER, COLOR_SUBCATEGORIES_BY_CATEGORY } from "@/lib/color-categories";
 import type { ColorMeta } from "@/lib/content/colors";
 
@@ -110,9 +113,11 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
                   {c.examLevel ? <ExamLevelBadge level={c.examLevel} /> : null}
                   {c.colorValue ? (
                     <div className={`num ${styles.cardValues}`}>
+                      {/* どの数値も、HEXからの同じ変換(deriveColorValues)で出す */}
                       <span>{c.colorValue.hex}</span>
-                      <span>{formatRgb(hexToRgb(c.colorValue.hex))}</span>
-                      <span>{formatHsv(c.colorValue.hsv)}</span>
+                      <span>{formatRgb(deriveColorValues(c.colorValue.hex).rgb)}</span>
+                      <span>{formatHsv(deriveColorValues(c.colorValue.hex).hsv)}</span>
+                      <span>{formatLab(deriveColorValues(c.colorValue.hex).lab)}</span>
                     </div>
                   ) : null}
                   <p className={styles.cardSummary}>{c.summary}</p>
@@ -192,6 +197,30 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
               </div>
             </section>
           ) : null}
+
+          {withColorValue.length > 0 ? (
+            <section className={styles.section} aria-labelledby="cmp-harmony">
+              <h2 id="cmp-harmony" className={styles.sectionLabel}>
+                HARMONY 調和の選び方を並べる
+              </h2>
+              <HarmonySets
+                key={withColorValue[0].id}
+                name={withColorValue[0].name}
+                hex={withColorValue[0].colorValue!.hex}
+              />
+            </section>
+          ) : null}
+
+          <section className={styles.section} aria-labelledby="cmp-chroma">
+            <h2 id="cmp-chroma" className={styles.sectionLabel}>
+              CHROMA 同じ明度でも、色相で出せる鮮やかさは違う
+            </h2>
+            <ChromaLab />
+          </section>
+
+          <p className={styles.claim}>
+            この画面の数値は、すべて表示している色のHEXから、同じ変換(RGB→HSV・Lab)で計算しています。記載値は npm run verify が同じ関数で再計算して一致を確認しています。
+          </p>
 
           <div className={styles.actions}>
             <ActionButton icon={<IconRefresh />} onClick={clear} disabled={selected.length === 0}>

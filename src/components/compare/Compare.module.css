@@ -269,3 +269,14 @@
   color: var(--color-negative);
   font-size: var(--text-caption);
 }
+
+/* 画面の下に置く、数値の出どころの一文 */
+.claim {
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--accent-current);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  line-height: 1.8;
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}

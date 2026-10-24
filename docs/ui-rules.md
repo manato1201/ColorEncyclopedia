@@ -20,6 +20,9 @@
 
 - 見本の周囲は常に中立灰(`--swatch-stage` / `--swatch-ink` / `--swatch-paper`)。**テーマ(ライト/ダーク/選択色)で変えない**。周りの色で見え方が変わるため。
 - 見本には**必ず名前または値を併記**する。色だけで意味を伝えない。
+- 画面に出す色の数値(RGB・HSV・Lab)は、HEXからの単一の変換(`deriveColorValues`)で出す。frontmatterの記載値を直接表示しない(記載値は `npm run verify` が再計算と突き合わせる)。
+- 複数色で見せる用語は `palette`(名前+HEX)を使い、`PaletteSwatches` で並べる。
+- 色彩検定の出題範囲として確認していない用語は `beyondExam: true` とし、`PracticeBadge`(点線の「実務の用語」)で、級バッジ(`ExamLevelBadge`)の項目と区別する。
 - 画面上の色は環境により異なる旨を、比較画面とAtlasに固定の注記で出す。
 
 ## 文字・数字

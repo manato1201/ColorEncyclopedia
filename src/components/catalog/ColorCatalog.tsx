@@ -54,7 +54,7 @@ export function ColorCatalog({ colors, featuredId }: ColorCatalogProps) {
           </span>
         )
       }
-      renderValue={(color) => color.colorValue?.hex ?? color.examLevel ?? ""}
+      renderValue={(color) => color.colorValue?.hex ?? color.examLevel ?? (color.beyondExam ? "実務" : "")}
       renderPreview={(color) => <ColorPreview color={color} />}
       renderActions={(color) => {
         const question = FIRST_QUESTION_BY_ENTRY.get(color.id);

@@ -19,6 +19,8 @@ export const COLOR_CATEGORY_TAXONOMY = [
       "ユニバーサルデザイン",
     ],
   },
+  // 色彩検定の範囲として確認していない、映像・撮影の実務の用語(IMPROVEMENT_DESIGN Y2)
+  { category: "カラーグレーディング・光の用語", subcategories: ["グレーディング", "光"] },
 ] as const;
 
 export const COLOR_CATEGORY_ORDER = COLOR_CATEGORY_TAXONOMY.map((c) => c.category);
