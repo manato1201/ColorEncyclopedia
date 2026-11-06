@@ -33,6 +33,25 @@ import {
   HUE_WHEEL_VISUALIZERS,
 } from "../src/lib/color-visualizers.ts";
 
+import { SHAPE_3D } from "../src/lib/shape-3d.ts";
+import { getColor3D } from "../src/lib/color-3d.ts";
+import { CUBE_NETS, enumerateCubeNets, enumerateHexominoes, eulerCharacteristic, foldsToCube, POLYHEDRA } from "../src/lib/geometry3d/polyhedra.ts";
+import { fractalTree3d, hilbert3dPath, sierpinskiTetrahedra, subdividedCubes } from "../src/lib/geometry3d/fractals.ts";
+import {
+  bezierCurve,
+  BEZIER_CONTROL_POINTS,
+  conicKind,
+  conicSection,
+  hyperboloidLines,
+  icosahedronEdges,
+  lissajous3d,
+  phyllotaxisSphere,
+  shellSurface,
+  spherePacking,
+} from "../src/lib/geometry3d/curves.ts";
+import { colorPosition, hsvSolidMesh, labGamutCloud, rgbCubeMesh } from "../src/lib/geometry3d/color-solids.ts";
+import { allFinite, maxAbs } from "../src/lib/geometry3d/mesh-data.ts";
+
 /** frontmatterのhsvは整数丸め(±1)、labは小数1桁丸めなので、再計算値との許容差を持たせる。 */
 const HSV_TOLERANCE = 1;
 const LAB_TOLERANCE = 0.2;
@@ -303,11 +322,85 @@ function verifyVisualizers() {
   );
 }
 
+/**
+ * 3D表示(three.js)の幾何データと対応表を、three.jsなしで検査する。
+ * - 多面体はオイラーの多面体定理 V−E+F=2 を満たす
+ * - 立方体の展開図は、6マスの連結図形35種のうち、サイコロを転がして折りたためる11種になる
+ * - 3次元ヒルベルト曲線は、全格子点をちょうど1回、隣へ移りながらたどる
+ * - メンガーのスポンジ 20^n、カントール塵 8^n、シェルピンスキーの四面体 4^n の個数
+ * - 円錐の切り口は、傾きに応じて 円・楕円・放物線・双曲線(2本)になる
+ * - 色立体のメッシュ・点群は有限で、範囲 [-1.7, 1.7] に収まる
+ */
+function verifyGeometry3d() {
+  const shapeIds = new Set(listIds("shapes"));
+  const colorIds = new Set(listIds("colors"));
+
+  for (const p of POLYHEDRA) {
+    if (eulerCharacteristic(p) !== 2) fail(`3d:polyhedron:${p.id}`, `V−E+F が 2 でない(${eulerCharacteristic(p)})`);
+  }
+  if (enumerateHexominoes().length !== 35) fail("3d:nets", "6マスの連結図形(ヘキソミノ)が35種類でない");
+  if (enumerateCubeNets().length !== 11 || CUBE_NETS.length !== 11 || !CUBE_NETS.every(foldsToCube)) fail("3d:nets", "立方体の展開図が11種類でない");
+
+  for (let order = 1; order <= 3; order++) {
+    const path = hilbert3dPath(order);
+    const step = 2 / 2 ** order;
+    const seen = new Set(path.map((q) => q.join(",")));
+    if (path.length !== 8 ** order || seen.size !== path.length) fail(`3d:hilbert:${order}`, "点の数・重複が合わない");
+    for (let i = 1; i < path.length; i++) {
+      const d = Math.abs(path[i][0] - path[i - 1][0]) + Math.abs(path[i][1] - path[i - 1][1]) + Math.abs(path[i][2] - path[i - 1][2]);
+      if (Math.abs(d - step) > 1e-9) fail(`3d:hilbert:${order}`, `${i}番目で隣の点に移っていない`);
+    }
+  }
+  for (let n = 0; n <= 3; n++) {
+    if (subdividedCubes(n, "menger").length !== 20 ** n) fail("3d:menger", `${n}段の立方体の数が 20^n でない`);
+    if (subdividedCubes(n, "cantor").length !== 8 ** n) fail("3d:cantor", `${n}段の立方体の数が 8^n でない`);
+    if (sierpinskiTetrahedra(n).length !== 4 ** n) fail("3d:sierpinski", `${n}段の四面体の数が 4^n でない`);
+  }
+  if (fractalTree3d(5, 35).length !== (3 ** 6 - 1) / 2) fail("3d:tree", "枝の数が (3^(n+1)−1)/2 でない");
+
+  const kinds = [0, 25, 45, 65].map((t) => conicKind(t));
+  if (kinds.join() !== "circle,ellipse,parabola,hyperbola") fail("3d:conic", `切り口の種類が想定と違う(${kinds.join()})`);
+  if (conicSection(65).length !== 2 || conicSection(25).length !== 1) fail("3d:conic", "双曲線は2本、楕円は1本の曲線になるはず");
+  if (icosahedronEdges().length !== 30) fail("3d:golden", "正二十面体の辺が30本でない");
+
+  const geometry = {
+    "phyllotaxis": phyllotaxisSphere(500, 137.5).flat(),
+    "shell": Array.from(shellSurface({ turns: 3.2, growth: 1.618 }).positions),
+    "lissajous": lissajous3d([3, 2, 1], [Math.PI / 2, 0, 0]).flat(),
+    "packing": spherePacking("fcc", 3).flat(),
+    "hyperboloid": hyperboloidLines(60, 70).flat(2),
+    "bezier": bezierCurve(BEZIER_CONTROL_POINTS).flat(),
+    "conic": conicSection(60).flat(2),
+    "hsv-solid": Array.from(hsvSolidMesh({ cutStart: 200, cutSpan: 90 }).positions),
+    "rgb-cube": Array.from(rgbCubeMesh(10).positions),
+    "lab-gamut": Array.from(labGamutCloud(26).positions),
+  };
+  for (const [name, values] of Object.entries(geometry)) {
+    if (!allFinite(values)) fail(`3d:geometry:${name}`, "有限でない座標");
+    else if (maxAbs(values) > (name === "packing" ? 20 : 3)) fail(`3d:geometry:${name}`, `座標の最大値が大きすぎる(${maxAbs(values).toFixed(2)})`);
+  }
+  for (const hex of ["#000000", "#FFFFFF", "#EB6238", "#2792C3"]) {
+    for (const space of ["rgb", "hsv", "lab"]) {
+      const pos = colorPosition(space, hex);
+      if (!allFinite(pos) || maxAbs(pos) > 1.7) fail(`3d:position:${space}`, `${hex} の位置が範囲外: ${pos.join(",")}`);
+    }
+  }
+
+  // 対応表: 実在するエントリを指し、図形は2Dの可視化も持つ(切り替えは2Dの可視化の中にあるため)
+  for (const id of Object.keys(SHAPE_3D)) {
+    if (!shapeIds.has(id)) fail(`3d:shape:${id}`, "対応する content/shapes のエントリが存在しない");
+    if (!(id in SHAPE_VISUALIZERS)) fail(`3d:shape:${id}`, "2Dの可視化がない(立体への切り替えは2Dの可視化の中にある)");
+  }
+  const colors3d = [...colorIds].filter((id) => getColor3D(id) !== null).length;
+  console.log(`3d: 図形 ${Object.keys(SHAPE_3D).length}/${shapeIds.size}件、色 ${colors3d}/${colorIds.size}件が立体(3D)表示に対応`);
+}
+
 verifyColors();
 verifyShapes();
 verifyExamQuestions();
 verifyTermNotes();
 verifyVisualizers();
+verifyGeometry3d();
 
 if (errors > 0) {
   console.error(`${errors}件のfrontmatter検証エラー`);

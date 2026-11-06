@@ -15,9 +15,13 @@ import {
   SEASON_PALETTE_IDS,
 } from "@/lib/color-visualizers";
 import { colorLoader } from "@/lib/content/colors";
+import { Color3DVisualizer } from "@/components/visualizer3d/Color3DVisualizer";
+import { getColor3D } from "@/lib/color-3d";
 
 type ColorEntryVisualProps = {
   id: string;
+  /** 色の名前(色立体の点の名前に使う)。 */
+  name?: string;
   /** colorValue を持つ色のHEX。 */
   hex?: string;
   /** 複数色で見せる用語のパレット。 */
@@ -29,7 +33,7 @@ type ColorEntryVisualProps = {
  * - 見え方の場面(対比・残像など)/ 混色 / 季節の木+パレット / パレットの分布 / デモ用の色の色相環・配色 / colorValue の色相環・配色
  * どれにも当てはまらないときは、対応していない旨を出す。
  */
-export function ColorEntryVisual({ id, hex, palette }: ColorEntryVisualProps) {
+export function ColorEntryVisual({ id, name, hex, palette }: ColorEntryVisualProps) {
   const blocks: { key: string; title: string; node: React.ReactNode }[] = [];
 
   if (id in COLOR_EFFECT_SCENES) {
@@ -69,6 +73,32 @@ export function ColorEntryVisual({ id, hex, palette }: ColorEntryVisualProps) {
           </p>
           <ColorVisualizer hex={COLOR_DEMO_HEX[id]} />
         </div>
+      ),
+    });
+  }
+
+  // 色立体(3D): 色の位置・パレットの散らばり・概念に合う空間
+  const solid = getColor3D(id);
+  if (solid) {
+    const markers =
+      solid.markers === "hex" && hex
+        ? [{ name: name ?? id, hex }]
+        : solid.markers === "palette" && palette
+          ? palette
+          : solid.markers === "demo" && id in COLOR_DEMO_HEX
+            ? [{ name: "デモ用の色", hex: COLOR_DEMO_HEX[id] }]
+            : [];
+    blocks.push({
+      key: "space3d",
+      title: "立体(3D)で見る",
+      node: (
+        <Color3DVisualizer
+          markers={markers}
+          defaultSpace={solid.space}
+          title={solid.title}
+          note={solid.note}
+          caption={solid.markers === "demo" && markers.length > 0 ? "デモ用の色で示しています(この項目自体の色ではありません)。" : undefined}
+        />
       ),
     });
   }

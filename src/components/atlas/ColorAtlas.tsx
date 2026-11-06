@@ -7,6 +7,7 @@ import { ActionLink } from "@/components/hud/ActionLink";
 import { SwatchStage } from "@/components/hud/SwatchStage";
 import { IconArrowRight } from "@/components/icons/Icons";
 import { formatHsv, formatLab } from "@/lib/color-format";
+import { Atlas3D } from "@/components/visualizer3d/Atlas3D";
 import type { Hsv, Lab } from "@/lib/color-math";
 
 export type AtlasPoint = {
@@ -18,7 +19,7 @@ export type AtlasPoint = {
   lab: Lab;
 };
 
-type View = "wheel" | "unrolled";
+type View = "wheel" | "unrolled" | "solid";
 
 /** 2つの見方で同じ座標系(viewBox)を共有する。点は見方の切り替えでなめらかに移動する。 */
 const VIEW_W = 720;
@@ -44,9 +45,9 @@ function unrolledPosition({ h, v }: Hsv) {
 }
 
 /**
- * 色彩Atlas(2D)。全収録色を、同じ数値(HSV・Lab)から2つの見方で並べる。
- * 「色相×彩度(円)」と「色相×明度(展開)」。点を選ぶと下に同じ数値が並ぶ。
- * 3D表示は用意していない(IMPROVEMENT_PLAN C2のフォールバックである2Dを本体にしている)。
+ * 色彩Atlas。全収録色を、同じ数値(HSV・Lab)から3つの見方で並べる。
+ * 「色相×彩度(円)」「色相×明度(展開)」の2Dと、色立体の中に置く「立体(3D)」(three.js。選んだときに初めて読み込む)。
+ * 点を選ぶと下に同じ数値が並ぶ。2Dを本体にし、3Dは同じ点を立体で見る補助にしている。
  * 点の周りは中立灰のステージにして、テーマ色で見え方が変わらないようにしている。
  */
 export function ColorAtlas({ points }: { points: AtlasPoint[] }) {
@@ -95,8 +96,19 @@ export function ColorAtlas({ points }: { points: AtlasPoint[] }) {
             >
               色相 × 明度(展開)
             </button>
+            <button
+              type="button"
+              className={`${styles.tab} ${view === "solid" ? styles.tabActive : ""}`}
+              aria-pressed={view === "solid"}
+              onClick={() => setView("solid")}
+            >
+              立体(3D)
+            </button>
           </div>
 
+          {view === "solid" ? (
+            <Atlas3D points={points} selectedId={selectedId} onSelect={setSelectedId} />
+          ) : (
           <svg
             className={styles.plot}
             viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
@@ -159,7 +171,7 @@ export function ColorAtlas({ points }: { points: AtlasPoint[] }) {
               const { x, y } = view === "wheel" ? wheelPosition(p.hsv) : unrolledPosition(p.hsv);
               const isSelected = p.id === selectedId;
               return (
-                <g key={p.id} className={styles.dotWrap} style={{ transform: `translate(${x}px, ${y}px)` }}>
+                <g key={p.id} className={styles.dotWrap} style={{ transform: `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px)` }}>
                   <circle
                     r={isSelected ? 11 : 8}
                     fill={p.hex}
@@ -175,10 +187,13 @@ export function ColorAtlas({ points }: { points: AtlasPoint[] }) {
               );
             })}
           </svg>
+          )}
 
           <p className={styles.note}>
-            画面上の色は環境により異なります。位置はHSVの値(色相=角度、彩度=中心からの距離、明度=縦位置)で決めており、
-            見た目の色ではなく数値が基準です。
+            画面上の色は環境により異なります。
+            {view === "solid"
+              ? "位置は、選んだ空間(HSV・Lab・RGB)の数値で決めており、見た目の色ではなく数値が基準です。"
+              : "位置はHSVの値(色相=角度、彩度=中心からの距離、明度=縦位置)で決めており、見た目の色ではなく数値が基準です。"}
           </p>
         </div>
 

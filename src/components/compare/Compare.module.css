@@ -45,8 +45,16 @@
   align-items: start;
 }
 
+/* 一覧は画面の高さに収め、内部でスクロールする(比較結果が長くても、一覧はいつも手元にある) */
 .listPane {
+  position: sticky;
+  top: var(--space-6);
   min-width: 0;
+  max-height: calc(100vh - var(--space-12));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding-right: var(--space-2);
 }
 
 .stagePane {
@@ -224,6 +232,13 @@
   .explorer {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-8);
+  }
+
+  .listPane {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
   }
 
   /* 縦積みでは、比較結果(主役)を一覧より上に出す */

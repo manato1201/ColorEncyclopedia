@@ -69,8 +69,16 @@
   align-items: start;
 }
 
+/* 一覧は画面の高さに収め、内部でスクロールする(下まで進んでも主役が画面内に残る) */
 .listPane {
+  position: sticky;
+  top: var(--space-6);
   min-width: 0;
+  max-height: calc(100vh - var(--space-12));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding-right: var(--space-2);
 }
 
 .preview {
@@ -81,6 +89,9 @@
   gap: var(--space-8);
   min-width: 0;
   padding: var(--space-8);
+  /* 画面より背が高いときは、主役の中でスクロールする */
+  max-height: calc(100vh - var(--space-12));
+  overflow-y: auto;
   background: var(--color-paper);
   border-radius: var(--radius-card);
   /* 方眼紙を思わせる罫線(Featured Work Card) */
@@ -122,9 +133,18 @@
     gap: var(--space-8);
   }
 
+  .listPane {
+    position: static;
+    max-height: none;
+    overflow-y: visible;
+    padding-right: 0;
+  }
+
   .preview {
     order: -1;
     position: static;
+    max-height: none;
+    overflow-y: visible;
     padding: var(--space-6);
     scroll-margin-top: var(--space-4);
   }

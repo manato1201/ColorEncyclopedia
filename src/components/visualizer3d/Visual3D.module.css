@@ -1,0 +1,179 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.title {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.note {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  line-height: 1.7;
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.rowLabel {
+  min-width: 5.5rem;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.choice {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-interactive);
+  padding: var(--space-1) var(--space-3);
+  background: transparent;
+  color: var(--color-ink-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.choice:hover {
+  border-color: var(--accent-current);
+  color: var(--accent-current);
+}
+
+.choice[aria-pressed="true"] {
+  background: var(--accent-current);
+  border-color: var(--accent-current);
+  color: var(--on-accent);
+}
+
+.range {
+  flex: 1;
+  min-width: 8rem;
+  accent-color: var(--accent-current);
+}
+
+.rangeValue {
+  min-width: 4.5rem;
+  text-align: right;
+  font-size: var(--text-caption);
+  color: var(--color-ink);
+}
+
+.readout {
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  line-height: 1.7;
+  color: var(--color-ink);
+}
+
+.readout :global(.num) {
+  color: var(--accent-current);
+}
+
+/* 色の点の凡例(名前+HEXを併記) */
+.legend {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  color: var(--color-ink);
+}
+
+.legendValue {
+  margin-left: auto;
+  color: var(--color-ink-muted);
+}
+
+/* 「平面 / 立体」の切替 */
+.switch {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.switchTabs {
+  display: inline-flex;
+  align-self: flex-start;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-interactive);
+  overflow: hidden;
+}
+
+.switchTab {
+  padding: var(--space-1) var(--space-4);
+  border: none;
+  background: transparent;
+  color: var(--color-ink-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.switchTab:hover {
+  color: var(--accent-current);
+}
+
+.switchTab[aria-pressed="true"] {
+  background: var(--accent-current);
+  color: var(--on-accent);
+}
+
+/* 3Dを始める前の、読み込まずに待つ枠 */
+.start {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-6);
+  background: var(--color-paper);
+  border-radius: var(--radius-card);
+}
+
+.startText {
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+}

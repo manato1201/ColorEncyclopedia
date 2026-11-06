@@ -80,6 +80,21 @@ function renderElement(el: ShapeElement, index: number) {
   );
 }
 
+const round3 = (n: number) => Math.round(n * 1000) / 1000;
+
+/** フレーム内のすべての座標を小数3桁に丸める。 */
+function roundFrame<F extends { elements: ShapeElement[] }>(frame: F): F {
+  const elements = frame.elements.map((el) => {
+    const out: Record<string, unknown> = { ...el };
+    for (const [key, value] of Object.entries(el)) {
+      if (typeof value === "number") out[key] = round3(value);
+      else if (key === "points") out[key] = (value as [number, number][]).map(([x, y]) => [round3(x), round3(y)]);
+    }
+    return out as ShapeElement;
+  });
+  return { ...frame, elements };
+}
+
 type ShapeConstructionVisualizerProps = {
   shapeId: string;
 };
@@ -90,7 +105,8 @@ type ShapeConstructionVisualizerProps = {
  */
 export function ShapeConstructionVisualizer({ shapeId }: ShapeConstructionVisualizerProps) {
   const generator = SHAPE_VISUALIZERS[shapeId];
-  const frames = useMemo(() => (generator ? generator() : []), [generator]);
+  // 座標は小数3桁に丸める(サーバーとブラウザで三角関数の最後の桁が違い、ハイドレーションが食い違うため)
+  const frames = useMemo(() => (generator ? generator().map(roundFrame) : []), [generator]);
   const { stepIndex, isFinished, showPause, handlePlayPause, handleStep, reset } = useStepPlayer(
     frames.length,
   );

@@ -15,6 +15,7 @@ import { AsciiPlant } from "@/components/ui/AsciiPlant";
 import { ColorTuneLab } from "./ColorTuneLab";
 import { HarmonySets } from "./HarmonySets";
 import { ColorSystemsVisualizer } from "@/components/visualizer/ColorSystemsVisualizer";
+import { Color3DVisualizer } from "@/components/visualizer3d/Color3DVisualizer";
 import { contrastRatio, WCAG_AA_NORMAL, WCAG_AAA_NORMAL } from "@/lib/color-math";
 import { deriveColorValues } from "@/lib/color-values";
 import { formatHsv, formatLab, formatRgb } from "@/lib/color-format";
@@ -181,6 +182,19 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
                   </div>
                 ))}
               </div>
+            </section>
+          ) : null}
+
+          {withColorValue.length > 0 ? (
+            <section className={styles.section} aria-labelledby="cmp-space">
+              <h2 id="cmp-space" className={styles.sectionLabel}>
+                SPACE 色立体の中で位置を比べる
+              </h2>
+              <Color3DVisualizer
+                markers={withColorValue.map((c) => ({ name: c.name, hex: c.colorValue!.hex }))}
+                defaultSpace="hsv"
+                note="選んだ色を、同じ色立体に並べます。空間を切り替えると、近く見える色・離れて見える色が変わります。"
+              />
             </section>
           ) : null}
 

@@ -1,0 +1,89 @@
+.viewport {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  /* 画面が低いときは、はみ出さないよう高さを抑える */
+  max-height: min(70vh, 40rem);
+  margin-inline: auto;
+  overflow: hidden;
+  background: var(--color-paper);
+  border-radius: var(--radius-card);
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.canvas:active {
+  cursor: grabbing;
+}
+
+.notice {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  line-height: 1.7;
+  color: var(--color-ink-muted);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tool {
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-interactive);
+  padding: var(--space-1) var(--space-3);
+  background: transparent;
+  color: var(--color-ink-muted);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.tool:hover {
+  border-color: var(--accent-current);
+  color: var(--accent-current);
+}
+
+.tool[aria-pressed="true"] {
+  background: var(--accent-current);
+  border-color: var(--accent-current);
+  color: var(--on-accent);
+}
+
+.toolGap {
+  width: var(--space-2);
+}
+
+.hint {
+  margin-left: auto;
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}

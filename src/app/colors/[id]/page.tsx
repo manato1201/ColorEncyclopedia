@@ -138,7 +138,7 @@ export default async function ColorDetailPage({
           <h2 id="visual-heading" className={styles.sectionLabel}>
             VISUALIZE 可視化
           </h2>
-          <ColorEntryVisual id={id} hex={colorValue?.hex} palette={color.palette} />
+          <ColorEntryVisual id={id} name={color.name} hex={colorValue?.hex} palette={color.palette} />
         </section>
 
         <section
