@@ -6,10 +6,8 @@ import { PracticeBadge } from "@/components/hud/PracticeBadge";
 import { ExamLevelBadge } from "@/components/hud/ExamLevelBadge";
 import { SwatchStage } from "@/components/hud/SwatchStage";
 import { ApplyThemeButton } from "@/components/theme/ApplyThemeButton";
-import {
-  ColorVisualizer,
-  hasColorVisualizer,
-} from "@/components/visualizer/ColorVisualizer";
+import { AsciiPlant } from "@/components/ui/AsciiPlant";
+import { ColorEntryVisual } from "@/components/visualizer/ColorEntryVisual";
 import { RelatedCarousel } from "@/components/colors/RelatedCarousel";
 import { TermNotes } from "@/components/colors/TermNotes";
 import { SectionNav, type SectionNavItem } from "@/components/ui/SectionNav";
@@ -19,6 +17,7 @@ import { ColorSystemsVisualizer } from "@/components/visualizer/ColorSystemsVisu
 import { ContrastVisualizer } from "@/components/visualizer/ContrastVisualizer";
 import { deriveColorValues } from "@/lib/color-values";
 import { formatHsv, formatLab, formatRgb } from "@/lib/color-format";
+import { COLOR_DEMO_HEX } from "@/lib/color-visualizers";
 import { COLOR_VALUE_TERMS } from "@/lib/color-terms";
 import { colorLoader } from "@/lib/content/colors";
 import { findRelatedColors } from "@/lib/related-colors";
@@ -54,6 +53,7 @@ export default async function ColorDetailPage({
     ...(color.palette ? [{ id: "sec-palette", label: "PALETTE 見本" }] : []),
     { id: "sec-visual", label: "VISUALIZE 可視化" },
     { id: "sec-about", label: "ABOUT 概要" },
+    ...(!colorValue && id === "three-attributes" ? [{ id: "sec-live", label: "LIVE 軸を動かす" }] : []),
     ...(colorValue ? [{ id: "sec-live", label: "LIVE 軸を動かす" }, { id: "sec-systems", label: "SYSTEMS 方式比較" }, { id: "sec-contrast", label: "CONTRAST" }] : []),
     ...(note ? [{ id: "sec-notes", label: "NOTES 見分け方" }] : []),
     ...(related.length > 0 ? [{ id: "sec-related", label: "RELATED 近い色" }] : []),
@@ -136,15 +136,9 @@ export default async function ColorDetailPage({
       <div className={styles.layout}>
         <section id="sec-visual" className={styles.visualPane} aria-labelledby="visual-heading">
           <h2 id="visual-heading" className={styles.sectionLabel}>
-            VISUALIZE 色相環・配色理論の可視化
+            VISUALIZE 可視化
           </h2>
-          {colorValue && hasColorVisualizer(id) ? (
-            <ColorVisualizer hex={colorValue.hex} />
-          ) : (
-            <div className={styles.placeholder}>
-              このエントリは色相環・配色理論の可視化には対応していません(colorValueを持つ色エントリのみ対応)。
-            </div>
-          )}
+          <ColorEntryVisual id={id} hex={colorValue?.hex} palette={color.palette} />
         </section>
 
         <section
@@ -162,6 +156,17 @@ export default async function ColorDetailPage({
           />
         </section>
       </div>
+
+      {!colorValue && COLOR_DEMO_HEX[id] ? (
+        <div className={styles.tools}>
+          <section id="sec-live" className={styles.tool} aria-labelledby="live-heading">
+            <h2 id="live-heading" className={styles.sectionLabel}>
+              LIVE 3つの属性を1つずつ動かす(デモ用の色 {COLOR_DEMO_HEX[id]})
+            </h2>
+            <ColorMotionPreview hex={COLOR_DEMO_HEX[id]} />
+          </section>
+        </div>
+      ) : null}
 
       {colorValue ? (
         <div className={styles.tools}>
@@ -199,6 +204,10 @@ export default async function ColorDetailPage({
           <TermNotes note={note} />
         </section>
       ) : null}
+
+      <div className={styles.herbarium} aria-hidden="true">
+        <AsciiPlant seed={id} cols={40} rows={14} />
+      </div>
 
       {related.length > 0 ? (
         <section id="sec-related" className={styles.extra} aria-labelledby="related-heading">

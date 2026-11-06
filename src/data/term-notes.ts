@@ -6,6 +6,9 @@
  * 数値は各エントリ本文のデータに揃えている。マンセル値など本図鑑で計算していない値は載せない。
  */
 
+import { SHAPE_TERM_NOTES_EXT } from "./term-notes-shapes-ext.ts";
+import { COLOR_TERM_NOTES_EXT } from "./term-notes-colors-ext.ts";
+
 export type TermNote = {
   /** 見るポイント: その用語を見分ける・確かめるときの着眼点。 */
   look: string;
@@ -15,7 +18,7 @@ export type TermNote = {
   caution: string;
 };
 
-export const COLOR_TERM_NOTES: Record<string, TermNote> = {
+const BASE_COLOR_TERM_NOTES: Record<string, TermNote> = {
   "accessible-color-design": {
     look: "色相ではなく明度差(コントラスト比)で見分けられるか。通常テキストのAA基準は4.5:1以上。",
     confuse: "色を変えれば区別できると考えがちだが、色覚特性によっては赤と緑は区別しにくい。色以外の手がかり(形・模様・ラベル)が要る。",
@@ -243,7 +246,7 @@ export const COLOR_TERM_NOTES: Record<string, TermNote> = {
   },
 };
 
-export const SHAPE_TERM_NOTES: Record<string, TermNote> = {
+const BASE_SHAPE_TERM_NOTES: Record<string, TermNote> = {
   "fibonacci-spiral": {
     look: "正方形の辺が1, 1, 2, 3, 5, 8…と増え、隣り合う項の比が黄金比に近づく。",
     confuse: "黄金螺旋は滑らかな対数螺旋。フィボナッチ螺旋は整数比による近似で、同一ではない。",
@@ -330,3 +333,7 @@ export const SHAPE_TERM_NOTES: Record<string, TermNote> = {
     caution: "五芒星の対角線の分割比は黄金比。数値(約1.618)と結びつけて確かめる。",
   },
 };
+
+/** 追加分(src/data/term-notes-*-ext.ts)を結合した、全エントリの定型項目。 */
+export const SHAPE_TERM_NOTES: Record<string, TermNote> = { ...BASE_SHAPE_TERM_NOTES, ...SHAPE_TERM_NOTES_EXT };
+export const COLOR_TERM_NOTES: Record<string, TermNote> = { ...BASE_COLOR_TERM_NOTES, ...COLOR_TERM_NOTES_EXT };

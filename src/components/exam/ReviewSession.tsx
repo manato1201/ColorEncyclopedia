@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import styles from "./Review.module.css";
+import { AsciiPlant } from "@/components/ui/AsciiPlant";
 import { ExamQuiz } from "./ExamQuiz";
 import { ActionButton, ActionLink } from "@/components/hud/ActionLink";
 import { IconArrowRight, IconRefresh } from "@/components/icons/Icons";
@@ -40,6 +41,7 @@ export function ReviewSession() {
   if (dueIds.length === 0) {
     return (
       <div className={styles.empty}>
+        <AsciiPlant seed="review-empty" cols={40} rows={13} grow />
         <p>
           いま復習する問題はありません。級ごとの問題を解くと、ここに復習が貯まります。
         </p>

@@ -8,8 +8,8 @@ const PLAY_INTERVAL_MS = 900;
  * フレーム列の再生状態を管理する共通フック(The-Algorithm-IllustratedのuseStepPlayer.tsを踏襲)。
  * effect内で直接setStateせず、setTimeoutコールバック内でのみ呼ぶことでreact-hooks/set-state-in-effectを回避している。
  */
-export function useStepPlayer(frameCount: number) {
-  const [stepIndex, setStepIndex] = useState(0);
+export function useStepPlayer(frameCount: number, initialIndex = 0) {
+  const [stepIndex, setStepIndex] = useState(initialIndex);
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {

@@ -1,15 +1,31 @@
-import { HUE_WHEEL_VISUALIZERS } from "./color-visualizers";
+import { COLOR_EFFECT_SCENES } from "./color-effect-scenes";
+import {
+  COLOR_CONTRAST_DEMOS,
+  COLOR_DEMO_HEX,
+  COLOR_MIXING_MODES,
+  COLOR_PALETTE_VISUALIZERS,
+  HUE_WHEEL_VISUALIZERS,
+} from "./color-visualizers";
 
 /**
- * このidに対応する色可視化(色相環+配色理論)があるかどうか。
+ * このidに対応する色の可視化があるかどうか。
  * The-Algorithm-Illustrated の has-visualizer.ts と同じ役割で、ビルド時(getAllMeta)・
  * 詳細ページ・比較画面のいずれからでも安全にimportできる。
  *
- * HARMONY_VISUALIZERSは現状HUE_WHEEL_VISUALIZERSと同一オブジェクトを指すエイリアスのため、
- * ここでの判定はHUE_WHEEL_VISUALIZERSだけを見れば十分(両方を`in`で見ると同じ判定を二重に行うだけになる)。
- * 配色理論可視化だけを個別に無効化する必要が生じたら、color-visualizers.tsで両者を独立した
- * オブジェクトに分離し、ここも両方を見るように戻すこと。
+ * 可視化の種類(どれか1つでもあれば対応あり):
+ * - 色相環・配色理論(HUE_WHEEL_VISUALIZERS: colorValueを持つ色)
+ * - デモ用の色を使う色相環・ライブプレビュー(COLOR_DEMO_HEX: 色相環・色の三属性)
+ * - 混色(COLOR_MIXING_MODES)、見え方の場面(COLOR_EFFECT_SCENES)
+ * - パレットの分布・季節の木(COLOR_PALETTE_VISUALIZERS)
+ * HARMONY_VISUALIZERS は HUE_WHEEL_VISUALIZERS と同一オブジェクトのエイリアスなので、ここでは前者だけを見れば足りる。
  */
 export function hasColorVisualizer(colorId: string): boolean {
-  return colorId in HUE_WHEEL_VISUALIZERS;
+  return (
+    colorId in HUE_WHEEL_VISUALIZERS ||
+    colorId in COLOR_DEMO_HEX ||
+    colorId in COLOR_CONTRAST_DEMOS ||
+    colorId in COLOR_MIXING_MODES ||
+    colorId in COLOR_EFFECT_SCENES ||
+    colorId in COLOR_PALETTE_VISUALIZERS
+  );
 }

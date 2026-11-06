@@ -11,6 +11,7 @@ import { EntryList } from "@/components/explorer/EntryList";
 import { useEntryFilter } from "@/components/explorer/useEntryFilter";
 import { ColorVisualizer, hasColorVisualizer } from "@/components/visualizer/ColorVisualizer";
 import { ChromaLab } from "./ChromaLab";
+import { AsciiPlant } from "@/components/ui/AsciiPlant";
 import { ColorTuneLab } from "./ColorTuneLab";
 import { HarmonySets } from "./HarmonySets";
 import { ColorSystemsVisualizer } from "@/components/visualizer/ColorSystemsVisualizer";
@@ -83,7 +84,10 @@ export function ColorCompareView({ colors }: ColorCompareViewProps) {
           </p>
 
           {selected.length === 0 ? (
-            <div className={styles.emptyState}>左の一覧から色を選ぶと、ここに比較が表示されます。</div>
+            <div className={styles.emptyState}>
+              <AsciiPlant seed="compare-colors" cols={40} rows={13} grow />
+              左の一覧から色を選ぶと、ここに比較が表示されます。
+            </div>
           ) : (
             <ul className={styles.cards}>
               {selected.map((c) => (

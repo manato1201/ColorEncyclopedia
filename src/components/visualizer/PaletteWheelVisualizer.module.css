@@ -1,0 +1,115 @@
+.visualizer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.canvas {
+  width: 100%;
+  max-width: 24rem;
+  aspect-ratio: 1 / 1;
+  display: block;
+}
+
+.stage {
+  fill: var(--swatch-stage);
+}
+
+.grid {
+  fill: none;
+  stroke: var(--swatch-ink);
+  stroke-opacity: 0.2;
+  stroke-width: 0.3;
+}
+
+.axis {
+  fill: var(--swatch-ink);
+  font-size: 3.2px;
+  fill-opacity: 0.7;
+}
+
+.dot {
+  stroke: var(--swatch-paper);
+  stroke-width: 0.8;
+}
+
+.dotLabel {
+  fill: var(--swatch-ink);
+  font-size: 3px;
+  font-weight: 700;
+  paint-order: stroke;
+  stroke: var(--swatch-paper);
+  stroke-width: 0.6px;
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(7rem, 1fr) 5rem minmax(0, 15rem);
+  grid-template-areas:
+    "index name hex hsv"
+    ". bar bar bar";
+  align-items: baseline;
+  gap: 2px var(--space-3);
+  font-size: var(--text-caption);
+}
+
+.index {
+  grid-area: index;
+  color: var(--color-ink-muted);
+}
+
+.name {
+  grid-area: name;
+  font-family: var(--font-body);
+  color: var(--color-ink);
+}
+
+.hex {
+  grid-area: hex;
+  color: var(--color-ink);
+}
+
+.hsv {
+  grid-area: hsv;
+  color: var(--color-ink-muted);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.bar {
+  grid-area: bar;
+  display: block;
+  height: 4px;
+  background: var(--color-stone);
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  background: var(--accent-current);
+}
+
+.summary {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  line-height: 1.7;
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+@media (max-width: 600px) {
+  .item {
+    grid-template-columns: 1.25rem minmax(0, 1fr) 5rem;
+    grid-template-areas:
+      "index name hex"
+      ". hsv hsv"
+      ". bar bar";
+  }
+}

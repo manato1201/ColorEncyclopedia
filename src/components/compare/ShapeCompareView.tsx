@@ -3,6 +3,7 @@
 import Link from "next/link";
 import styles from "./Compare.module.css";
 import { useCompareSelection, useIdsFromQuery, MAX_COMPARE_SELECTED } from "./useCompareSelection";
+import { AsciiPlant } from "@/components/ui/AsciiPlant";
 import { ActionButton, ActionLink } from "@/components/hud/ActionLink";
 import { IconArrowRight, IconRefresh } from "@/components/icons/Icons";
 import { EntryList } from "@/components/explorer/EntryList";
@@ -56,7 +57,10 @@ export function ShapeCompareView({ shapes }: ShapeCompareViewProps) {
 
         <div className={styles.stagePane}>
           {selected.length === 0 ? (
-            <div className={styles.emptyState}>左の一覧から図形を選ぶと、ここに比較が表示されます。</div>
+            <div className={styles.emptyState}>
+              <AsciiPlant seed="compare-shapes" cols={40} rows={13} grow />
+              左の一覧から図形を選ぶと、ここに比較が表示されます。
+            </div>
           ) : (
             <ul className={styles.cards}>
               {selected.map((s) => (

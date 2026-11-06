@@ -199,3 +199,10 @@
   padding-top: var(--space-8);
   border-top: 1px solid var(--color-line);
 }
+
+/* 余白の植物図譜(装飾。本文・操作の邪魔にならないよう、ページの末尾に置く) */
+.herbarium {
+  margin-top: var(--space-16);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-line);
+}

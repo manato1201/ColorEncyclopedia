@@ -512,7 +512,8 @@ export function kaleidoscopeSymmetrySteps(): ShapeFrame[] {
   ];
 }
 
-export const SHAPE_VISUALIZERS: Record<string, () => ShapeFrame[]> = {
+/** 最初期に作った9件(このファイル内のジェネレータ)。全体のレジストリは index.ts で他カテゴリと結合する。 */
+export const BASE_SHAPE_VISUALIZERS: Record<string, () => ShapeFrame[]> = {
   "golden-ratio": goldenRatioSteps,
   "regular-tessellation": regularTessellationSteps,
   "point-symmetry": pointSymmetrySteps,

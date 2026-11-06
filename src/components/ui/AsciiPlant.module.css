@@ -1,0 +1,27 @@
+/* 植物図譜モチーフ(ASCII)。装飾なので、色は既存トークンだけ・本文より控えめに */
+.plant {
+  margin: 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 11px;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: pre;
+  color: var(--color-ink-muted);
+  user-select: none;
+  overflow: hidden;
+}
+
+.plant :global(.plant-green) {
+  color: var(--color-accent-green);
+}
+
+.plant :global(.plant-flower) {
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .plant {
+    font-size: 9px;
+  }
+}

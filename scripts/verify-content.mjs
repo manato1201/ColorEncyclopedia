@@ -12,6 +12,7 @@
 // 7. colorValue.hsv / colorValue.lab が hex から再計算した値と一致すること(転記ミスの検出)
 // 8. 検定問題(src/data/exam-questions.ts)のid重複・選択肢・答えの範囲・explanationRefの解決
 // 9. 全エントリに定型項目(src/data/term-notes.ts: 見るポイント/混同しやすい点/使うときの注意)があること
+// 11. 可視化(図形の作図ジェネレータ・色の可視化レジストリ)が、実在するエントリだけを指し、全フレームの座標が有限・描画範囲内であること
 // 10. beyondExam(実務の用語)は examLevel を持たず、palette は #RRGGBB の見本であること
 
 import fs from "node:fs";
@@ -22,6 +23,15 @@ import { SHAPE_CATEGORY_TAXONOMY } from "../src/lib/shape-categories.ts";
 import { hexToHsv, hexToLab } from "../src/lib/color-math.ts";
 import { EXAM_QUESTIONS } from "../src/data/exam-questions.ts";
 import { COLOR_TERM_NOTES, SHAPE_TERM_NOTES } from "../src/data/term-notes.ts";
+import { SHAPE_VISUALIZERS } from "../src/lib/shape-visualizers/index.ts";
+import { COLOR_EFFECT_SCENES } from "../src/lib/color-effect-scenes.ts";
+import {
+  COLOR_CONTRAST_DEMOS,
+  COLOR_DEMO_HEX,
+  COLOR_MIXING_MODES,
+  COLOR_PALETTE_VISUALIZERS,
+  HUE_WHEEL_VISUALIZERS,
+} from "../src/lib/color-visualizers.ts";
 
 /** frontmatterのhsvは整数丸め(±1)、labは小数1桁丸めなので、再計算値との許容差を持たせる。 */
 const HSV_TOLERANCE = 1;
@@ -231,10 +241,73 @@ function verifyTermNotes() {
   console.log("term-notes: 全エントリの定型項目を検証");
 }
 
+function listIds(dirName) {
+  return fs
+    .readdirSync(path.join(process.cwd(), "content", dirName))
+    .filter((f) => f.endsWith(".md"))
+    .map((f) => f.replace(/.md$/, ""));
+}
+
+function verifyVisualizers() {
+  const shapeIds = new Set(listIds("shapes"));
+  const colorIds = new Set(listIds("colors"));
+
+  for (const [id, generate] of Object.entries(SHAPE_VISUALIZERS)) {
+    const label = `shape-visualizer:${id}`;
+    if (!shapeIds.has(id)) fail(label, "対応する content/shapes のエントリが存在しない");
+    let frames;
+    try {
+      frames = generate();
+    } catch (e) {
+      fail(label, `フレーム生成で例外: ${e.message}`);
+      continue;
+    }
+    if (!Array.isArray(frames) || frames.length < 2) {
+      fail(label, "フレームが2つ未満");
+      continue;
+    }
+    frames.forEach((fr, i) => {
+      if (!fr.description) fail(label, `フレーム${i + 1}に説明文がない`);
+      for (const el of fr.elements) {
+        const pts = [];
+        if (el.kind === "rect") pts.push([el.x, el.y], [el.x + el.w, el.y + el.h]);
+        else if (el.kind === "line") pts.push([el.x1, el.y1], [el.x2, el.y2]);
+        else if (el.kind === "circle") pts.push([el.cx - el.r, el.cy - el.r], [el.cx + el.r, el.cy + el.r]);
+        else if (el.kind === "polygon" || el.kind === "polyline") pts.push(...el.points);
+        else pts.push([el.x, el.y]);
+        for (const [x, y] of pts) {
+          if (!Number.isFinite(x) || !Number.isFinite(y)) fail(label, `フレーム${i + 1}に有限でない座標`);
+          else if (x < -2 || x > 102 || y < -2 || y > 102) fail(label, `フレーム${i + 1}の座標(${x.toFixed(1)}, ${y.toFixed(1)})が描画範囲(0〜100)の外`);
+        }
+      }
+    });
+  }
+
+  const colorRegistries = {
+    HUE_WHEEL_VISUALIZERS,
+    COLOR_CONTRAST_DEMOS,
+    COLOR_DEMO_HEX,
+    COLOR_MIXING_MODES,
+    COLOR_EFFECT_SCENES,
+    COLOR_PALETTE_VISUALIZERS,
+  };
+  const withVisual = new Set();
+  for (const [name, registry] of Object.entries(colorRegistries)) {
+    for (const id of Object.keys(registry)) {
+      if (!colorIds.has(id)) fail(`color-visualizer:${name}`, `"${id}" に対応する content/colors のエントリが存在しない`);
+      withVisual.add(id);
+    }
+  }
+  console.log(
+    `visualizers: 図形 ${Object.keys(SHAPE_VISUALIZERS).filter((id) => shapeIds.has(id)).length}/${shapeIds.size}件、色 ${[...withVisual].filter((id) => colorIds.has(id)).length}/${colorIds.size}件が可視化に対応`,
+  );
+}
+
 verifyColors();
 verifyShapes();
 verifyExamQuestions();
 verifyTermNotes();
+verifyVisualizers();
 
 if (errors > 0) {
   console.error(`${errors}件のfrontmatter検証エラー`);

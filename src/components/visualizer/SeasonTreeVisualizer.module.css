@@ -1,0 +1,103 @@
+.visualizer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* 木の絵。周囲は中立灰の枠(色見本として扱う) */
+.canvas {
+  width: 100%;
+  max-width: 30rem;
+  aspect-ratio: 10 / 7;
+  display: block;
+  border: 4px solid var(--swatch-stage);
+  box-sizing: border-box;
+}
+
+.fill {
+  transition: fill 0.6s ease;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.seasonName {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  font-size: var(--text-subheading);
+  color: var(--accent-current);
+}
+
+.palette {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-2);
+}
+
+.paletteItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+}
+
+.chip {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid var(--swatch-stage);
+  box-sizing: content-box;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.hex {
+  margin-left: auto;
+  color: var(--color-ink-muted);
+}
+
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 30rem;
+  font-size: var(--text-caption);
+}
+
+.caption {
+  caption-side: top;
+  padding-bottom: var(--space-2);
+  text-align: left;
+  font-family: var(--font-body);
+  color: var(--color-ink-muted);
+}
+
+.table th,
+.table td {
+  padding: var(--space-2);
+  text-align: left;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.table thead th {
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  color: var(--color-ink-muted);
+}
+
+.current th,
+.current td {
+  color: var(--accent-current);
+  font-weight: var(--weight-bold);
+}
+
+.note {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  line-height: 1.7;
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}

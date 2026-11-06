@@ -17,6 +17,8 @@ export const COLOR_CATEGORY_TAXONOMY = [
       "トーン配色",
       "その他技法",
       "ユニバーサルデザイン",
+      "混色・見え方",
+      "季節の配色",
     ],
   },
   // 色彩検定の範囲として確認していない、映像・撮影の実務の用語(IMPROVEMENT_DESIGN Y2)

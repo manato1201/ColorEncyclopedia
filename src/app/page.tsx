@@ -1,4 +1,5 @@
 import { EntranceCards } from "@/components/landing/EntranceCards";
+import { Herbarium } from "@/components/landing/Herbarium";
 import { LandingHero, type LandingStat } from "@/components/landing/LandingHero";
 import { EXAM_QUESTIONS } from "@/data/exam-questions";
 import { colorLoader } from "@/lib/content/colors";
@@ -44,6 +45,7 @@ export default function HomePage() {
           { href: "/exam", label: "検定対策", labelEn: "Exam", count: EXAM_QUESTIONS.length, unit: "問" },
         ]}
       />
+      <Herbarium />
     </>
   );
 }

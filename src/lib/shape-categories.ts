@@ -5,7 +5,7 @@
 export const SHAPE_CATEGORY_TAXONOMY = [
   {
     category: "図形理論",
-    subcategories: ["比例・分割", "対称性", "平面充填"],
+    subcategories: ["比例・分割", "対称性", "平面充填", "フラクタル・再帰", "曲線", "作図・定理", "立体・多面体"],
   },
 ] as const;
 
