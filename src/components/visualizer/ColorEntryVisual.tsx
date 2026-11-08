@@ -9,14 +9,20 @@ import { COLOR_EFFECT_SCENES } from "@/lib/color-effect-scenes";
 import {
   COLOR_CONTRAST_DEMOS,
   COLOR_DEMO_HEX,
+  COLOR_HARMONY_TYPE,
+  COLOR_HUE_DIFFERENCE,
   COLOR_MIXING_MODES,
+  COLOR_VISION_IDS,
   COLOR_PALETTE_VISUALIZERS,
   HUE_WHEEL_VISUALIZERS,
   SEASON_PALETTE_IDS,
 } from "@/lib/color-visualizers";
 import { colorLoader } from "@/lib/content/colors";
 import { Color3DVisualizer } from "@/components/visualizer3d/Color3DVisualizer";
-import { getColor3D } from "@/lib/color-3d";
+import { getColor3D, harmonyOffsets } from "@/lib/color-3d";
+import { hexToHsv, hsvToHex } from "@/lib/color-math";
+import { HueDifferenceVisualizer } from "./HueDifferenceVisualizer";
+import { ColorVisionVisualizer } from "./ColorVisionVisualizer";
 
 type ColorEntryVisualProps = {
   id: string;
@@ -60,7 +66,16 @@ export function ColorEntryVisual({ id, name, hex, palette }: ColorEntryVisualPro
   if (palette && id in COLOR_PALETTE_VISUALIZERS) {
     blocks.push({ key: "palette", title: "パレットを色相・彩度・明度で並べる", node: <PaletteWheelVisualizer items={palette} /> });
   }
-  if (hex && id in HUE_WHEEL_VISUALIZERS) {
+  if (id in COLOR_VISION_IDS) {
+    blocks.push({ key: "vision", title: "色覚の特性ごとの見え方(近似)", node: <ColorVisionVisualizer /> });
+  }
+  if (id in COLOR_HUE_DIFFERENCE) {
+    blocks.push({
+      key: "huediff",
+      title: "色相差を動かして、分類を確かめる(デモ用の色)",
+      node: <HueDifferenceVisualizer hex={COLOR_DEMO_HEX[id]} initialStep={COLOR_HUE_DIFFERENCE[id]} />,
+    });
+  } else if (hex && id in HUE_WHEEL_VISUALIZERS) {
     blocks.push({ key: "wheel", title: "色相環・配色理論", node: <ColorVisualizer hex={hex} /> });
   } else if (id in COLOR_DEMO_HEX) {
     blocks.push({
@@ -71,7 +86,7 @@ export function ColorEntryVisual({ id, name, hex, palette }: ColorEntryVisualPro
           <p className={styles.demoNote}>
             デモ用の色 <span className="num">{COLOR_DEMO_HEX[id]}</span> で見せています(この項目自体の色ではありません)。
           </p>
-          <ColorVisualizer hex={COLOR_DEMO_HEX[id]} />
+          <ColorVisualizer hex={COLOR_DEMO_HEX[id]} harmony={COLOR_HARMONY_TYPE[id]} />
         </div>
       ),
     });
@@ -85,7 +100,12 @@ export function ColorEntryVisual({ id, name, hex, palette }: ColorEntryVisualPro
         ? [{ name: name ?? id, hex }]
         : solid.markers === "palette" && palette
           ? palette
-          : solid.markers === "demo" && id in COLOR_DEMO_HEX
+            : solid.markers === "harmony" && id in COLOR_DEMO_HEX
+              ? (harmonyOffsets(id) ?? [0]).map((off, i) => ({
+                  name: i === 0 || off === 0 ? "基準色" : `色相 +${((off % 360) + 360) % 360}°`,
+                  hex: hsvToHex({ ...hexToHsv(COLOR_DEMO_HEX[id]), h: (hexToHsv(COLOR_DEMO_HEX[id]).h + off + 360) % 360 }),
+                }))
+            : solid.markers === "demo" && id in COLOR_DEMO_HEX
             ? [{ name: "デモ用の色", hex: COLOR_DEMO_HEX[id] }]
             : [];
     blocks.push({
@@ -97,7 +117,7 @@ export function ColorEntryVisual({ id, name, hex, palette }: ColorEntryVisualPro
           defaultSpace={solid.space}
           title={solid.title}
           note={solid.note}
-          caption={solid.markers === "demo" && markers.length > 0 ? "デモ用の色で示しています(この項目自体の色ではありません)。" : undefined}
+          caption={(solid.markers === "demo" || solid.markers === "harmony") && markers.length > 0 ? "デモ用の色で示しています(この項目自体の色ではありません)。" : undefined}
         />
       ),
     });

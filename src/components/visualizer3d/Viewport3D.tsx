@@ -35,7 +35,7 @@ export type SceneHandle<P> = {
 /** シーンを作る関数。three.js は ctx.THREE で受け取る(このファイルの外からは three を直接 import しない)。 */
 export type SceneBuilder<P> = (ctx: SceneContext, params: P) => SceneHandle<P>;
 
-type ViewPreset = "oblique" | "top" | "front";
+export type ViewPreset = "oblique" | "top" | "front" | "iso";
 
 type Viewport3DProps<P> = {
   scene: SceneBuilder<P>;
@@ -44,6 +44,8 @@ type Viewport3DProps<P> = {
   label: string;
   /** 斜めから見たときの、注視点からのカメラの向きと距離。 */
   distance?: number;
+  /** 最初の視点。 */
+  initialView?: ViewPreset;
   /** 最初から自動で回すか(動きを減らす設定では回さない。操作を始めたら止まる)。 */
   autoRotate?: boolean;
   /** ビューポートの下に出す補足(凡例など)。 */
@@ -86,6 +88,7 @@ function readTheme(el: HTMLElement): SceneTheme {
 function viewDirection(view: ViewPreset): [number, number, number] {
   if (view === "top") return [0, 1, 0.0001];
   if (view === "front") return [0, 0.08, 1];
+  if (view === "iso") return [1, 1, 1];
   return [0.75, 0.55, 0.9];
 }
 
@@ -96,7 +99,7 @@ function viewDirection(view: ViewPreset): [number, number, number] {
  * - 自動回転は、動きを減らす設定では行わず、ドラッグを始めたら止まる。「回転」ボタンで切り替えられる。
  * - WebGLが使えない環境では、その旨を出す。
  */
-export function Viewport3D<P>({ scene: buildScene, params, label, distance = 5, autoRotate = true, children }: Viewport3DProps<P>) {
+export function Viewport3D<P>({ scene: buildScene, params, label, distance = 5, autoRotate = true, initialView = "oblique", children }: Viewport3DProps<P>) {
   const hostRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "unsupported">("loading");
   const [rotating, setRotating] = useState(
@@ -169,7 +172,7 @@ export function Viewport3D<P>({ scene: buildScene, params, label, distance = 5, 
         camera.position.set((d[0] / len) * distance, (d[1] / len) * distance, (d[2] / len) * distance);
         camera.lookAt(0, 0, 0);
       };
-      setCameraFrom("oblique");
+      setCameraFrom(initialView);
 
       const controls = new controlsModule.OrbitControls(camera, canvas);
       controls.enablePan = false;
@@ -291,7 +294,7 @@ export function Viewport3D<P>({ scene: buildScene, params, label, distance = 5, 
       cleanup?.();
     };
     // paramsは別のeffectで反映する。シーン・テーマ・ラベルが変わったときだけ作り直す
-  }, [buildScene, themeKey, label, distance]);
+  }, [buildScene, themeKey, label, distance, initialView]);
 
   const setView = useCallback((view: ViewPreset) => {
     setRotating(false);
@@ -318,6 +321,9 @@ export function Viewport3D<P>({ scene: buildScene, params, label, distance = 5, 
           </button>
           <button type="button" className={styles.tool} onClick={() => setView("front")}>
             正面
+          </button>
+          <button type="button" className={styles.tool} onClick={() => setView("iso")}>
+            等角
           </button>
           <span className={styles.toolGap} aria-hidden="true" />
           <button type="button" className={styles.tool} onClick={() => apiRef.current?.zoom(0.8)} aria-label="拡大">

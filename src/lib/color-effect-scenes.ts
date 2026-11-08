@@ -40,6 +40,8 @@ const kelvinTile = (k: number): EffectTile => ({
 });
 
 export const COLOR_EFFECT_SCENES: Record<string, EffectScene[]> = {
+  // 心理補色は、補色残像の見え方そのもの(afterimage と同じ場面)
+  "psychological-complementary": [],
   "simultaneous-contrast": [
     {
       description: "同じ灰色(#808080)を、赤・緑・青の背景の上に置く。中央の色は同じなのに、背景の補色の方向にずれて見える",
@@ -158,3 +160,5 @@ export const COLOR_EFFECT_SCENES: Record<string, EffectScene[]> = {
     { description: "高い色温度(およそ5500〜10000K)。白から、青みの冷たい光へ。数値は近似", tiles: cool.map(kelvinTile) },
   ],
 };
+
+COLOR_EFFECT_SCENES["psychological-complementary"] = COLOR_EFFECT_SCENES.afterimage;

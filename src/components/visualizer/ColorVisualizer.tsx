@@ -1,18 +1,19 @@
 import styles from "./ColorVisualizer.module.css";
 import { HueWheelVisualizer } from "./HueWheelVisualizer";
-import { HarmonyVisualizer } from "./HarmonyVisualizer";
+import { HarmonyVisualizer, type HarmonyType } from "./HarmonyVisualizer";
 
 export { hasColorVisualizer } from "@/lib/has-color-visualizer";
 
 type ColorVisualizerProps = {
   hex: string;
+  harmony?: HarmonyType;
 };
 
 /**
  * 色の可視化(色相環+配色理論)の共通ディスパッチャ。詳細ページ・比較画面の両方から使う。
  * hasColorVisualizer(id)がtrueのエントリでのみ意味を持つ(呼び出し側で判定する)。
  */
-export function ColorVisualizer({ hex }: ColorVisualizerProps) {
+export function ColorVisualizer({ hex, harmony }: ColorVisualizerProps) {
   return (
     <div className={styles.stack}>
       <section>
@@ -21,7 +22,7 @@ export function ColorVisualizer({ hex }: ColorVisualizerProps) {
       </section>
       <section>
         <h3 className={styles.sectionLabel}>配色理論</h3>
-        <HarmonyVisualizer hex={hex} />
+        <HarmonyVisualizer hex={hex} initialType={harmony} />
       </section>
     </div>
   );

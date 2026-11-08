@@ -1,5 +1,5 @@
 import type { ColorSpace } from "./geometry3d/color-solids.ts";
-import { COLOR_PALETTE_VISUALIZERS, HUE_WHEEL_VISUALIZERS } from "./color-visualizers.ts";
+import { COLOR_DEMO_HEX, COLOR_HUE_DIFFERENCE, COLOR_PALETTE_VISUALIZERS, HUE_WHEEL_VISUALIZERS } from "./color-visualizers.ts";
 
 /**
  * 色の「色立体で見る」(3D)の対応表。
@@ -12,7 +12,7 @@ export type Color3DInfo = {
   /** 最初に出す空間。 */
   space: ColorSpace;
   /** 点の元: HEX(自身の色)/ palette(パレットの全色)/ demo(デモ用の色)/ none(点なし)。 */
-  markers: "hex" | "palette" | "demo" | "none";
+  markers: "hex" | "palette" | "demo" | "none" | "harmony";
   /** 3D表示の見出し。 */
   title: string;
   /** 何を見るかの一文。 */
@@ -59,12 +59,35 @@ const CONCEPT_3D: Record<string, Omit<Color3DInfo, "markers"> & { markers?: Colo
   },
 };
 
+/** 配色の概念エントリで、デモ用の色から色相を回して作る点(基準色からの色相差、度)。 */
+const HARMONY_OFFSETS: Record<string, number[]> = {
+  "complementary-harmony": [0, 180],
+  "psychological-complementary": [0, 180],
+  "analogous-harmony": [-30, 0, 30],
+  "triadic-harmony": [0, 120, 240],
+  "split-complementary-harmony": [0, 150, 210],
+  "tetrad-harmony": [0, 90, 180, 270],
+  ...Object.fromEntries(Object.entries(COLOR_HUE_DIFFERENCE).map(([id, step]) => [id, [0, step * 15]])),
+};
+
+export function harmonyOffsets(colorId: string): number[] | null {
+  return HARMONY_OFFSETS[colorId] ?? null;
+}
+
 const DEFAULT_NOTE =
   "この色の代表値を、色立体の中の1点として示します。空間を切り替えると、同じ色の位置が変わって見えます。";
 
 export function getColor3D(colorId: string): Color3DInfo | null {
   const concept = CONCEPT_3D[colorId];
   if (concept) return { ...concept, markers: concept.markers ?? "demo" };
+  if (colorId in HARMONY_OFFSETS && colorId in COLOR_DEMO_HEX) {
+    return {
+      space: "hsv",
+      markers: "harmony",
+      title: "配色の色を、色立体の中で見る",
+      note: "色相だけを回した色の位置です。HSV円柱を「真上」から見ると、色相環上の角度の関係がそのまま見えます。デモ用の色で示しています。",
+    };
+  }
   if (colorId in COLOR_PALETTE_VISUALIZERS) {
     return {
       space: "hsv",

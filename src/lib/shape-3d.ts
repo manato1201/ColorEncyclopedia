@@ -1,3 +1,4 @@
+import type { HullSolidId } from "./geometry3d/hull.ts";
 import type { PolyhedronId } from "./geometry3d/polyhedra.ts";
 
 /**
@@ -20,7 +21,16 @@ export type Shape3DSpec =
   | { kind: "hyperboloid"; twist: number }
   | { kind: "tree" }
   | { kind: "bezier" }
-  | { kind: "golden" };
+  | { kind: "golden" }
+  | { kind: "hull-solids"; solids: HullSolidId[]; initial: HullSolidId; dual: boolean; axes: boolean }
+  | { kind: "space-filling" }
+  | { kind: "revolve" }
+  | { kind: "archimedes" }
+  | { kind: "cavalieri" }
+  | { kind: "box-diagonal" }
+  | { kind: "catenoid" }
+  | { kind: "helix" }
+  | { kind: "isometric" };
 
 export type Shape3DEntry = Shape3DSpec & {
   /** 3D表示の見出し(「〜を立体で見る」)。 */
@@ -147,6 +157,119 @@ export const SHAPE_3D: Record<string, Shape3DEntry> = {
     note: "互いに直交する3枚の黄金長方形の頂点12個が、そのまま正二十面体の頂点になります。",
   },
 };
+
+const PLATONIC_HULL: HullSolidId[] = ["tetrahedron", "cube", "octahedron", "dodecahedron", "icosahedron"];
+
+Object.assign(SHAPE_3D, {
+  "truncated-icosahedron": {
+    kind: "hull-solids",
+    solids: ["truncated-icosahedron", "icosahedron", "dodecahedron"],
+    initial: "truncated-icosahedron",
+    dual: false,
+    axes: false,
+    title: "サッカーボールの形を回して見る",
+    note: "正二十面体の12個の角を切り落とすと、五角形12枚と六角形20枚が残ります。頂点・辺・面を数え直しても、V−E+F=2 になります。",
+  },
+  cuboctahedron: {
+    kind: "hull-solids",
+    solids: ["cuboctahedron", "cube", "octahedron"],
+    initial: "cuboctahedron",
+    dual: false,
+    axes: false,
+    title: "立方体の角を辺の中点まで切り落とす",
+    note: "立方体(または正八面体)の角を、辺の中点まで切り落とした形。三角形8枚と四角形6枚で、どの頂点も同じ並びです。",
+  },
+  "archimedean-solids": {
+    kind: "hull-solids",
+    solids: ["cuboctahedron", "truncated-tetrahedron", "truncated-cube", "truncated-octahedron", "rhombicuboctahedron", "icosidodecahedron", "truncated-icosahedron"],
+    initial: "truncated-octahedron",
+    dual: false,
+    axes: false,
+    title: "半正多面体を切り替えて見る",
+    note: "2種類以上の正多角形でできて、どの頂点のまわりも同じ並びの立体です(正多面体を切り落とした形が多い)。面の色は辺の数の違いです。",
+  },
+  "dual-polyhedra": {
+    kind: "hull-solids",
+    solids: ["cube", "octahedron", "dodecahedron", "icosahedron", "tetrahedron", "cuboctahedron"],
+    initial: "cube",
+    dual: true,
+    axes: false,
+    title: "双対: 面の中心を結ぶ",
+    note: "各面の中心を頂点にして結ぶと、頂点と面の数が入れ替わった立体になります。立方体の双対は正八面体、正四面体の双対は正四面体です。",
+  },
+  "space-filling": {
+    kind: "space-filling",
+    title: "同じ立体で空間を埋める",
+    note: "立方体のほかに、切頂八面体と菱形十二面体も、同じ立体だけで空間をすき間なく埋められます。すき間を広げて、1個ずつの形を見てください。",
+  },
+  "solids-of-revolution": {
+    kind: "revolve",
+    title: "平面図形を回して立体にする",
+    note: "図形を軸のまわりに回すと、立体が生まれます。回転の角度を動かして、途中の形を見てください。",
+  },
+  "sphere-volume": {
+    kind: "archimedes",
+    title: "円錐・球・円柱の体積の比",
+    note: "同じ半径で高さが直径の円錐・球・円柱は、体積の比が 1 : 2 : 3 になります。アルキメデスが墓に刻ませたとされる関係です。",
+  },
+  "cavalieri-principle": {
+    kind: "cavalieri",
+    title: "どの高さでも断面積が等しい",
+    note: "半球と、円柱から円錐をくり抜いた立体を、同じ高さで切った断面の面積は、いつも等しくなります。だから体積も等しい(カヴァリエリの原理)。",
+  },
+  "polyhedral-symmetry": {
+    kind: "hull-solids",
+    solids: PLATONIC_HULL,
+    initial: "cube",
+    dual: false,
+    axes: true,
+    title: "正多面体の回転対称の軸",
+    note: "面の中心・頂点・辺の中点を通る軸のまわりに回して、元と重なる回転を数えます。立方体と正八面体は24、正十二面体と正二十面体は60通りです。",
+  },
+  "rotational-symmetry": {
+    kind: "hull-solids",
+    solids: PLATONIC_HULL,
+    initial: "icosahedron",
+    dual: false,
+    axes: true,
+    title: "立体の回転対称",
+    note: "平面の回転対称(中心のまわりに回して重なる)を、立体に拡げます。軸の色は、何回転で元に戻るか(2・3・4・5回軸)の違いです。",
+  },
+  "point-symmetry": {
+    kind: "hull-solids",
+    solids: PLATONIC_HULL,
+    initial: "tetrahedron",
+    dual: false,
+    axes: false,
+    title: "立体の点対称(中心対称)",
+    note: "中心について、すべての頂点の反対側にも頂点があるものが点対称です。正四面体は点対称ではなく、立方体・正八面体・正十二面体・正二十面体は点対称です。",
+  },
+  "pythagorean-theorem": {
+    kind: "box-diagonal",
+    title: "空間に拡げた三平方の定理",
+    note: "直方体の空間の対角線は、三平方の定理を2回使うと求められます。縦・横・高さを動かして確かめてください。",
+  },
+  "sierpinski-triangle": {
+    kind: "sierpinski",
+    title: "立体にすると: シェルピンスキーの四面体",
+    note: "正三角形を3つの小さな正三角形に分け続けるように、四面体を4つの小さな四面体に分け続けます。段が増えると体積は 1/2 ずつ減ります。",
+  },
+  catenary: {
+    kind: "catenoid",
+    title: "懸垂線を回すとカテノイド",
+    note: "鎖を両端でつるしたときの曲線(懸垂線)を、軸のまわりに回してできる曲面。石けん膜がつくる最小曲面の形です。",
+  },
+  helix: {
+    kind: "helix",
+    title: "円柱に巻きつくつる巻き線",
+    note: "円柱のまわりを、一定の割合で上りながら回る曲線。ピッチと巻き数を動かして、長さの変わり方を見てください。",
+  },
+  "rhombille-tiling": {
+    kind: "isometric",
+    title: "菱形タイリングは、積み木を等角で見た形",
+    note: "立方体の積み木を斜め上から見ると、3方向の面がすべて同じ菱形に見えます。「等角」の視点で、ひし形の敷き詰めに見える位置を探してください。",
+  },
+} satisfies Record<string, Shape3DEntry>);
 
 export function hasShape3D(shapeId: string): boolean {
   return shapeId in SHAPE_3D;

@@ -87,6 +87,35 @@ export const COLOR_DEMO_HEX: Record<string, string> = {
   "gradation-harmony": "#E58A2B",
   "camaieu-harmony": "#7DB46C",
   "bicolore-harmony": "#2B5FAE",
+  "tetrad-harmony": "#2792C3",
+  "psychological-complementary": "#E8452B",
+  "identical-hue-harmony": "#2792C3",
+  "adjacent-hue-harmony": "#2792C3",
+  "similar-hue-harmony": "#2792C3",
+  "mid-hue-harmony": "#2792C3",
+  "contrast-hue-harmony": "#2792C3",
+};
+
+/** 色相差による配色(24色相環で、色相が何つ離れているか)。最初に見せる色相差(つ)。 */
+export const COLOR_HUE_DIFFERENCE: Record<string, number> = {
+  "identical-hue-harmony": 0,
+  "adjacent-hue-harmony": 1,
+  "similar-hue-harmony": 2,
+  "mid-hue-harmony": 5,
+  "contrast-hue-harmony": 9,
+};
+
+/** 色覚の見え方のシミュレーションを見せる概念エントリ。 */
+export const COLOR_VISION_IDS: Record<string, true> = { "color-vision-diversity": true };
+
+/** 配色理論の概念エントリが、色相環の配色理論の可視化で最初に開く種類。 */
+export const COLOR_HARMONY_TYPE: Record<string, "complementary" | "analogous" | "triadic" | "split-complementary" | "tetrad"> = {
+  "complementary-harmony": "complementary",
+  "psychological-complementary": "complementary",
+  "analogous-harmony": "analogous",
+  "triadic-harmony": "triadic",
+  "split-complementary-harmony": "split-complementary",
+  "tetrad-harmony": "tetrad",
 };
 
 /** コントラスト比の確認(ContrastVisualizer)を、デモ用の前景・背景で見せる概念エントリ。#767676 と白は、AAの境目(約4.54:1)。 */
@@ -115,6 +144,32 @@ export const COLOR_PALETTE_VISUALIZERS: Record<string, true> = {
   "summer-palette": true,
   "autumn-palette": true,
   "winter-palette": true,
+  "tone-vivid": true,
+  "tone-strong": true,
+  "tone-bright": true,
+  "tone-light": true,
+  "tone-pale": true,
+  "tone-soft": true,
+  "tone-dull": true,
+  "tone-deep": true,
+  "tone-dark": true,
+  "tone-light-grayish": true,
+  "tone-grayish": true,
+  "tone-dark-grayish": true,
+  "accent-color": true,
+  "separation-color": true,
+  "repetition-harmony": true,
+  "faux-camaieu-harmony": true,
+  "natural-harmony": true,
+  "complex-harmony": true,
+  "dominant-tone-harmony": true,
+  "sepia": true,
+  "bleach-bypass": true,
+  "white-balance": true,
+  "rim-light": true,
+  "overcast-light": true,
+  "candlelight": true,
+  "neon-glow": true,
 };
 
 /** 季節の配色(同じ構図の木に、季節ごとのパレットを当てはめて並べる)。この順に再生する。 */

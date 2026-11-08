@@ -72,5 +72,6 @@ export function polarToXY(
   const radius = size / 2 - 2;
   const rad = (hueDeg * Math.PI) / 180;
   const r = (Math.min(satPercent, 100) / 100) * radius;
-  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  // 小数2桁に丸める(サーバーとブラウザで三角関数の最後の桁が違い、ハイドレーションが食い違うため)
+  return { x: Math.round((cx + r * Math.cos(rad)) * 100) / 100, y: Math.round((cy + r * Math.sin(rad)) * 100) / 100 };
 }

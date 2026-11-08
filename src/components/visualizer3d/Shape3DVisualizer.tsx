@@ -24,6 +24,17 @@ import {
 import { CONIC_LABEL, conicKind, GOLDEN_ANGLE_DEG, PACKING_DENSITY, type PackingKind } from "@/lib/geometry3d/curves";
 import { CUBE_NETS, netLabel, POLYHEDRA, PHI, eulerCharacteristic, type PolyhedronId } from "@/lib/geometry3d/polyhedra";
 import { SHAPE_3D, type Shape3DEntry } from "@/lib/shape-3d";
+import {
+  ArchimedesView,
+  BoxDiagonalView,
+  CatenoidView,
+  CavalieriView,
+  HelixView,
+  HullSolidsView,
+  IsometricView,
+  RevolveView,
+  SpaceFillingView,
+} from "./Shape3DSolidViews";
 
 /** 図形の「立体で見る」(3D)。登録(SHAPE_3D)の種類ごとに、シーンと操作を組み合わせる。 */
 
@@ -416,5 +427,23 @@ export function Shape3DVisualizer({ shapeId }: Props) {
       return <BezierView key={shapeId} entry={entry} />;
     case "golden":
       return <GoldenView key={shapeId} entry={entry} />;
+    case "hull-solids":
+      return <HullSolidsView key={shapeId} entry={entry} />;
+    case "space-filling":
+      return <SpaceFillingView key={shapeId} entry={entry} />;
+    case "revolve":
+      return <RevolveView key={shapeId} entry={entry} />;
+    case "archimedes":
+      return <ArchimedesView key={shapeId} entry={entry} />;
+    case "cavalieri":
+      return <CavalieriView key={shapeId} entry={entry} />;
+    case "box-diagonal":
+      return <BoxDiagonalView key={shapeId} entry={entry} />;
+    case "catenoid":
+      return <CatenoidView key={shapeId} entry={entry} />;
+    case "helix":
+      return <HelixView key={shapeId} entry={entry} />;
+    case "isometric":
+      return <IsometricView key={shapeId} entry={entry} />;
   }
 }

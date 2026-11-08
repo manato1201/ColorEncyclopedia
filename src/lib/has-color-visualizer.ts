@@ -4,6 +4,7 @@ import {
   COLOR_DEMO_HEX,
   COLOR_MIXING_MODES,
   COLOR_PALETTE_VISUALIZERS,
+  COLOR_VISION_IDS,
   HUE_WHEEL_VISUALIZERS,
 } from "./color-visualizers";
 
@@ -26,6 +27,7 @@ export function hasColorVisualizer(colorId: string): boolean {
     colorId in COLOR_CONTRAST_DEMOS ||
     colorId in COLOR_MIXING_MODES ||
     colorId in COLOR_EFFECT_SCENES ||
-    colorId in COLOR_PALETTE_VISUALIZERS
+    colorId in COLOR_PALETTE_VISUALIZERS ||
+    colorId in COLOR_VISION_IDS
   );
 }

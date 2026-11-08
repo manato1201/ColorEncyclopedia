@@ -7,13 +7,14 @@ import { hexToHsv, hsvToHex } from "@/lib/color-math";
 
 const CANVAS_SIZE = 260;
 
-type HarmonyType = "complementary" | "analogous" | "triadic" | "split-complementary";
+export type HarmonyType = "complementary" | "analogous" | "triadic" | "split-complementary" | "tetrad";
 
 const HARMONY_LABELS: Record<HarmonyType, string> = {
   complementary: "補色",
   analogous: "類似色",
   triadic: "トライアド",
   "split-complementary": "スプリットコンプリメンタリ",
+  tetrad: "テトラード",
 };
 
 /** 基準色相からの相対角度(度)。配色理論での実在する用語をそのまま用いる。 */
@@ -27,20 +28,24 @@ function harmonyOffsets(type: HarmonyType): number[] {
       return [120, 240];
     case "split-complementary":
       return [150, 210];
+    case "tetrad":
+      return [90, 180, 270];
   }
 }
 
 type HarmonyVisualizerProps = {
   hex: string;
+  /** 最初に開く配色の種類。 */
+  initialType?: HarmonyType;
 };
 
 /**
  * 補色・類似色・トライアド・スプリットコンプリメンタリを色相環上に線で結んで描画する。
  * HueWheelVisualizerと同じ色相環描画ロジック(hueWheelCanvas)を共有する。
  */
-export function HarmonyVisualizer({ hex }: HarmonyVisualizerProps) {
+export function HarmonyVisualizer({ hex, initialType = "complementary" }: HarmonyVisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [harmonyType, setHarmonyType] = useState<HarmonyType>("complementary");
+  const [harmonyType, setHarmonyType] = useState<HarmonyType>(initialType);
   const { h, s, v } = hexToHsv(hex);
 
   useEffect(() => {

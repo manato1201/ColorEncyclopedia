@@ -7,6 +7,8 @@
  */
 
 import { SHAPE_TERM_NOTES_EXT } from "./term-notes-shapes-ext.ts";
+import { SHAPE_TERM_NOTES_EXT2 } from "./term-notes-shapes-ext2.ts";
+import { COLOR_TERM_NOTES_EXT2 } from "./term-notes-colors-ext2.ts";
 import { COLOR_TERM_NOTES_EXT } from "./term-notes-colors-ext.ts";
 
 export type TermNote = {
@@ -335,5 +337,5 @@ const BASE_SHAPE_TERM_NOTES: Record<string, TermNote> = {
 };
 
 /** 追加分(src/data/term-notes-*-ext.ts)を結合した、全エントリの定型項目。 */
-export const SHAPE_TERM_NOTES: Record<string, TermNote> = { ...BASE_SHAPE_TERM_NOTES, ...SHAPE_TERM_NOTES_EXT };
-export const COLOR_TERM_NOTES: Record<string, TermNote> = { ...BASE_COLOR_TERM_NOTES, ...COLOR_TERM_NOTES_EXT };
+export const SHAPE_TERM_NOTES: Record<string, TermNote> = { ...BASE_SHAPE_TERM_NOTES, ...SHAPE_TERM_NOTES_EXT, ...SHAPE_TERM_NOTES_EXT2 };
+export const COLOR_TERM_NOTES: Record<string, TermNote> = { ...BASE_COLOR_TERM_NOTES, ...COLOR_TERM_NOTES_EXT, ...COLOR_TERM_NOTES_EXT2 };

@@ -30,6 +30,7 @@ import {
   COLOR_DEMO_HEX,
   COLOR_MIXING_MODES,
   COLOR_PALETTE_VISUALIZERS,
+  COLOR_VISION_IDS,
   HUE_WHEEL_VISUALIZERS,
 } from "../src/lib/color-visualizers.ts";
 
@@ -50,6 +51,7 @@ import {
   spherePacking,
 } from "../src/lib/geometry3d/curves.ts";
 import { colorPosition, hsvSolidMesh, labGamutCloud, rgbCubeMesh } from "../src/lib/geometry3d/color-solids.ts";
+import { dualHull, HULL_SOLIDS, rotationAxes, rotationGroupOrder, solidHull, spaceFillingCenters } from "../src/lib/geometry3d/hull.ts";
 import { allFinite, maxAbs } from "../src/lib/geometry3d/mesh-data.ts";
 
 /** frontmatterのhsvは整数丸め(±1)、labは小数1桁丸めなので、再計算値との許容差を持たせる。 */
@@ -309,6 +311,7 @@ function verifyVisualizers() {
     COLOR_MIXING_MODES,
     COLOR_EFFECT_SCENES,
     COLOR_PALETTE_VISUALIZERS,
+    COLOR_VISION_IDS,
   };
   const withVisual = new Set();
   for (const [name, registry] of Object.entries(colorRegistries)) {
@@ -384,6 +387,29 @@ function verifyGeometry3d() {
       const pos = colorPosition(space, hex);
       if (!allFinite(pos) || maxAbs(pos) > 1.7) fail(`3d:position:${space}`, `${hex} の位置が範囲外: ${pos.join(",")}`);
     }
+  }
+
+  // 凸包の立体: V−E+F=2、双対の頂点数=元の面数、正多面体の回転群の位数(12・24・24・60・60)
+  const platonicOrder = { tetrahedron: 12, cube: 24, octahedron: 24, dodecahedron: 60, icosahedron: 60 };
+  for (const spec of HULL_SOLIDS) {
+    const h = solidHull(spec.id);
+    if (h.vertices.length - h.edges.length + h.faces.length !== 2) fail(`3d:hull:${spec.id}`, "V−E+F が 2 でない");
+    if (dualHull(h).vertices.length !== h.faces.length) fail(`3d:hull:${spec.id}`, "双対の頂点数が元の面の数と違う");
+    if (spec.id in platonicOrder && rotationGroupOrder(rotationAxes(h)) !== platonicOrder[spec.id]) fail(`3d:hull:${spec.id}`, "回転群の位数が想定と違う");
+  }
+  const vol = (h) => {
+    let v = 0;
+    for (const f of h.faces) for (let i = 1; i < f.length - 1; i++) {
+      const a = h.vertices[f[0]], b = h.vertices[f[i]], c = h.vertices[f[i + 1]];
+      v += (a[0] * (b[1] * c[2] - b[2] * c[1]) - a[1] * (b[0] * c[2] - b[2] * c[0]) + a[2] * (b[0] * c[1] - b[1] * c[0])) / 6;
+    }
+    return Math.abs(v);
+  };
+  // 空間充填: 最近接の中心間距離から求めた格子の1点あたりの体積 = 立体の体積(すき間なく埋まる)
+  for (const [kind, perPoint] of [["cube", (n) => n ** 3], ["truncated-octahedron", (n) => ((2 * n) / Math.sqrt(3)) ** 3 / 2], ["rhombic-dodecahedron", (n) => (Math.SQRT2 * n) ** 3 / 4]]) {
+    const pts = spaceFillingCenters(kind, 100);
+    const nearest = Math.min(...pts.filter((p) => Math.hypot(...p) > 1e-9).map((p) => Math.hypot(...p)));
+    if (Math.abs(perPoint(nearest) - vol(solidHull(kind))) > 1e-6) fail(`3d:space-filling:${kind}`, "格子の1点あたりの体積が立体の体積と合わない(すき間・重なりがある)");
   }
 
   // 対応表: 実在するエントリを指し、図形は2Dの可視化も持つ(切り替えは2Dの可視化の中にあるため)
