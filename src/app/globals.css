@@ -14,7 +14,7 @@
   --color-paper: #ffffff;
   --color-ash: #bfbebe;
   --color-stone: #cdcdc9;
-  --color-ink-muted: #706f6b;
+  --color-ink-muted: #65645f; /* 地 #e5e4e0 で 4.66:1・白で 5.93:1(旧 #706f6b は地で 3.95:1 で足りなかった) */
 
   /* セマンティックカラー(固定・選択色に連動しない) */
   --color-accent-green: #2f6844; /* 緑は「正解・確定」だけに使う(docs/ui-rules.md) */
@@ -134,6 +134,18 @@
   --color-negative: #e07a68;
   --on-accent: #151412;
   --shape-guide: #6a675f;
+}
+
+
+/* 動きの規則(DESIGN.md「動き」)。これから足す動きは、時間とイージングをここから使う(既存の CSS は触らない。触るときに寄せる)。
+   動かすのは transform と opacity だけ。動きを減らす設定では、下のグローバルな規則がすぐ切り替えにする。 */
+:root {
+  --dur-instant: 120ms; /* 押す・切り替える */
+  --dur-open: 240ms; /* 開く・閉じる */
+  --dur-enter: 300ms; /* 画面の出現(段をずらしても全体で 400ms 以内) */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* 出る */
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0); /* 入る・退く */
+  --ease-move: cubic-bezier(0.4, 0, 0.2, 1); /* 動く */
 }
 
 html {

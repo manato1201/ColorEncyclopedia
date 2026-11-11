@@ -18,6 +18,15 @@ export const PAGE_CANVAS_HEX: Record<ThemeMode, string> = {
   dark: "#151412",
 };
 
+/**
+ * ページの上に載るカード(--color-paper)の色。ダークでは地より明るいので、地より厳しい基準になる。
+ * 選択色の文字は、地とこのカードの両方の上で AA を満たす必要がある(ライトのカードは白で、地より易しい)。
+ */
+export const SURFACE_HEX: Record<ThemeMode, string> = {
+  light: "#FFFFFF",
+  dark: "#1F1E1B",
+};
+
 /** AAを満たせない(無彩色に近い・白や黒に張り付いた)色のときに使う安全なテーマ。 */
 export const SAFE_FALLBACK_THEME: Record<ThemeMode, DerivedTheme> = {
   light: { primary: "#2B2B2B", accent: "#5B8DEF" },
@@ -32,8 +41,9 @@ const ACHROMATIC_SATURATION = 12;
  * ライトでは暗く(明度Vを下げる)、ダークでは明るく(Vを上げ、最後は彩度Sを下げる)していき、
  * 最初にAAを満たした色を返す。満たせなければnull。
  */
-function ensureContrast(hex: string, canvas: string, mode: ThemeMode): string | null {
-  if (contrastRatio(hex, canvas) >= WCAG_AA_NORMAL) return hex;
+function ensureContrast(hex: string, canvases: string[], mode: ThemeMode): string | null {
+  const ok = (c: string) => canvases.every((bg) => contrastRatio(c, bg) >= WCAG_AA_NORMAL);
+  if (ok(hex)) return hex;
 
   const { h, s, v } = hexToHsv(hex);
   if (s < ACHROMATIC_SATURATION) return null;
@@ -41,18 +51,18 @@ function ensureContrast(hex: string, canvas: string, mode: ThemeMode): string | 
   if (mode === "light") {
     for (let nextV = v - 2; nextV >= 20; nextV -= 2) {
       const candidate = hsvToHex({ h, s, v: nextV });
-      if (contrastRatio(candidate, canvas) >= WCAG_AA_NORMAL) return candidate;
+      if (ok(candidate)) return candidate;
     }
     return null;
   }
 
   for (let nextV = v + 2; nextV <= 100; nextV += 2) {
     const candidate = hsvToHex({ h, s, v: nextV });
-    if (contrastRatio(candidate, canvas) >= WCAG_AA_NORMAL) return candidate;
+    if (ok(candidate)) return candidate;
   }
   for (let nextS = s - 3; nextS >= 25; nextS -= 3) {
     const candidate = hsvToHex({ h, s: nextS, v: 100 });
-    if (contrastRatio(candidate, canvas) >= WCAG_AA_NORMAL) return candidate;
+    if (ok(candidate)) return candidate;
   }
   return null;
 }
@@ -64,7 +74,7 @@ function ensureContrast(hex: string, canvas: string, mode: ThemeMode): string | 
  * (ColorEncyclopedia_DESIGN.md Phase 4の制約。ダークテーマの追加でモード別の判定が必要になった)。
  */
 export function deriveThemeFromColor(hex: string, mode: ThemeMode = "light"): DerivedTheme {
-  const primary = ensureContrast(hex, PAGE_CANVAS_HEX[mode], mode);
+  const primary = ensureContrast(hex, [PAGE_CANVAS_HEX[mode], SURFACE_HEX[mode]], mode);
   if (!primary) return SAFE_FALLBACK_THEME[mode];
 
   const { h, s, v } = hexToHsv(primary);
