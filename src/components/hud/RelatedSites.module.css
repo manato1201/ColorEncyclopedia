@@ -1,0 +1,80 @@
+/* 本文を邪魔しない小さなフッター。ホバーはヘッダーのナビと同じ流儀(選択色+下線。動きは付けない) */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-8);
+  padding: var(--space-6) var(--space-8);
+  border-top: 1px solid var(--color-line);
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  line-height: var(--leading-caption);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: var(--text-caption);
+  font-weight: var(--weight-bold);
+  letter-spacing: var(--tracking-caption);
+  color: var(--color-ink-muted);
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link,
+.current {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-3);
+}
+
+.link {
+  color: var(--color-ink);
+  border-radius: var(--radius-interactive);
+}
+
+.link:hover,
+.link:focus-visible {
+  color: var(--accent-current);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.current {
+  color: var(--color-ink-muted);
+}
+
+.desc {
+  color: var(--color-ink-muted);
+}
+
+.note {
+  flex-basis: 100%;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 639px) {
+  .footer {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .list {
+    flex-direction: column;
+    flex-basis: 100%;
+  }
+
+  .link {
+    padding: var(--space-1) 0;
+  }
+}

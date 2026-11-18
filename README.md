@@ -2,6 +2,8 @@
 
 色彩検定の対策と学習のために、**色と図形の情報を図鑑のように**収録して見られるようにしたリポジトリ。Next.js 16(App Router)/ React 19 / TypeScript。コンテンツは `content/colors`・`content/shapes` の Markdown(frontmatter つき)です。
 
+**関連サイト**: 自作の 4 サイトは各画面のフッターから相互に行き来できます([アルゴリズム図鑑](https://the-algorithm-illustrated.vercel.app)・[基礎学習図鑑](https://foundations-encyclopedia.vercel.app)・[色彩図鑑](https://color-encyclopedia.vercel.app)・[Houdini リファレンス](https://houdini-reference.vercel.app))。サイトごとにオリジンが違うため、お気に入り・テーマ・設定は共有されません。
+
 ![全体の構成図](docs/diagrams/architecture.svg)
 
 - **色図鑑 / 図形図鑑**: カタログと詳細(数値データ・方式の比較・コントラスト比・作図手順の可視化。立体は「平面 / 立体(3D)」を切り替え)。

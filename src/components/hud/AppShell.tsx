@@ -4,6 +4,7 @@ import { ReviewCountBadge } from "./ReviewCountBadge";
 import { ThemeColorPicker } from "@/components/theme/ThemeColorPicker";
 import { ThemeModeToggle } from "@/components/theme/ThemeModeToggle";
 import { BackToTop } from "@/components/ui/BackToTop";
+import { RelatedSites } from "./RelatedSites";
 import styles from "./AppShell.module.css";
 
 type AppShellProps = {
@@ -45,6 +46,7 @@ export function AppShell({ children }: AppShellProps) {
         </div>
       </header>
       <main className={styles.main}>{children}</main>
+      <RelatedSites current="color" />
       <BackToTop />
     </div>
   );
