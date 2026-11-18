@@ -38,6 +38,19 @@
   border-top-color: var(--accent-current);
 }
 
+/* ホバーで 2px 浮き上がる(押せるカードだと分かる手応え。transform だけ・マウスのあるときだけ) */
+@media (prefers-reduced-motion: no-preference) and (hover: hover) {
+  .card {
+    transition:
+      border-color 0.15s ease,
+      transform var(--dur-instant) var(--ease-out);
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+  }
+}
+
 .no {
   font-size: var(--text-caption);
   color: var(--color-ink-muted);

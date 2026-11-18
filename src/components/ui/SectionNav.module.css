@@ -37,3 +37,16 @@
   border-bottom-color: var(--accent-current);
   font-weight: var(--weight-bold);
 }
+
+/* 読み進み具合(スクロールプログレスバー)。罫線の位置に重ね、幅は変えず scaleX だけで伸ばす。 */
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--accent-current);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
