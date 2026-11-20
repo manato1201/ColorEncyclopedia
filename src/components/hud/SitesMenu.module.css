@@ -1,0 +1,120 @@
+.root {
+  position: relative;
+}
+
+/* ヘッダーの ThemeModeToggle と同じ縁取りのボタン */
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-interactive);
+  background: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-weight: var(--weight-bold);
+  font-size: 0.8125rem;
+  letter-spacing: var(--tracking-caption);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.button:hover,
+.button[aria-expanded="true"] {
+  border-color: var(--accent-current);
+  color: var(--accent-current);
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  z-index: 30;
+  width: 22rem;
+  max-width: calc(100vw - var(--space-8));
+  padding: var(--space-2);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-interactive);
+  background: var(--color-paper);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+:global(:root[data-theme="light"]) .panel {
+  box-shadow: 0 8px 24px rgba(29, 29, 29, 0.16);
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+/* 開くとき 1 回だけ(opacity/transform)。動きを減らす設定では globals の規則ですぐ切り替わる */
+.panel[data-open="true"] {
+  animation: sites-menu-open var(--dur-open) var(--ease-out);
+}
+
+@keyframes sites-menu-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel[data-open="true"] {
+    animation: none;
+  }
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-interactive);
+}
+
+.name {
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+}
+
+.desc {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+}
+
+.link:hover,
+.link:focus-visible {
+  background: var(--color-parchment);
+}
+
+.link:hover .name,
+.link:focus-visible .name {
+  color: var(--accent-current);
+}
+
+.current .name {
+  color: var(--color-ink-muted);
+}
+
+/* 狭い画面: ヘッダーが折り返してもはみ出さないよう、左端に揃えて画面幅に収める */
+@media (max-width: 639px) {
+  .panel {
+    right: auto;
+    left: 0;
+  }
+}

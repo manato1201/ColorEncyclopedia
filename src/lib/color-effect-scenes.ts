@@ -155,6 +155,82 @@ export const COLOR_EFFECT_SCENES: Record<string, EffectScene[]> = {
       ],
     },
   ],
+  "hue-contrast": [
+    {
+      description: "同じ橙(#E8872B)を、赤の背景と黄の背景に置く。赤の上では黄みがかり、黄の上では赤みがかって見えやすい",
+      tiles: [
+        { bg: "#C0392B", bgName: "赤の背景", fg: "#E8872B", fgName: "中央の橙(同じ色)" },
+        { bg: "#E8C43A", bgName: "黄の背景", fg: "#E8872B", fgName: "中央の橙(同じ色)" },
+      ],
+    },
+    {
+      description: "同じ緑(#3E9A5B)を、黄と青の背景に置く。黄の上では青みがかり、青の上では黄みがかって見えやすい",
+      tiles: [
+        { bg: "#E8C43A", bgName: "黄の背景", fg: "#3E9A5B", fgName: "中央の緑(同じ色)" },
+        { bg: "#2B5FAE", bgName: "青の背景", fg: "#3E9A5B", fgName: "中央の緑(同じ色)" },
+      ],
+    },
+  ],
+  "average-mixing": [
+    {
+      description: "赤(#FF0000)と青(#0000FF)の回転混色・並置混色は、平均の暗めの赤紫(#800080)に見える。光を足すのとは違い、明るくならない",
+      tiles: [
+        { bg: "#FF0000", bgName: "赤" },
+        { bg: "#0000FF", bgName: "青" },
+        { bg: "#800080", bgName: "平均の色(赤紫)" },
+      ],
+    },
+    {
+      description: "補色に近い黄(#FFFF00)と青(#0000FF)の平均は、灰色(#808080)になる。補色どうしを混ぜると、無彩色に近づく",
+      tiles: [
+        { bg: "#FFFF00", bgName: "黄" },
+        { bg: "#0000FF", bgName: "青" },
+        { bg: "#808080", bgName: "平均の色(灰色)" },
+      ],
+    },
+  ],
+  visibility: [
+    {
+      description: "同じ黄(#F2D31B)の四角を、黒い背景と白い背景に置く。明度差が大きい黒の上ではよく見え、小さい白の上では見えにくい",
+      tiles: [
+        { bg: "#111111", bgName: "黒の背景(明度差 大)", fg: "#F2D31B", fgName: "黄", fgSize: 50 },
+        { bg: "#FFFFFF", bgName: "白の背景(明度差 小)", fg: "#F2D31B", fgName: "黄(同じ色)", fgSize: 50 },
+      ],
+    },
+    {
+      description: "色相が違っても、明度が近いと見分けにくい。赤(#C0392B)と緑(#2E8B57)は、色相は違うが、明度が近い",
+      tiles: [{ bg: "#2E8B57", bgName: "緑の背景", fg: "#C0392B", fgName: "赤(明度が近い)", fgSize: 50 }],
+    },
+  ],
+  conspicuity: [
+    {
+      description: "同じ灰色の背景に、高彩度の赤と、低彩度の灰青を置く。高彩度の赤のほうが、先に目に入りやすい",
+      tiles: [
+        { bg: "#B8B8B8", bgName: "灰色の背景", fg: "#D62A1F", fgName: "高彩度の赤", fgSize: 40 },
+        { bg: "#B8B8B8", bgName: "灰色の背景", fg: "#8E9AA6", fgName: "低彩度の灰青", fgSize: 40 },
+      ],
+    },
+  ],
+  "color-weight": [
+    {
+      description: "同じ大きさの箱を、灰色の背景に置く。暗い箱は重く、明るい箱は軽く感じる傾向がある",
+      tiles: [
+        { bg: "#B8B8B8", bgName: "灰色の背景", fg: "#2A2A2A", fgName: "暗い箱(重く感じる)", fgSize: 50 },
+        { bg: "#B8B8B8", bgName: "灰色の背景", fg: "#F2F2F2", fgName: "明るい箱(軽く感じる)", fgSize: 50 },
+      ],
+    },
+  ],
+  "stimulating-calming": [
+    {
+      description: "高彩度の暖色(興奮色)と、寒色(沈静色)を、同じ灰色の背景に置く。暖色は活動的に、寒色は落ち着いて感じられる傾向がある",
+      tiles: [
+        { bg: "#B8B8B8", bgName: "灰色の背景", fg: "#D62A1F", fgName: "赤(興奮色)", fgSize: 50 },
+        { bg: "#B8B8B8", bgName: "灰色の背景", fg: "#E8872B", fgName: "橙(興奮色)", fgSize: 50 },
+        { bg: "#B8B8B8", bgName: "灰色の背景", fg: "#2B62C8", fgName: "青(沈静色)", fgSize: 50 },
+        { bg: "#B8B8B8", bgName: "灰色の背景", fg: "#3F9A9A", fgName: "青緑(沈静色)", fgSize: 50 },
+      ],
+    },
+  ],
   "color-temperature": [
     { description: "低い色温度(およそ2000〜4500K)。赤〜橙みの暖かい光。数値は近似", tiles: warm.map(kelvinTile) },
     { description: "高い色温度(およそ5500〜10000K)。白から、青みの冷たい光へ。数値は近似", tiles: cool.map(kelvinTile) },

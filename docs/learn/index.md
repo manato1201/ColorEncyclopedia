@@ -23,7 +23,7 @@
 
 | 場所 | 役割 |
 |---|---|
-| `content/colors/`・`content/shapes/` | コンテンツ(Markdown + frontmatter。色 129・図形 92) |
+| `content/colors/`・`content/shapes/` | コンテンツ(Markdown + frontmatter。色 159・図形 112) |
 | `src/lib/content/` | `createContentLoader`(メタ・本文 HTML)・色と図形のローダー |
 | `src/lib/color-math.ts` | 色空間・コントラスト比・ΔE・ガマット |
 | `src/lib/color-values.ts` | 画面に出す数値の**単一の変換**(`deriveColorValues`) |

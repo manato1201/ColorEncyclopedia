@@ -13,12 +13,12 @@ python -m pytest -q tests/test_docs.py
 `verify` の出力の例(件数は、そのときの収録数):
 
 ```text
-colors: 129件を検証
-shapes: 92件を検証
+colors: 159件を検証
+shapes: 112件を検証
 exam-questions: 34問を検証
 term-notes: 全エントリの定型項目を検証
-visualizers: 図形 92/92件、色 129/129件が可視化に対応
-3d: 図形 36/92件、色 116/129件が立体(3D)表示に対応
+visualizers: 図形 112/112件、色 153/159件が可視化に対応
+3d: 図形 36/112件、色 135/159件が立体(3D)表示に対応
 OK: 全エントリのfrontmatter検証をパスしました
 ```
 

@@ -1,4 +1,4 @@
-/* 本文を邪魔しない小さなフッター。ホバーはヘッダーのナビと同じ流儀(選択色+下線。動きは付けない) */
+/* 本文を邪魔しない小さなフッター(文字は本文 14px・説明/注記 13px 以上)。ホバーはヘッダーのナビと同じ流儀(選択色+下線。動きは付けない) */
 .footer {
   display: flex;
   flex-wrap: wrap;
@@ -7,15 +7,15 @@
   padding: var(--space-6) var(--space-8);
   border-top: 1px solid var(--color-line);
   font-family: var(--font-body);
-  font-size: var(--text-caption);
-  line-height: var(--leading-caption);
+  font-size: 0.875rem;
+  line-height: 1.5;
   letter-spacing: var(--tracking-caption);
   color: var(--color-ink-muted);
 }
 
 .heading {
   font-family: var(--font-display);
-  font-size: var(--text-caption);
+  font-size: 0.875rem;
   font-weight: var(--weight-bold);
   letter-spacing: var(--tracking-caption);
   color: var(--color-ink-muted);
@@ -55,12 +55,14 @@
 }
 
 .desc {
+  font-size: 0.8125rem;
   color: var(--color-ink-muted);
 }
 
 .note {
   flex-basis: 100%;
   margin: 0;
+  font-size: 0.8125rem;
   overflow-wrap: anywhere;
 }
 

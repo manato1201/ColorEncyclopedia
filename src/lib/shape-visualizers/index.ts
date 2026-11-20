@@ -2,6 +2,7 @@ import { BASE_SHAPE_VISUALIZERS, type ShapeFrame } from "./base.ts";
 import { CONSTRUCTION_VISUALIZERS } from "./constructions.ts";
 import { CURVE_VISUALIZERS } from "./curves.ts";
 import { EXTRA_VISUALIZERS } from "./extra.ts";
+import { EXTRA2_VISUALIZERS } from "./extra2.ts";
 import { FRACTAL_VISUALIZERS } from "./fractal.ts";
 import { PROPORTION_VISUALIZERS } from "./proportion.ts";
 import { SOLID_VISUALIZERS } from "./solids.ts";
@@ -24,4 +25,5 @@ export const SHAPE_VISUALIZERS: Record<string, () => ShapeFrame[]> = {
   ...CONSTRUCTION_VISUALIZERS,
   ...SOLID_VISUALIZERS,
   ...EXTRA_VISUALIZERS,
+  ...EXTRA2_VISUALIZERS,
 };

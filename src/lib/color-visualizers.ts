@@ -65,6 +65,11 @@ export const HUE_WHEEL_VISUALIZERS: Record<string, true> = {
   ebiiro: true,
   nezumiiro: true,
   shikkoku: true,
+  tokiiro: true,
+  kuchibairo: true,
+  botaniro: true,
+  wasurenagusairo: true,
+  kamenozoki: true,
 };
 
 /** 配色理論可視化(補色・類似色・トライアド・スプリットコンプリメンタリ)は色相環と同じ対象集合を使う。 */
@@ -88,6 +93,11 @@ export const COLOR_DEMO_HEX: Record<string, string> = {
   "camaieu-harmony": "#7DB46C",
   "bicolore-harmony": "#2B5FAE",
   "tetrad-harmony": "#2792C3",
+  "pentad-harmony": "#2792C3",
+  "hexad-harmony": "#2792C3",
+  "hsv-color-model": "#2792C3",
+  "munsell-system": "#2792C3",
+  "pccs-system": "#2792C3",
   "psychological-complementary": "#E8452B",
   "identical-hue-harmony": "#2792C3",
   "adjacent-hue-harmony": "#2792C3",
@@ -126,6 +136,8 @@ export const COLOR_CONTRAST_DEMOS: Record<string, { fg: string; bg: string }> = 
 /** 混色の可視化(光の混色と、色材の混色)。 */
 export const COLOR_MIXING_MODES: Record<string, "additive" | "subtractive"> = {
   "additive-mixing": "additive",
+  "rgb-color-model": "additive",
+  "cmyk-color-model": "subtractive",
   "subtractive-mixing": "subtractive",
 };
 
@@ -163,6 +175,12 @@ export const COLOR_PALETTE_VISUALIZERS: Record<string, true> = {
   "natural-harmony": true,
   "complex-harmony": true,
   "dominant-tone-harmony": true,
+  "tonal-harmony": true,
+  "pure-color": true,
+  "dull-color": true,
+  "achromatic-color": true,
+  tint: true,
+  shade: true,
   "sepia": true,
   "bleach-bypass": true,
   "white-balance": true,

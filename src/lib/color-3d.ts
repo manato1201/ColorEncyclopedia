@@ -45,6 +45,42 @@ const CONCEPT_3D: Record<string, Omit<Color3DInfo, "markers"> & { markers?: Colo
     note: "白から、C・M・Yの色材で光を引いていくと黒に近づきます。立方体の向かい合う角が補色の関係です。",
     markers: "none",
   },
+  "rgb-color-model": {
+    space: "rgb",
+    title: "RGBを、立方体で見る",
+    note: "R・G・Bの量が各軸です。原点(黒)から、3つの光を足していくと、頂点で白に届きます。",
+    markers: "none",
+  },
+  "cmyk-color-model": {
+    space: "rgb",
+    title: "CMYの考え方を、RGB立方体で見る",
+    note: "白の頂点から、シアン・マゼンタ・イエローで光を引いていくと、黒に近づきます。CMYKの数値そのものは、ここでは計算していません。",
+    markers: "none",
+  },
+  "hsv-color-model": {
+    space: "hsv",
+    title: "HSVを、円柱で見る",
+    note: "色相は角度、彩度は中心からの距離、明度は高さ。デモ用の色の位置を点で示します。",
+    markers: "demo",
+  },
+  "munsell-system": {
+    space: "hsv",
+    title: "三属性を、立体で見る(HSV円柱で代用)",
+    note: "マンセルの色立体そのものは、対応表が要るため計算していません。三属性の考え方を、HSV円柱で見ます。",
+    markers: "demo",
+  },
+  "pccs-system": {
+    space: "hsv",
+    title: "色相とトーンを、立体で見る(HSV円柱で代用)",
+    note: "PCCSの値そのものは、計算していません。色相が角度、トーンが彩度と明度の組み合わせ、という考え方を、HSV円柱で見ます。",
+    markers: "demo",
+  },
+  "cielab-color-space": {
+    space: "lab",
+    title: "Labを、色域の点群で見る",
+    note: "sRGBで出せる色の範囲を、Labに並べた点群です。縦軸がL*、横の2軸がa*・b*です。",
+    markers: "none",
+  },
   "chroma-contrast": {
     space: "lab",
     title: "彩度の違いを、Labで見る",
@@ -67,6 +103,8 @@ const HARMONY_OFFSETS: Record<string, number[]> = {
   "triadic-harmony": [0, 120, 240],
   "split-complementary-harmony": [0, 150, 210],
   "tetrad-harmony": [0, 90, 180, 270],
+  "pentad-harmony": [0, 72, 144, 216, 288],
+  "hexad-harmony": [0, 60, 120, 180, 240, 300],
   ...Object.fromEntries(Object.entries(COLOR_HUE_DIFFERENCE).map(([id, step]) => [id, [0, step * 15]])),
 };
 
